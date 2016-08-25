@@ -335,4 +335,24 @@ public class QueryTweet {
 		}
 		return false;
 	}
+
+	public static List<Tweet> getAllTweetsForParticularUser(long userId, long startTime, long latestTime) throws ClassNotFoundException, SQLException {
+		List<Tweet> tweetsForParticularUser = new ArrayList<>();
+		
+		StringBuilder query = new StringBuilder("select * from tweets where user_id = ").append(userId)
+				.append(" and created_at between ").append(startTime).append(" and ").append(latestTime);
+		logger.info("executing sql query: " + query.toString());
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		while (rs.next()) {
+			Tweet tweet = prepareTweetObject(rs);
+			if (tweet.getUserId() != userId) {
+				tweet.markRetweet();
+				tweet.setRetweetUserId(userId);
+			}
+			tweetsForParticularUser.add(tweet);
+		}
+		return tweetsForParticularUser;
+	}
+
+	
 }

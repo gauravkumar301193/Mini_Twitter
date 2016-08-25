@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import models.Tweet;
 import query.database.QueryTweet;
+import query.database.QueryUser;
 import query.database.UpdateTweet;
 import response.util.CheckValidity;
 

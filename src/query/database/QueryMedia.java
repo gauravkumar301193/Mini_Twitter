@@ -16,9 +16,6 @@ import models.Media;
 public class QueryMedia {
 	
 	static Logger logger = Logger.getLogger(QueryMedia.class);
-	public QueryMedia() {
-	
-	}
 	
 	public Media getMedia(int media_id) throws SQLException, ClassNotFoundException {
 		String sql = "select * from media where media_id = " + media_id ;

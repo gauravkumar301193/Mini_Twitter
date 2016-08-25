@@ -15,8 +15,8 @@ import models.RetweetModel;
  */
 
 public class QueryUser {
-	
 	static Logger logger = Logger.getLogger(QueryUser.class);
+	
 	public static boolean checkUserExists(long userId) 
 			throws ClassNotFoundException, SQLException {
 		StringBuilder query = new StringBuilder("select * from authentication where user_id=");

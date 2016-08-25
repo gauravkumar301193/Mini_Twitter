@@ -79,10 +79,10 @@ public class User {
     	m.reset();
         m.update(password.getBytes());
         byte[] digest = m.digest();
-        BigInteger bigInt = new BigInteger(1,digest);
+        BigInteger bigInt = new BigInteger(1, digest);
         String hashtext = bigInt.toString(16);
-        while(hashtext.length() < 32 ){
-            hashtext = "0"+hashtext;
+        while(hashtext.length() < 32 ) {
+            hashtext = "0" + hashtext;
         }
         
         return hashtext;
@@ -95,12 +95,13 @@ public class User {
     public void setUserId(long userId) {
     	this.userId = userId;
     }
+    
     public long getUserId() {
     	return userId;
     }
     
     public static long generateUserID() {
-    	 userIdGenerator++;
+    	 userIdGenerator ++;
     	 return userIdGenerator;
     }
 }

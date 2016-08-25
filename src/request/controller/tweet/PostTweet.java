@@ -95,7 +95,7 @@ public class PostTweet extends HttpServlet {
 		try {
 			
 			status = NewTweet.postTweet(tweet);
-			response.getWriter().write("here post");
+			//response.getWriter().write("here post");
 			response.setContentType("text/html");
 			if(status) {
 				response.getWriter().write("Tweet Posted Successfully");

@@ -4,37 +4,33 @@ package models;
  */
 
 public class Media {
-	private int media_id;
-	private String media_path;
-	private MediaType media_type;
+	private int mediaId;
+	private String mediaPath;
+	private MediaType mediaType;
 	private static int mediaIdGenerator = 0;
 	
-	public Media() {
-		
-	}
-	
 	public int getMediaId() {
-		return media_id;
+		return mediaId;
 	}
 	
 	public void setMediaId(int media_id) {
-		this.media_id = media_id;
+		this.mediaId = media_id;
 	}
 	
 	public String getMediaPath() {
-		return media_path;
+		return mediaPath;
 	}
 	
 	public void setMediaPath(String media_path) {
-		this.media_path = media_path;
+		this.mediaPath = media_path;
 	}
 
 	public MediaType getMediaType() {
-		return media_type;
+		return mediaType;
 	}
 	
 	public void setMediaType(MediaType media_type) {
-		this.media_type = media_type;
+		this.mediaType = media_type;
 	}
 
 	public int generateMediaId() {

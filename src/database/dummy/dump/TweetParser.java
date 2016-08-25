@@ -42,7 +42,7 @@ public class TweetParser {
         return hashtags;
     }
 
-    TweetParser(String s) {
+    public TweetParser(String s) {
         tweet = s;
     }
 
@@ -225,6 +225,7 @@ public class TweetParser {
         if (tp.isRetweeet())
             System.out.println("yes, it is a retweet");
         tp.displayWordsInTweet();
+       
 //        System.out.println(tp.getTweetText());
     }
    

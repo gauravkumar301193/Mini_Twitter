@@ -10,6 +10,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 public class Tweet {
+	private static final Logger logger = Logger.getLogger(Tweet.class);
+	
 	private String tweetText;
 	private long tweetId;
 	private long userId;
@@ -22,9 +24,10 @@ public class Tweet {
 	private List<String> hashtags;
 	private List<Long> mentions;
 	private String handle;
+	private String retweetHandle;
 	
 	private static long tweetIdGenerator = 9908028;
-	static Logger logger = Logger.getLogger(Tweet.class);
+	
 	public Tweet() {
 		hashtags = new ArrayList<String>();
 		retweet = false;
@@ -120,7 +123,7 @@ public class Tweet {
 	}
 	
 	public static long generateTweetID() {
-		tweetIdGenerator++;
+		tweetIdGenerator ++;
 		logger.info("New tweet id generated " + tweetIdGenerator);
 		return tweetIdGenerator;
 	}
@@ -132,5 +135,14 @@ public class Tweet {
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
+
+	public String getRetweetHandle() {
+		return retweetHandle;
+	}
+
+	public void setRetweetHandle(String retweetHandle) {
+		this.retweetHandle = retweetHandle;
+	}
+
 	
 }

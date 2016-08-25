@@ -1,7 +1,8 @@
 package query.database;
 
 public enum SqlQuerySeparators {
-	COMMA(","), DOUBLEQUOTE("\"");
+	COMMA(",")
+	, DOUBLEQUOTE("\"");
 	
 	private final String separator ;
 	
