@@ -29,9 +29,9 @@ public class GetTweetWithID extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
-			long tweetId = Long.parseLong(request.getParameter("tweet_id"));
+			long tweetId = Long.parseLong(request.getParameter("tweetId"));
 			Tweet tweet = QueryTweet.getTweetByTweetId(tweetId);
-			JSONObject obj = CreateJSONResponseTweets.jsonResponseOfSingleTweet(tweet);
+			JSONObject obj = CreateJSONResponseTweets.jsonResponseOfSingleTweet(tweet, null);
 			response.setContentType("application/json");
 			response.getWriter().write(obj.toString());
 		} catch (ClassNotFoundException | SQLException e) {

@@ -1,6 +1,7 @@
 package query.database;
 
 import database.dummy.dump.SQLConnection;
+import database.dummy.dump.TweetParser;
 import models.Tweet;
 import models.User;
 import org.apache.log4j.Logger;
@@ -8,6 +9,7 @@ import org.apache.log4j.Logger;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author gaurav.kum
@@ -25,18 +27,22 @@ import java.util.Iterator;
 public class UpdateTweet {
 	
 	static Logger logger = Logger.getLogger(UpdateTweet.class);
+	
 	public static boolean postTweet(Tweet tweetToAdd) throws ClassNotFoundException, SQLException {
 		
 		int mediaInserted = addMediaToDb(tweetToAdd);
 		int tweetInserted = addTweetToDb(tweetToAdd);
+		TweetParser tp = new TweetParser(tweetToAdd.getTweetText());
+		
+		String[] listOfWords = tp.listToArrayOfWords(); 
 		
 		ArrayList<String> hashtags = (ArrayList<String>) tweetToAdd.getHashtags();
-		ArrayList<Long> mentions = (ArrayList<Long>) tweetToAdd.getMentions();
+		ArrayList<Integer> mentions = (ArrayList<Integer>) tweetToAdd.getMentions();
 		long tweet_id = tweetToAdd.getTweetId();
 		
 		int hashtagsInserted = addHashtagsToDb(tweet_id, hashtags);
 		
-		int mentionsInserted = addMentionsToDb(tweet_id, mentions);
+		int mentionsInserted = addMentionsToDb(tweet_id, mentions, listOfWords);
 		
 		return (tweetInserted > 0 || hashtagsInserted > 0 || mentionsInserted > 0);
 	}
@@ -87,13 +93,19 @@ public class UpdateTweet {
  
 	}
 	
-	public static int addMentionsToDb(long tweet_id, ArrayList<Long> mentions) throws ClassNotFoundException, SQLException {
+	public static int addMentionsToDb(long tweet_id, ArrayList<Integer> mentions , String[] allWordsInTweet) throws ClassNotFoundException, SQLException {
 		int mentionsInserted = 0;
-		Iterator<Long> mentionIterator = mentions.iterator();
+		
+		Iterator<Integer> mentionIterator = mentions.iterator();
 		while (mentionIterator.hasNext()) {
+			String handle = allWordsInTweet[mentionIterator.next()];
+			
+			handle = handle.substring(1, handle.length());
+			long userId = QueryUser.getUserID(handle);
+			
 			StringBuilder sql = new StringBuilder("insert into tweet_mentions values(")
 						.append(tweet_id).append(",") 
-						.append(mentionIterator.next()).append(",") 
+						.append(userId).append(",") 
 						.append(System.currentTimeMillis()).append(")");
 			
 			logger.info("executing sql query in UpdateTweet addMentionsToDb: " + sql.toString());
@@ -104,12 +116,12 @@ public class UpdateTweet {
 		return mentionsInserted;
 	}
 
-	public static boolean likeTweet(long user, long tweetId) throws ClassNotFoundException, SQLException {
+	public static boolean likeTweet(long user, long tweetId ) throws ClassNotFoundException, SQLException {
 		long likedBy = user;
 		int likeInserted = insertInLikes(likedBy, tweetId);
 		
 		
-		int likesupdateInTweet = incrementTweetLikes(tweetId);
+		int likesupdateInTweet = incrementTweetLikes(tweetId );
 		
 		return likeInserted > 0 && likesupdateInTweet > 0;
 		
@@ -213,7 +225,7 @@ public class UpdateTweet {
 		Tweet tweet = QueryTweet.getTweetByTweetId(tweetId);
 		
 		ArrayList<String> hashtags = (ArrayList<String>) tweet.getHashtags();
-		ArrayList<Long> mentions = (ArrayList<Long>) tweet.getMentions();
+		ArrayList<Integer> mentions = (ArrayList<Integer>) tweet.getMentions();
 		
 		int retweetsDeleted = deleteRetweets(tweetId);
 		
@@ -247,9 +259,9 @@ public class UpdateTweet {
 		return SQLConnection.executeUpdate(sql.toString());
 	}
 
-	private static int deleteMentionsFromDb(long tweetId, ArrayList<Long> mentions) throws ClassNotFoundException, SQLException {
+	private static int deleteMentionsFromDb(long tweetId, ArrayList<Integer> mentions) throws ClassNotFoundException, SQLException {
 		int mentionsDeleted = 0;
-		Iterator<Long> mentionIterator = mentions.iterator();
+		Iterator<Integer> mentionIterator = mentions.iterator();
 		while (mentionIterator.hasNext()) {
 			StringBuilder sql = new StringBuilder("delete from mentions where tweet_id = ")
 					.append(tweetId);

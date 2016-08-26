@@ -152,7 +152,7 @@ public class QueryUser {
 		return null;
 	}
 	
-	public static User getUserDetails(long userId)
+	public static User getUserDetailsFromDb(long userId)
 			throws SQLException, ClassNotFoundException {
 		User user = new User();
 		StringBuilder query = new StringBuilder("select ud.user_id, a.email_id, a.name, a.handle, ud.follower_count,");
@@ -165,7 +165,11 @@ public class QueryUser {
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
 		if (rs.next()) {
 			// TODO log the result
-			user = getUserCredentials(userId);
+			//user = getUserCredentials(userId);
+			user.setUserId(rs.getLong(1));
+			user.setEmail(rs.getString(1));
+			user.setUserName(rs.getString(3));
+			user.setHandle(rs.getString(4));
 			user.setFollower(rs.getInt("follower_count"));
 			user.setFollowing(rs.getInt("following_count"));
 			user.setUserId(rs.getLong("user_id"));
@@ -365,5 +369,27 @@ public class QueryUser {
 			return (rs.getLong(1) == 0);
 		}
 		return false;
+	}
+
+	public static List<User> getAllUsersWithNameStartingWith(String usernameLike) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		StringBuilder query = new StringBuilder("select * from Authentication where handle like ")
+							.append("\'").append(usernameLike).append("%\'");
+		
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		logger.info("executing sql query : "+ query.toString());
+		
+		List<User> allUsers = new ArrayList<>();
+		while(rs.next()) {
+			User user = new User();
+			user.setUserName("name");
+			user.setHandle(rs.getString("handle"));
+			user.setUserId(rs.getLong("user_id"));
+			allUsers.add(user);
+			
+		}
+		
+		
+		return allUsers;
 	}
 }

@@ -45,7 +45,7 @@ public class TweetsWithHashtag extends HttpServlet {
 				startTime = Long.parseLong(request.getParameter("start_time"));
 			}
 			List<Tweet> tweetsForHashtag = services.tweet.TweetsWithHashtag.getTweetsOfHashtags(hashtag, startTime, latestTime);
-			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(tweetsForHashtag);
+			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(tweetsForHashtag , null);
 			response.setContentType("application/json");
 			response.getWriter().write(tweets.toString());
 		} catch (ClassNotFoundException | SQLException e) {

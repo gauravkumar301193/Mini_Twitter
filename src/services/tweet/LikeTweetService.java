@@ -8,9 +8,9 @@ import models.Tweet;
 import query.database.UpdateTweet;
 import response.util.CheckValidity;
 
-public class TweetLike {
+public class LikeTweetService {
 
-	static Logger logger = Logger.getLogger(TweetLike.class);
+	static Logger logger = Logger.getLogger(LikeTweetService.class);
 	public static boolean likeTweet(long userId, long tweetId) throws ClassNotFoundException, SQLException {
 		
 		if(CheckValidity.isValidTweet(tweetId)) {

@@ -1,6 +1,8 @@
 package request.controller.tweet;
 
 import models.Tweet;
+import query.database.QueryUser;
+
 import org.json.simple.JSONObject;
 import response.util.CreateJSONResponseTweets;
 import services.tweet.GetTweetsForUserProfile;
@@ -28,11 +30,16 @@ public class TweetsForUserProfile extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		try {
+			long userId = 0;
 			if (!request.getParameterMap().containsKey("user_id")) {
-				response.setStatus(500);
-				return;
+				if(request.getParameterMap().containsKey("handle")) {
+					String handle = request.getParameter("handle");
+					userId = QueryUser.getUserID(handle);
+				}
 			}
-			long userId = Long.parseLong(request.getParameter("user_id"));
+			else {
+				 userId = Long.parseLong(request.getParameter("user_id"));
+			}
 			long latestTime = System.currentTimeMillis();
 			long startTime = 0;
 			if (request.getParameterMap().containsKey("latest_time")) {
@@ -42,7 +49,7 @@ public class TweetsForUserProfile extends HttpServlet {
 				startTime = Long.parseLong(request.getParameter("start_time"));
 			}
 			List<Tweet> tweetsForProfile = GetTweetsForUserProfile.tweetsForUserProfile(userId, startTime, latestTime);
-			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(tweetsForProfile);
+			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(tweetsForProfile , userId);
 			response.setContentType("application/json");
 			response.getWriter().write(tweets.toString());
 		} catch (ClassNotFoundException | SQLException e) {

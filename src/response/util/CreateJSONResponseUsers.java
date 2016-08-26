@@ -1,14 +1,16 @@
 package response.util;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import models.User;
+import query.database.QueryUser;
 
 public class CreateJSONResponseUsers {
-	public static JSONObject jsonResponseUsers(List<User> users) {
+	public static JSONObject jsonResponseUsers(List<User> users) throws ClassNotFoundException, SQLException {
 		
 		JSONObject obj;
 		JSONArray allUsers = new JSONArray();
@@ -19,6 +21,13 @@ public class CreateJSONResponseUsers {
 			obj.put("handle", usr.getHandle());
 			obj.put("email", usr.getEmail());
 			
+//			boolean isFollowing= false;
+//			if(QueryUser.isConnection(userId, usr.getUserId())) {
+//				isFollowing = true;
+//			}
+//			
+//			obj.put("isFollowing" , isFollowing);
+			
 			allUsers.add(obj);
 		}
 		
@@ -26,6 +35,17 @@ public class CreateJSONResponseUsers {
 		mainObj.put("Users", allUsers);
 		
 		return mainObj;
+	}
+	
+	public static JSONObject jsonResponseOfSingleUser(User usr) {
+				
+			JSONObject obj = new JSONObject();
+			obj.put("userId", usr.getUserId());
+			obj.put("name", usr.getUserName());
+			obj.put("handle", usr.getHandle());
+			obj.put("email", usr.getEmail());
+			
+			return obj;
 	}
 }
 

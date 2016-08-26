@@ -38,7 +38,7 @@ public class AllFollowers extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try {
-			long userId = Long.parseLong(request.getParameter("user_id"));
+			long userId = Long.parseLong(request.getParameter("userId"));
 			List<User> followersList = GetAllFollowers.getAllFollowers(userId);
 			JSONObject jsonObjectOfFollowers = CreateJSONResponseUsers.jsonResponseUsers(followersList);
 			response.setContentType("application/json");

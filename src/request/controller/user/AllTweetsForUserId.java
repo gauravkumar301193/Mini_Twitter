@@ -40,21 +40,28 @@ public class AllTweetsForUserId extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			if (!request.getParameterMap().containsKey("user_id")) {
+			if (!request.getParameterMap().containsKey("userId")) {
+				
 				response.setStatus(500);
 				return;
 			}
-			long userId = Long.parseLong(request.getParameter("user_id"));
+			
+			
+			long userId = Long.parseLong(request.getParameter("userId"));
 			long latestTime = System.currentTimeMillis();
 			long startTime = 0;
-			if (request.getParameterMap().containsKey("latest_time")) {
-				latestTime = Long.parseLong(request.getParameter("latest_time"));
+			if (request.getParameterMap().containsKey("latestTime")) {
+				latestTime = Long.parseLong(request.getParameter("latestTime"));
 			}
-			if (request.getParameterMap().containsKey("start_time")) {
-				startTime = Long.parseLong(request.getParameter("start_time"));
+			if (request.getParameterMap().containsKey("startTime")) {
+				startTime = Long.parseLong(request.getParameter("startTime"));
 			}
+			
+			//response.getWriter().write("hello here");
 			List<Tweet> allTweetsForUser = GetAllTweetsForUserIdService.allTweetsForUserId(userId, startTime, latestTime);
-			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(allTweetsForUser);
+			
+			//System.out.println(allTweetsForUser.size());
+			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(allTweetsForUser, userId);
 			response.setContentType("application/json");
 			response.getWriter().write(tweets.toString());
 		} catch (ClassNotFoundException | SQLException e) {

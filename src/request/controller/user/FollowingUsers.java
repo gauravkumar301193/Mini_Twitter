@@ -33,7 +33,7 @@ public class FollowingUsers extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			long userId = Long.parseLong(request.getParameter("user_id"));
+			long userId = Long.parseLong(request.getParameter("userId"));
 			List<User> followersList = GetAllFollowingUsers.getAllFollowingUsers(userId);
 			JSONObject jsonObjectOfFollowers = CreateJSONResponseUsers.jsonResponseUsers(followersList);
 			response.setContentType("application/json");

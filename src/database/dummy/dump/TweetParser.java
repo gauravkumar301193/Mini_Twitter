@@ -20,11 +20,21 @@ public class TweetParser {
     private boolean retweet;
     private String[] spaceSeparatedWords;
 
-    private List<String> allWordsInTweet = new ArrayList<>();
+    
+
+	private List<String> allWordsInTweet = new ArrayList<>();
     private List<Integer> mentions = new ArrayList<>();
     private List<Integer> hashtags = new ArrayList<>();
     private List<Integer> urls = new ArrayList<>();
     private List<Integer> withoutSpaceWords = new ArrayList<>();
+    
+    public List<Integer> getWithoutSpaceWords() {
+		return withoutSpaceWords;
+	}
+
+	public void setWithoutSpaceWords(List<Integer> withoutSpaceWords) {
+		this.withoutSpaceWords = withoutSpaceWords;
+	}
 
     public String getUserName() {
         return userName;

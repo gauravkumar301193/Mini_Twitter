@@ -26,8 +26,9 @@ public class AuthenticateUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String emailId = "";
 		String password = "";
-		if (request.getParameterMap().containsKey("email_id")) {
-			emailId = request.getParameter("email_id");
+		System.out.println("here");
+		if (request.getParameterMap().containsKey("emailId")) {
+			emailId = request.getParameter("emailId");
 		} else {
 			logger.error("email id empty");
 			return;
@@ -41,7 +42,9 @@ public class AuthenticateUser extends HttpServlet {
 		}
 		try {
 			if (CheckUserCredentials.checkIfUserExists(emailId, password)) {
+				logger.info("Authentication success");
 				HttpSession session = request.getSession(true);
+				response.addHeader("Access-Control-Allow-Origin", "*");
 				response.setStatus(200);
 				session.setAttribute("email_id", emailId);
 				session.setAttribute("password", password);

@@ -1,6 +1,8 @@
 package response.util;
 
 import models.Tweet;
+import query.database.QueryTweet;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -12,13 +14,15 @@ import java.util.List;
 
 public class CreateJSONResponseTweets {
 
-	public static JSONObject jsonResponseTweet(List<Tweet> tweets)
+	public static JSONObject jsonResponseTweet(List<Tweet> tweets , Long userId)
 			throws ClassNotFoundException, SQLException {
 		
 		JSONObject obj;
 		JSONArray allTweets = new JSONArray();
 		for (Tweet twt : tweets) {
+			//System.out.println(twt.getTweetText());
 			TweetParser tp = new TweetParser(twt.getTweetText());
+			tp.parseTweet();
 			
 			obj = new JSONObject();
 			obj.put("tweetId", twt.getTweetId());
@@ -28,23 +32,44 @@ public class CreateJSONResponseTweets {
 			obj.put("content", twt.getTweetText());
 			obj.put("likes", twt.getLikeCount());
 			obj.put("retweetCount", twt.getRetweetCount());
-			obj.put("likes", twt.getLikeCount());
+			
+			boolean isLiked = false;
+			if(userId != null && CheckValidity.isValidUser(userId)){
+				isLiked = QueryTweet.checkIsLiked(userId, twt.getTweetId());
+			}
 			
 			JSONArray tweetText = new JSONArray();
 			List<String> wordsInTweet = tp.getAllWordsInTweet();
 			
+			//System.out.println("no of words in tweet :" + wordsInTweet.size() );
 			Iterator<String> wordsInTweetIter = wordsInTweet.iterator();
 	        while(wordsInTweetIter.hasNext()) {
-	        	tweetText.add(wordsInTweetIter.next());
-	            
+	        	JSONObject tweetWords = new JSONObject();
+	        	tweetWords.put("word", wordsInTweetIter.next());
+	            tweetText.add(tweetWords);      
 	        }
-	        obj.put("tweetText", tweetText);
-			if (twt.isRetweet()) {
+	        
+	        obj.put("tweetText",tweetText);
+	        
+	        JSONArray noSpaceSeparatedWords = new JSONArray();
+			List<Integer> noSpaceWordsList = tp.getWithoutSpaceWords();
+			
+			//System.out.println("no of words in tweet :" + wordsInTweet.size() );
+			Iterator<Integer> noSpaceWordsListIter = noSpaceWordsList.iterator();
+	        while(noSpaceWordsListIter.hasNext()) {
+	        	JSONObject withoutSpaceWords = new JSONObject();
+	        	withoutSpaceWords.put("withoutSpaceWordsIndex", noSpaceWordsListIter.next());
+	        	noSpaceSeparatedWords.add(withoutSpaceWords);      
+	        }
+	        
+	        obj.put("withoutSpaceWords", noSpaceSeparatedWords);
+	        
+		if (twt.isRetweet()) {
 				obj.put("retweet", true);
 				obj.put("retweetUserId", twt.getRetweetUserId());
 				obj.put("retweetHandle", twt.getRetweetHandle());
 			} 
-			obj.put("timestamp", twt.getTimestamp());
+
 			JSONArray mentions = new JSONArray();
 			JSONArray hashtags = new JSONArray();
 			
@@ -56,20 +81,22 @@ public class CreateJSONResponseTweets {
 			Iterator<Integer> hashtagsIter = hashtagsList.iterator();
 	        
 	        while(mentionsIter.hasNext()) {
-	            mentionsList.add(mentionsIter.next());
+	        	JSONObject mentionIndex = new JSONObject();
+	        	mentionIndex.put("index", mentionsIter.next());
+	            mentions.add(mentionIndex);
 	            
 	        }
 	        
-	        obj.put("mentions", mentionsList);
+	        obj.put("mentions",mentions);
 			
 	        while(hashtagsIter.hasNext()) {
-	            mentionsList.add(hashtagsIter.next());
-	            
+	        	JSONObject hashtagsIndex = new JSONObject();
+	        	hashtagsIndex.put("index", hashtagsIter.next());
+	            hashtags.add(hashtagsIndex);
 	        }
 	        
-	        obj.put("hashtags", hashtagsIter);
-			
-			
+	        obj.put("hashtags", hashtags);
+	        
 			allTweets.add(obj);
 		}
 		
@@ -80,9 +107,11 @@ public class CreateJSONResponseTweets {
 		
 	}
 	
-	public static JSONObject jsonResponseOfSingleTweet(Tweet twt) {
+	public static JSONObject jsonResponseOfSingleTweet(Tweet twt , Long userId) throws ClassNotFoundException, SQLException {
 		
 		TweetParser tp = new TweetParser(twt.getTweetText());
+		tp.parseTweet();
+		
 		JSONObject obj = new JSONObject();
 		obj.put("tweetId", twt.getTweetId());
 		obj.put("userHandle", twt.getHandle());
@@ -91,25 +120,45 @@ public class CreateJSONResponseTweets {
 		obj.put("content", twt.getTweetText());
 		obj.put("likes", twt.getLikeCount());
 		obj.put("retweetCount", twt.getRetweetCount());
-		obj.put("likes", twt.getLikeCount());
+	
 		
 		JSONArray tweetText = new JSONArray();
 		List<String> wordsInTweet = tp.getAllWordsInTweet();
 		
+		//System.out.println("no of words in tweet :" + wordsInTweet.size() );
 		Iterator<String> wordsInTweetIter = wordsInTweet.iterator();
         while(wordsInTweetIter.hasNext()) {
-        	tweetText.add(wordsInTweetIter.next());
-            
+        	JSONObject tweetWords = new JSONObject();
+        	tweetWords.put("word", wordsInTweetIter.next());
+            tweetText.add(tweetWords);      
         }
         
-        obj.put("tweetText", tweetText);
-		if (twt.isRetweet()) {
+        obj.put("tweetText",tweetText);
+        
+        JSONArray noSpaceSeparatedWords = new JSONArray();
+		List<Integer> noSpaceWordsList = tp.getWithoutSpaceWords();
+		
+		//System.out.println("no of words in tweet :" + wordsInTweet.size() );
+		Iterator<Integer> noSpaceWordsListIter = noSpaceWordsList.iterator();
+        while(noSpaceWordsListIter.hasNext()) {
+        	JSONObject withoutSpaceWords = new JSONObject();
+        	withoutSpaceWords.put("withoutSpaceWordsIndex", noSpaceWordsListIter.next());
+        	noSpaceSeparatedWords.add(withoutSpaceWords);      
+        }
+        
+        obj.put("withoutSpaceWords", noSpaceSeparatedWords);
+        
+	if (twt.isRetweet()) {
 			obj.put("retweet", true);
 			obj.put("retweetUserId", twt.getRetweetUserId());
 			obj.put("retweetHandle", twt.getRetweetHandle());
 		} 
-		
-		obj.put("timestamp", twt.getTimestamp());
+	
+		boolean isLiked = false;
+		if(userId != null && CheckValidity.isValidUser(userId)){
+			isLiked = QueryTweet.checkIsLiked(userId, twt.getTweetId());
+		}
+		obj.put("isLikedByUser", isLiked);
 		JSONArray mentions = new JSONArray();
 		JSONArray hashtags = new JSONArray();
 		
@@ -121,20 +170,22 @@ public class CreateJSONResponseTweets {
 		Iterator<Integer> hashtagsIter = hashtagsList.iterator();
         
         while(mentionsIter.hasNext()) {
-            mentionsList.add(mentionsIter.next());
+        	JSONObject mentionIndex = new JSONObject();
+        	mentionIndex.put("index", mentionsIter.next());
+            mentions.add(mentionIndex);
             
         }
         
-        obj.put("mentions", mentionsList);
+        obj.put("mentions",mentions);
 		
         while(hashtagsIter.hasNext()) {
-            mentionsList.add(hashtagsIter.next());
-            
+        	JSONObject hashtagsIndex = new JSONObject();
+        	hashtagsIndex.put("index", hashtagsIter.next());
+            hashtags.add(hashtagsIndex);
         }
         
-        obj.put("hashtags", hashtagsIter);
-		
-
+        obj.put("hashtags", hashtags);
+        
 		return obj;
 	}
 }

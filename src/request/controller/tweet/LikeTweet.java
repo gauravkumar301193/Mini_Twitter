@@ -16,7 +16,7 @@ import models.Tweet;
 import query.database.QueryTweet;
 import request.controller.session.AuthenticateUser;
 import response.util.CheckValidity;
-import services.tweet.TweetLike;
+import services.tweet.LikeTweetService;
 import services.user.RemoveUser;
 
 /**
@@ -57,11 +57,13 @@ public class LikeTweet extends HttpServlet {
 		//doGet(request, response);
 		String tweetLiked = "";
 		String likedBy = "";
+		
 		if (request.getParameterMap().containsKey("tweetId")) {
 		 tweetLiked = request.getParameter("tweetId");
 		}
 		else {
 			logger.error("tweet id empty");
+			return;
 		}
 		
 		if (request.getParameterMap().containsKey("tweetId")) {
@@ -69,29 +71,28 @@ public class LikeTweet extends HttpServlet {
 		}
 		else {
 			logger.error("user id empty");
+			return;
 		}
-		long tweetId =  Long.parseLong(tweetLiked); 
-		long userId =  Long.parseLong(likedBy); 
 		
+	
+		long tweetId =  Long.parseLong(tweetLiked); 
+		long likesByUserId =  Long.parseLong(likedBy); 
 		Tweet tweet;
 		boolean status = false;
 		try {
-			if(CheckValidity.isValidTweet(tweetId) && CheckValidity.isValidUser(userId)) {
-			//tweet = QueryTweet.getTweetByTweetId(tweetId);
-	
-		
-		
-			status = TweetLike.likeTweet(userId, tweetId);
+			
+			
+			status = LikeTweetService.likeTweet(likesByUserId, tweetId );
 			response.setContentType("text/html");
 			
 			if(status) {
 				response.getWriter().write("Tweet Liked");
 			}
 			else {
-				response.getWriter().write("Tweet can't be liked");
+					response.getWriter().write("Tweet can't be liked");
+				}
 			}
-			}
-			} catch (ClassNotFoundException | SQLException e) {
+			 catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				logger.error("SQl excetion occurred: " + e.getStackTrace());
 			}

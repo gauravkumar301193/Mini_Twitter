@@ -32,5 +32,14 @@ public class QueryMedia {
 		}
 		return null;
 	}
+
+	public static Long generateMediIdFromDb() throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select max(media_id) from media");
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		if(rs.next()) {
+			return rs.getLong(1);
+		}
+		return null;
+	}
 	
 }

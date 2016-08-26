@@ -95,10 +95,11 @@ public class PostTweet extends HttpServlet {
 		try {
 			
 			status = NewTweet.postTweet(tweet);
+			System.out.println(status);;
 			//response.getWriter().write("here post");
 			response.setContentType("text/html");
 			if(status) {
-				response.getWriter().write("Tweet Posted Successfully");
+				response.getWriter().write(tweet.getTweetId() + "");
 			}
 			else {
 				response.getWriter().write("Tweet can't be posted");

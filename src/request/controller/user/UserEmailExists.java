@@ -27,7 +27,7 @@ public class UserEmailExists extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
         //		response.getWriter().append("Served at: ").append(request.getContextPath());
-        String email = request.getParameter("email_id");
+        String email = request.getParameter("emailId");
         response.setContentType("text/html");
         try {
             if (QueryUser.checkEmailExists(email)) {

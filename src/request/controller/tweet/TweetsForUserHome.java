@@ -45,7 +45,7 @@ public class TweetsForUserHome extends HttpServlet {
 			if (CheckValidity.isValidUser(userId)) {
 				List<Tweet> listOfTweets = new ArrayList<>();
 				listOfTweets = services.tweet.TweetsForUserHome.getTweetsForUserHome(userId, startTime, latestTime);
-				JSONObject jsonObject = CreateJSONResponseTweets.jsonResponseTweet(listOfTweets);
+				JSONObject jsonObject = CreateJSONResponseTweets.jsonResponseTweet(listOfTweets ,userId);
 				response.setContentType("application/json");
 				response.getWriter().write(jsonObject.toString());
 			}

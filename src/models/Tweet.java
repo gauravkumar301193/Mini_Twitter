@@ -1,5 +1,7 @@
 package models;
 
+import java.sql.SQLException;
+
 /**
  * @author mayank.ra
  */
@@ -8,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import query.database.QueryTweet;
 
 public class Tweet {
 	private static final Logger logger = Logger.getLogger(Tweet.class);
@@ -22,16 +26,16 @@ public class Tweet {
 	private boolean retweet;
 	private long retweetUserId;
 	private List<String> hashtags;
-	private List<Long> mentions;
+	private List<Integer> mentions;
 	private String handle;
 	private String retweetHandle;
 	
-	private static long tweetIdGenerator = 9908028;
+	private static long tweetIdGenerator = 9908031;
 	
 	public Tweet() {
 		hashtags = new ArrayList<String>();
 		retweet = false;
-		mentions = new ArrayList<Long>();
+		mentions = new ArrayList<Integer>();
 	}
 
 	public long getRetweetUserId() {
@@ -109,21 +113,21 @@ public class Tweet {
 	public List<String> getHashtags() {
 		return hashtags;
 	}
-
+	
 	public void addHashtags(String hashtag) {
 		this.hashtags.add(hashtag);
 	}
 
-	public List<Long> getMentions() {
+	public List<Integer> getMentions() {
 		return mentions;
 	}
 
-	public void addMentions(long mentions) {
+	public void addMentions(Integer mentions) {
 		this.mentions.add(mentions);
 	}
 	
-	public static long generateTweetID() {
-		tweetIdGenerator ++;
+	public static long generateTweetID() throws ClassNotFoundException, SQLException {
+		tweetIdGenerator = QueryTweet.generateNewTweetId() + 1;
 		logger.info("New tweet id generated " + tweetIdGenerator);
 		return tweetIdGenerator;
 	}

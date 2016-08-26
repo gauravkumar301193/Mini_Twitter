@@ -340,18 +340,38 @@ public class QueryTweet {
 		List<Tweet> tweetsForParticularUser = new ArrayList<>();
 		
 		StringBuilder query = new StringBuilder("select * from tweets where user_id = ").append(userId)
-				.append(" and created_at between ").append(startTime).append(" and ").append(latestTime);
+				.append(" or tweet_id in (select tweet_id from retweets where user_id = ").append(userId).append(")").append(" and created_at between ").append(startTime).append(" and ").append(latestTime);
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		
 		while (rs.next()) {
+			
 			Tweet tweet = prepareTweetObject(rs);
-			if (tweet.getUserId() != userId) {
-				tweet.markRetweet();
-				tweet.setRetweetUserId(userId);
-			}
+			
 			tweetsForParticularUser.add(tweet);
 		}
+		//System.out.println(tweetsForParticularUser.size());
 		return tweetsForParticularUser;
+	}
+
+	public static boolean checkIsLiked(long userId, long tweetId) throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select * from likes where userId = ").append(userId)
+				.append(" and tweet_id = ").append(tweetId);
+		
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		if(rs.next()) {
+			return true;
+		}
+		return false;
+	}
+
+	public static long generateNewTweetId() throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select max(tweet_id) from tweets");
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		if(rs.next()) {
+			return rs.getLong(1);
+		}
+		return 0;
 	}
 
 	
