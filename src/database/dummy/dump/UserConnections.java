@@ -4,6 +4,7 @@ package database.dummy.dump;
  * @author mayank.ra
  */
 import java.math.BigInteger;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -28,7 +29,7 @@ public class UserConnections {
 					continue;
 				}
 				try {
-					int result = SQLConnection.executeUpdate(buildString(follower, user));
+					ResultSet result = SQLConnection.executeQuery(buildString(follower, user));
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					System.out.println("Couldn't execute " + buildString(follower, user));

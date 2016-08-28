@@ -31,7 +31,7 @@ public class AddRetweetToDb {
 		String filePath = pathOfFile;
 		try {
 			retweetBuffer = new BufferedReader(new FileReader(filePath));
-			statement = SQLConnection.getExecutableStatement();
+//			statement = SQLConnection.getExecutableStatement();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -77,6 +77,7 @@ public class AddRetweetToDb {
 						.append(tweetText)
 						.append("%\'");
 				System.out.println(sql.toString());
+//				ResultSet rs = SQLConnection.executeQuery(sql.toString());
 				ResultSet rs = SQLConnection.executeQuery(sql.toString());
 				
 				long tweetTime = 0, originalTweetId = 0;

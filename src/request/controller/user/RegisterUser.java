@@ -11,8 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 
 import models.User;
+import query.database.QueryUser;
+import response.util.CreateJSONResponseUsers;
 import services.user.AddNewUser;
 
 /**
@@ -26,8 +29,7 @@ import services.user.AddNewUser;
 @WebServlet("/RegisterUser")
 public class RegisterUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	static Logger logger = Logger.getLogger(RegisterUser.class); 
+	private static final Logger logger = Logger.getLogger(RegisterUser.class); 
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -55,24 +57,24 @@ public class RegisterUser extends HttpServlet {
 		String userName = "";
 		String handle = "";
 		String password = "";
-		String email = "";
+		String emailId = "";
 		
 		if(request.getParameterMap().containsKey("userName")) {
-		 userName = request.getParameter("userName");
+			userName = request.getParameter("userName");
 		}
 		else {
 			logger.error("userName empty");
 			return;
 		}
 		if(request.getParameterMap().containsKey("handle")) {
-		 handle = request.getParameter("handle");
+			handle = request.getParameter("handle");
 		}
 		else {
 			logger.error("handle empty");
 			return;
 		}
 		if(request.getParameterMap().containsKey("password")) {
-		 password = request.getParameter("password");
+			password = request.getParameter("password");
 		}
 		else {
 			logger.error("password empty");
@@ -80,7 +82,7 @@ public class RegisterUser extends HttpServlet {
 		}
 		
 		if(request.getParameterMap().containsKey("emailId")) {
-		 email = request.getParameter("emailId");
+			emailId = request.getParameter("emailId");
 		}
 		else {
 			logger.error("emailId empty");
@@ -89,28 +91,46 @@ public class RegisterUser extends HttpServlet {
 		
 		User user = new User();
 		
-		user.setEmail(email);
+		user.setEmail(emailId);
 		user.setHandle(handle);
 		user.setPassword(password);
 		user.setUserName(userName);
-		user.setUserId(User.generateUserID());
-		user.setLogout(0);
-		
-		boolean status = false;
-		
 		try {
+			user.setUserId(User.generateUserID());
+		} catch (ClassNotFoundException | SQLException e1) {
+			// TODO Auto-generated catch block
+			logger.error("can't generate userId");
+			e1.printStackTrace();
+			return;
+		}
+		user.setLogout(0);
+		user.setTweetCount(0);
+		user.setFollower(0);
+		user.setFollowing(0);
+		boolean status = false;
+		try {
+			response.addHeader("Access-Control-Allow-Origin", "*");
+			
+			
 			status = AddNewUser.addNewUser(user);
 			response.setContentType("text/html");
 			if(status) {
-				response.getWriter().write("User Added Successfully");
+				JSONObject jsonObject = CreateJSONResponseUsers.jsonResponseOfSingleUser(user , user.getUserId());
+				response.setStatus(200);
+				logger.info(jsonObject.toString());
+				response.setContentType("application/json");
+				response.getWriter().write(jsonObject.toString());				response.setContentType("text/html");
+//				response.getWriter().write("adasd");
+				logger.info("user added");
+				return;
 			}
 			else {
-				response.getWriter().write("User not added");
+				response.setStatus(404);
+				logger.info("user not added");
 			}
 			
 		} catch (ClassNotFoundException | SQLException e) {
-			logger.error("SQl excetion occurred: " + e.getStackTrace());
-			
+			logger.error("SQl excetion occurred: " + e.getStackTrace());			
 		}
 		 
 		

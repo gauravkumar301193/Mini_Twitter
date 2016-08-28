@@ -26,7 +26,12 @@ public class TweetParser {
     private List<Integer> mentions = new ArrayList<>();
     private List<Integer> hashtags = new ArrayList<>();
     private List<Integer> urls = new ArrayList<>();
-    private List<Integer> withoutSpaceWords = new ArrayList<>();
+    
+    public List<Integer> getUrls() {
+		return urls;
+	}
+
+	private List<Integer> withoutSpaceWords = new ArrayList<>();
     
     public List<Integer> getWithoutSpaceWords() {
 		return withoutSpaceWords;
@@ -224,9 +229,7 @@ public class TweetParser {
     }
 
     public static void main(String[] args) {
-        String tweet = "rondavies: RT @znmdthemovie: WATCH AND SHARE...GET A " +
-                "CHECK @khnhthemovie-https://www.google.com #greatMovie UP...MAKE SURE THE WOMEN #awesome" +
-                " AROUND YOU www.amazon.in/@media.net ARE CANCER FREE http://t.co/4xkitJIa";
+        String tweet = "mayankra: Thank you @ChloeS and @twittermedia team for the awesome gift! She's too young to Tweet but obviously loves it too. http://t.co/w7SQaZCQA5";
         String tweet2 = "rondavies: RT @RealRonHoward: “@jeca332: @RealRonHoward  I adore Hans Zimmers music.  He is amazing!”find his music @ #Rushmovie.com";
         TweetParser tp = new TweetParser(tweet);
 

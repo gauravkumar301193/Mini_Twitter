@@ -41,7 +41,7 @@ public class TweetsForUserHome {
 	
 	public static boolean checkValidInput(long userId, long startTime, long latestTime) 
 			throws ClassNotFoundException, SQLException {
-		if (CheckValidity.isValidUser(userId) && QueryUser.checkUserExists(userId)) {
+		if (CheckValidity.isValidUser(userId)) {
 			if (CheckValidity.isValidTime(startTime) && CheckValidity.isValidTime(latestTime)) {
 				if (startTime < latestTime) {
 					return true;

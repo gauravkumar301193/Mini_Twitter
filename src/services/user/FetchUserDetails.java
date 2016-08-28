@@ -22,5 +22,4 @@ public class FetchUserDetails {
 		
 		return null;
 	}
-
 }

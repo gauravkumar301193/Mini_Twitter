@@ -20,7 +20,7 @@ public class Tweet {
 	private long tweetId;
 	private long userId;
 	private long timestamp;
-	private long mediaId;
+	private Long mediaId;
 	private int likeCount;
 	private int retweetCount;
 	private boolean retweet;
@@ -86,11 +86,11 @@ public class Tweet {
 		this.timestamp = timestamp;
 	}
 	
-	public long getMediaId() {
+	public Long getMediaId() {
 		return mediaId;
 	}
 	
-	public void setMediaId(long mediaId) {
+	public void setMediaId(Long mediaId) {
 		this.mediaId = mediaId;
 	}
 	

@@ -53,39 +53,35 @@ public class UnfollowUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		String user = "";
-		String userToUnfollow = "";
-		if(request.getParameterMap().containsKey("user")) {
-		 user = request.getParameter("user");
+		Long userId = null;
+		Long loggedInUser = null;
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getParameterMap().containsKey("userId")) {
+		 userId = Long.parseLong(request.getParameter("userId"));
 		}
 		else {
 			logger.error("user empty");
 			return;
 		}
 		
-		if(request.getParameterMap().containsKey("userToUnfollow")) {
-		 userToUnfollow = request.getParameter("userToUnfollow");
+		if(request.getParameterMap().containsKey("loggedInUser")) {
+		 loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
 		}
 		else {
 			logger.error("user to unfollow empty");
 			return;
 		}
-		
-		long userId = Long.parseLong(user);
-		long userToFollowId = Long.parseLong(userToUnfollow);
-		
 		boolean status = false;
-		
 		try {
-			if(CheckValidity.isValidUser(userId) && CheckValidity.isValidUser(userToFollowId))
+			if(CheckValidity.isValidUser(userId) && CheckValidity.isValidUser(loggedInUser))
 			{
-				status = DeleteConnection.unfollowUser(userId, userToFollowId);
+				status = DeleteConnection.unfollowUser(loggedInUser, userId);
 				response.setContentType("text/html");
 				if(status) {
-					response.getWriter().write("Unfollowed Successfully");
+					response.setStatus(200);
 				}
 				else {
-					response.getWriter().write("Can't be unfollowed");
+					response.setStatus(503);
 				}
 			}
 		} catch (ClassNotFoundException | SQLException e) {

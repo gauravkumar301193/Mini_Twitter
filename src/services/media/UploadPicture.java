@@ -12,17 +12,6 @@ import query.database.UpdateMedia;
  */
 public class UploadPicture {
 
-	public static boolean uploadMedia(Media media) throws ClassNotFoundException, SQLException {
-		
-		if(media.getMediaId() > 0) {
-			 if(UpdateMedia.addMediaToDB(media)) {
-				 return true;
-			 }
-			 else {
-				 return false;
-			 }
-		}
-		return false;
-	}
+	
 
 }

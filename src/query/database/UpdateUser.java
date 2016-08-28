@@ -41,20 +41,26 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser insertIntoAuthentication : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	
 	}
 	
 	private static int insertIntoUserDetails(User user) throws ClassNotFoundException, SQLException {
-		StringBuilder sql = new StringBuilder("Insert into user_details(user_id, following_count , follower_count,logout) values(")
+		StringBuilder sql = new StringBuilder("Insert into user_details(user_id, following_count , follower_count,logout, tweets_count , handle) values(")
 				.append(user.getUserId()).append(SqlQuerySeparators.COMMA)
 				.append(user.getFollowing()).append(SqlQuerySeparators.COMMA)
-				.append(user.getFollower()).append(",").append(0).append(")");
+				.append(user.getFollower()).append(",")
+				.append(0).append(",")
+				.append(user.getTweetCount()).append(",")
+				.append(SqlQuerySeparators.DOUBLEQUOTE).append(user.getHandle()).append(SqlQuerySeparators.DOUBLEQUOTE)
+				.append(")");
 		
 
 		logger.info("executing sql query in UpdateUser insertIntoUserDetails : " + sql.toString());
 		
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	public static boolean followUser(long userId, long userToFollow) throws SQLException, ClassNotFoundException {
@@ -76,6 +82,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser incrementFollowerCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 
 	private static int addConnections(long user, long userToFollow) throws ClassNotFoundException, SQLException {
@@ -88,6 +95,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser addConnections : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int incrementFollowingCount(long user) throws ClassNotFoundException, SQLException {
@@ -98,6 +106,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser incrementFollowingCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	public static boolean unfollowUser(long user, long userToUnfollow) throws SQLException, ClassNotFoundException {
@@ -119,6 +128,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser decrementFollowerCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 
 	}
 
@@ -131,6 +141,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser updateConnectionEndTime : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int decrementFollowingCount(long user) throws ClassNotFoundException, SQLException {
@@ -138,9 +149,10 @@ public class UpdateUser {
 				.append(" where user_id = ") 
 				.append(user);
 
-		logger.info("executing sql query in UpdateUser decrementFollowingCount : " + sql.toString());
+//		logger.info("executing sql query in UpdateUser decrementFollowingCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	public static boolean deleteUser(long userId) throws ClassNotFoundException, SQLException {
@@ -185,6 +197,7 @@ public class UpdateUser {
 	
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 
 	}
 
@@ -194,6 +207,7 @@ public class UpdateUser {
 		
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int deleteConnections(long userId) throws ClassNotFoundException, SQLException {
@@ -203,6 +217,7 @@ public class UpdateUser {
 		
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 
 	}
 
@@ -211,6 +226,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteTweetMentions : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 
 	}
 	
@@ -219,6 +235,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteRetweets : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int deleteHashtags(long userId) throws ClassNotFoundException, SQLException {
@@ -227,6 +244,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteHashtags : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int deleteTweetMedia(long userId) throws ClassNotFoundException, SQLException {
@@ -235,6 +253,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteTweetMedia : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int deleteTweets(long userId) throws ClassNotFoundException, SQLException {
@@ -250,6 +269,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteTweets : " + sql.toString());
 		
 		return  SQLConnection.executeUpdate(sql.toString()) ;
+//		return SQLConnection.db.updateDb(sql.toString());
 		
 	}
 	
@@ -260,6 +280,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteTweetshashtags : " + sql.toString());
 		
 		return  SQLConnection.executeUpdate(sql.toString()) ;
+//		return SQLConnection.db.updateDb(sql.toString());
 		
 	}
 
@@ -270,6 +291,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteTweetsMentions : " + sql.toString());
 		
 		return  SQLConnection.executeUpdate(sql.toString()) ;
+//		return SQLConnection.db.updateDb(sql.toString());
 		}
 
 	private static int deleteUserMedia(long userId) throws ClassNotFoundException, SQLException {
@@ -279,6 +301,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteUserMedia : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int deleteUserDetails(long userId) throws ClassNotFoundException, SQLException {
@@ -288,6 +311,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteUserDetails : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int deleteFromAuthentication(long userId) throws ClassNotFoundException, SQLException {
@@ -296,6 +320,7 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser deleteFromAuthentication : " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	

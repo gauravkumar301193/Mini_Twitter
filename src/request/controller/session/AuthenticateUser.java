@@ -1,6 +1,11 @@
 package request.controller.session;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+
+import models.User;
+import query.database.QueryUser;
+import response.util.CreateJSONResponseUsers;
 import services.user.CheckUserCredentials;
 
 import javax.servlet.ServletException;
@@ -26,7 +31,6 @@ public class AuthenticateUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String emailId = "";
 		String password = "";
-		System.out.println("here");
 		if (request.getParameterMap().containsKey("emailId")) {
 			emailId = request.getParameter("emailId");
 		} else {
@@ -41,13 +45,23 @@ public class AuthenticateUser extends HttpServlet {
 			return;
 		}
 		try {
-			if (CheckUserCredentials.checkIfUserExists(emailId, password)) {
+			
+			Long userId = CheckUserCredentials.checkIfUserExists(emailId, password);
+			if (userId != null) {
 				logger.info("Authentication success");
+				User user = QueryUser.getUserDetailsFromDb(userId);
+
+				JSONObject jsonObject = CreateJSONResponseUsers.jsonResponseOfSingleUser(user, userId);
 				HttpSession session = request.getSession(true);
 				response.addHeader("Access-Control-Allow-Origin", "*");
 				response.setStatus(200);
+				
+				logger.info(jsonObject.toString());
 				session.setAttribute("email_id", emailId);
 				session.setAttribute("password", password);
+				session.setAttribute("userId", userId);
+				response.setContentType("application/json");
+				response.getWriter().write(jsonObject.toString());
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			logger.error("SQl excetion occurred: " + e.getStackTrace());

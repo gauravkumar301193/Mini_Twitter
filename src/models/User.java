@@ -6,7 +6,10 @@ package models;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import query.database.QueryUser;
 
 public class User {
     private String userName = "";
@@ -26,19 +29,26 @@ public class User {
 
 	private static long userIdGenerator = 9821980;
     
-    public int following = 0;
-    public int follower = 0;
+    public long following = 0;
+    public long follower = 0;
+	private int tweetCount;
+	
+	
     
 
-    public int getFollowing() {
+    public int getTweetCount() {
+		return tweetCount;
+	}
+
+	public long getFollowing() {
 		return following;
 	}
 
-	public void setFollowing(int following) {
-		this.following = following;
+	public void setFollowing(long l) {
+		this.following = l;
 	}
 
-	public int getFollower() {
+	public long getFollower() {
 		return follower;
 	}
 
@@ -100,9 +110,15 @@ public class User {
     	return userId;
     }
     
-    public static long generateUserID() {
-    	 userIdGenerator ++;
+    public static long generateUserID() throws ClassNotFoundException, SQLException {
+    	 userIdGenerator = QueryUser.generateUserId() + 1;
     	 return userIdGenerator;
     }
+
+	public void setTweetCount(int i) {
+		this.tweetCount = i;
+		// TODO Auto-generated method stub
+		
+	}
 }
 

@@ -11,57 +11,61 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SQLConnection {
-	public static Statement statement = null;
-
-	public static Statement getExecutableStatement() throws SQLException, ClassNotFoundException {
-		if (statement != null) 
-			return statement;
-		Class.forName("com.mysql.jdbc.Driver");
-		// TODO log: trying to establish connection on port 3306.
-		
-		Connection con = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/TwitterDatabase", "root", "");
-		// TODO log: the connection has been established
-		statement = con.createStatement();
-		return statement;
-	}
 	
-	public static Statement getExecutableStatement1() throws ClassNotFoundException, SQLException {
-		Statement st;
-		
-		Class.forName("com.mysql.jdbc.Driver");
-		// TODO log: trying to establish connection on port 3306.
-		Connection con = (Connection) DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/TwitterDatabase", "root", "");
-		// TODO log: the connection has been established
-		st = con.createStatement();
-		return st;
-		
-	}
-	
-	public static ResultSet executeQuery1(String sqlQuery) throws SQLException, ClassNotFoundException {
-	
-			Statement st = getExecutableStatement1();
-		
-		// TODO log: executing query: sqlQuery
-		return st.executeQuery(sqlQuery);
-	}
-	
+	public Connection conn;
+    private static Statement statement;
+    public static SQLConnection db;
+    private SQLConnection() {
+        
+        try {
+        	Class.forName("com.mysql.jdbc.Driver");
+    		
+    		conn = (Connection) DriverManager.getConnection(
+    				"jdbc:mysql://localhost:3306/TwitterDatabase", "root", "");
+          }
+        catch (Exception sqle) {
+            sqle.printStackTrace();
+        }
+    }
+   
+    public static synchronized SQLConnection getDbCon() {
+        if ( db == null ) {
+            db = new SQLConnection();
+        }
+        return db;
+    }
+ 
 	public static ResultSet executeQuery(String sqlQuery) throws SQLException, ClassNotFoundException {
-		if (statement == null) {
-			statement = getExecutableStatement();
+		if (db == null) {
+			db = getDbCon();
 		}
-		// TODO log: executing query: sqlQuery
+		statement = db.conn.createStatement();
+		
 		return statement.executeQuery(sqlQuery);
 	}
 	
 	
 	public static int executeUpdate(String sqlQuery) throws SQLException, ClassNotFoundException {
-		if (statement == null) {
-			statement = getExecutableStatement();
+		if (db == null) {
+			db = getDbCon();
 		}
 		// TODO log: executing query: sqlQuery
+		statement = db.conn.createStatement();
 		return statement.executeUpdate(sqlQuery);
 	}
 	
+	       
+//	    public ResultSet queryDb(String query) throws SQLException{
+//	        statement = db.conn.createStatement();
+//	        ResultSet res = statement.executeQuery(query);
+//	        return res;
+//	    }
+//	   
+//	    public int updateDb(String query) throws SQLException {
+//	        statement = db.conn.createStatement();
+//	        int result = statement.executeUpdate(query);
+//	        return result;
+//	    }
+//	 
 }
+	

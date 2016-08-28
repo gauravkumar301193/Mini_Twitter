@@ -29,7 +29,7 @@ public class QueryUser {
 		return false;
 	}
 	
-	public static boolean checkUserCredentials(String emailId, String password)
+	public static Long checkUserCredentials(String emailId, String password)
 			throws ClassNotFoundException, SQLException {
 		StringBuilder query = new StringBuilder("select * from authentication where email_id =")
 				.append(SqlQuerySeparators.DOUBLEQUOTE)
@@ -42,10 +42,11 @@ public class QueryUser {
 		
 		logger.info("Executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
-			return true;
+			return rs.getLong("user_id");
 		} 
-		return false;
+		return null;
 	}
 	
 	public static long getLastLogout(long userId) 
@@ -54,6 +55,7 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO logger statement to be added
 			return rs.getLong("logout");
@@ -67,6 +69,7 @@ public class QueryUser {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO log statement to be added
 			return rs.getString(1);
@@ -80,6 +83,7 @@ public class QueryUser {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO log the result
 			return rs.getLong("media_id");
@@ -93,6 +97,7 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO log the result
 			return rs.getInt("follower_count");
@@ -105,7 +110,9 @@ public class QueryUser {
 		String query = "select following_count from user_details where user_id=" + userId;
 
 		logger.info("executing sql query: " + query.toString());
+		
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO log the result
 			return rs.getInt("following_count");
@@ -119,6 +126,7 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO log the result
 			return rs.getLong("user_id");
@@ -132,6 +140,7 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO log the result
 			return rs.getString("password");
@@ -145,6 +154,7 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
 			// TODO log the result
 			return rs.getString("password");
@@ -163,16 +173,17 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
 			// TODO log the result
 			//user = getUserCredentials(userId);
-			user.setUserId(rs.getLong(1));
-			user.setEmail(rs.getString(1));
-			user.setUserName(rs.getString(3));
-			user.setHandle(rs.getString(4));
+			user.setUserId(rs.getLong("user_id"));
+			user.setEmail(rs.getString("email_id"));
+			user.setUserName(rs.getString("name"));
+			user.setHandle(rs.getString("handle"));
 			user.setFollower(rs.getInt("follower_count"));
 			user.setFollowing(rs.getInt("following_count"));
-			user.setUserId(rs.getLong("user_id"));
+			
 			return user;
 		} 
 		return null;
@@ -187,6 +198,7 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
 			// TODO log the result
 			user = prepareUserObject(rs);
@@ -200,10 +212,11 @@ public class QueryUser {
 			throws ClassNotFoundException, SQLException {
 		List<User> allFollowerIDs = new ArrayList<>();
 		StringBuilder query = new StringBuilder("select * from authentication where user_id in (");
-		query.append("select follower from connections where following=" + userId + " and end_time is NULL)");
+		query.append("select follower from connections where following=" + userId + " and end_time is NULL) order by handle");
 
 		logger.info("executing sql query: " + query.toString());		
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		while (rs.next()) {
 			// TODO log all the followers
 			allFollowerIDs.add(prepareUserObject(rs));
@@ -219,10 +232,11 @@ public class QueryUser {
 		stringBuilder.append("select * from Authentication where user_id in (");
 		stringBuilder.append("select following from connections where follower = ");
 		stringBuilder.append(userId);
-		stringBuilder.append(" and end_time is null)");
+		stringBuilder.append(" and end_time is null) order by handle");
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
 		while (rs.next()) {
 			// TODO log all the followers
 			allFollowingIDs.add(prepareUserObject(rs));
@@ -237,6 +251,7 @@ public class QueryUser {
 
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		while (rs.next()) {
 			allMentions.add(rs.getLong("user_id"));
 		}
@@ -255,6 +270,7 @@ public class QueryUser {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		RetweetModel retweet = new RetweetModel();
 		while(rs.next()) {
 			retweet.setTweetId(rs.getLong("tweet_id"));
@@ -276,7 +292,10 @@ public class QueryUser {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
+			logger.info("email doesn't exists");
+			
 			return true;
 		}
 		return false;
@@ -293,6 +312,7 @@ public class QueryUser {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
 			return true;
 		}
@@ -323,6 +343,7 @@ public class QueryUser {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		while(rs.next()) {
 			User user = new User();
 			user.setHandle(rs.getString("handle"));
@@ -339,32 +360,21 @@ public class QueryUser {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
 			return rs.getLong("logout_time");
 		}
 		return 0;
 	}
-
-	public static boolean isNoConnection(long userId, long userToFollowId) throws ClassNotFoundException, SQLException {
-		
-		StringBuilder query = new StringBuilder("select start_time from connections where follower = ");
-		query.append(userId).append(" and").append(" following = ").append(userToFollowId);
-		
-		logger.info("executing sql query: " + query.toString());
-		ResultSet rs = SQLConnection.executeQuery(query.toString());
-		if (rs.next()) {
-			return true;
-		}
-		return false;
-	}
 	
-	public static boolean isConnection(long userId, long userToFollowId) throws ClassNotFoundException, SQLException {
+	public static boolean isConnection(long userId1, long userId2) throws ClassNotFoundException, SQLException {
 		
 		StringBuilder query = new StringBuilder("select end_time from connections where follower = ");
-		query.append(userId).append(" and").append(" following = ").append(userToFollowId);
+		query.append(userId1).append(" and").append(" following = ").append(userId2);
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
 			return (rs.getLong(1) == 0);
 		}
@@ -374,16 +384,18 @@ public class QueryUser {
 	public static List<User> getAllUsersWithNameStartingWith(String usernameLike) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		StringBuilder query = new StringBuilder("select * from Authentication where handle like ")
-							.append("\'").append(usernameLike).append("%\'");
+							.append("\'").append(usernameLike).append("%\'").append(" limit 5");
 		
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		logger.info("executing sql query : "+ query.toString());
 		
 		List<User> allUsers = new ArrayList<>();
 		while(rs.next()) {
 			User user = new User();
-			user.setUserName("name");
+			user.setUserName(rs.getString("name"));
 			user.setHandle(rs.getString("handle"));
+			user.setEmail(rs.getString("email_id"));
 			user.setUserId(rs.getLong("user_id"));
 			allUsers.add(user);
 			
@@ -391,5 +403,34 @@ public class QueryUser {
 		
 		
 		return allUsers;
+	}
+
+
+	public static long generateUserId() throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select max(user_id) from authentication");
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
+
+		if(rs.next()) {
+			return rs.getLong(1);
+		}
+		
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public static String getUserHandle(long userId) throws ClassNotFoundException, SQLException {
+		
+		String query = "select handle from Authentication where user_id=" + userId;
+
+		logger.info("executing sql query: " + query.toString());
+		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
+
+		if (rs.next()) {
+			// TODO log the result
+			return rs.getString("handle");
+		}
+		return null;
 	}
 }

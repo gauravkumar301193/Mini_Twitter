@@ -52,40 +52,42 @@ public class FollowUser extends HttpServlet {
 		//doGet(request, response);
 		String follower = "";
 		String userToFollow = "";
-		
-		if(request.getParameterMap().containsKey("follower")) {
-		 follower = request.getParameter("follower");
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getParameterMap().containsKey("userId")) {
+		 userToFollow = request.getParameter("userId");
 		}
 		else {
 			logger.error("follower empty");
 			return;
 		}
-		if(request.getParameterMap().containsKey("following")) {
-		 userToFollow = request.getParameter("following");
+		if(request.getParameterMap().containsKey("loggedInUser")) {
+		 follower = request.getParameter("loggedInUser");
 		}
 		else {
 			logger.error("user to follow empty");
 			return;
 		}
 		//response.getWriter().print("hello from user");
-		long followerId = Long.parseLong(follower);
-		long userToFollowId = Long.parseLong(userToFollow);
+		long userId = Long.parseLong(userToFollow);
+		long loggedInUser = Long.parseLong(follower);
 		
 		boolean status = false;
 		
 		try {
-			if(CheckValidity.isValidUser(followerId) && CheckValidity.isValidUser(followerId)) {
-			status = CreateConnection.followUser(followerId, userToFollowId);
+			if(CheckValidity.isValidUser(userId) && CheckValidity.isValidUser(loggedInUser)) {
+			status = CreateConnection.followUser(loggedInUser, userId);
 			response.setContentType("text/html");
 			if(status) {
-				response.getWriter().write("Followed Successfully");
+				response.setStatus(200);
 			}
 			else {
-				response.getWriter().write("Can't be followed");
+				response.setStatus(503);
 			}
 		} 
 		}catch (ClassNotFoundException | SQLException e) {
+			
 			logger.error("SQl excetion occurred: " + e.getStackTrace());
+			response.setStatus(503);
 			
 		}
 		

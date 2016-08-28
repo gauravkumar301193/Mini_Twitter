@@ -33,7 +33,7 @@ public class AddTweetsToDB {
 		String filePath = pathOfFile;
 		try {
 			tweetBuffer = new BufferedReader(new FileReader(filePath));
-			statement = SQLConnection.getExecutableStatement();
+//			statement = SQLConnection.getExecutableStatement();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -92,6 +92,7 @@ public class AddTweetsToDB {
 		.append(tweet).append("\",").append(timestamp).append(",\"").append(userHandle).append("\")");
 		
 		SQLConnection.executeUpdate(query1.toString());
+//		SQLConnection.db.updateDb(query1.toString());
 	}
 	
 	public void insertIntoMentions(List<Long> mentionIds, int tweetId, long timestamp)
@@ -102,6 +103,7 @@ public class AddTweetsToDB {
 					.append(tweetId).append(",").append(iter.next()).append(",").append(timestamp).append(")");
 			
 			SQLConnection.executeUpdate(query.toString());
+//			SQLConnection.db.updateDb(query.toString());
 		}
 	}
 	
@@ -116,6 +118,7 @@ public class AddTweetsToDB {
 					.append("\",").append(tweetId).append(")");
 			
 			SQLConnection.executeUpdate(query.toString());
+//			SQLConnection.db.updateDb(query.toString());
 		}
 	}
 	

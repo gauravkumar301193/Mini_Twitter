@@ -12,11 +12,11 @@ import response.util.CheckValidity;
 public class PostRetweet {
 	
 	static Logger logger = Logger.getLogger(PostRetweet.class);
-	public static boolean retweetPost( long userId, long tweetId) throws ClassNotFoundException, SQLException {
+	public static boolean retweetPost( String loggedInUserHandle, long tweetId, long authorId, long loggedInUser) throws ClassNotFoundException, SQLException {
 		
-		if(CheckValidity.isValidUser(userId)) {
+		if(CheckValidity.isValidUser(loggedInUser)) {
 			if(CheckValidity.isValidTweet(tweetId)) {
-				return UpdateTweet.retweetPost(userId, tweetId);
+				return UpdateTweet.retweetPost(loggedInUserHandle, tweetId ,authorId, loggedInUser);
 			}
 			else {
 				logger.error("Wrong tweet id received: " + tweetId);
@@ -25,7 +25,7 @@ public class PostRetweet {
 			
 		}
 		else {
-			logger.error("Wrong user id received: " + userId);
+			logger.error("Wrong user id received: " + loggedInUser);
 			return false;
 		}
 		

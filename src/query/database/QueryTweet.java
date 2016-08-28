@@ -32,6 +32,7 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
 		List<Tweet> tweets = new ArrayList<Tweet>();
 		while (rs.next()) {
 			tweets.add(prepareTweetObject(rs));
@@ -47,10 +48,26 @@ public class QueryTweet {
 
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
+
 		if (rs.next()) {
 			return prepareTweetObject(rs);
 		}
 		return null;
+	}
+	
+	public static boolean checkRetweetForUser(Long tweetId, Long userId) 
+			throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select * from retweets where user_id =")
+				.append(userId)
+				.append(" and tweet_id = ")
+				.append(tweetId);
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
+		if (rs.next()) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static List<Tweet> getTweetsByUserId(long user_id) 
@@ -63,6 +80,8 @@ public class QueryTweet {
 
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+		
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
 		
 		while (rs.next()) {
 			allTweetsForUser.add(prepareTweetObject(rs));
@@ -81,6 +100,7 @@ public class QueryTweet {
 		stringBuilder.append(")");
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
 		while (rs.next()) {
 			allReTweets.add(prepareTweetObject(rs));
@@ -97,6 +117,8 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
+		
 		while(rs.next()) {
 			allhashtags.add(rs.getString("hash_name"));
 		}
@@ -115,6 +137,8 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
+		
 		while(rs.next()) {
 			allTweetsWithMention.add(prepareTweetObject(rs));
 		}
@@ -130,6 +154,8 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
+		
 		if (rs.next()) {
 			return rs.getInt(1);
 		}
@@ -148,6 +174,8 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
+		
 		if (rs.next()) {
 			return true;
 		}
@@ -168,6 +196,8 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
+		
 		while(rs.next()) {
 			allTweetsWithMention.add(prepareTweetObject(rs));
 		}
@@ -184,6 +214,7 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
 		if (rs.next()) {
 			return true;
 		}
@@ -196,6 +227,7 @@ public class QueryTweet {
 		
 		String query = generateQueryForUserProfile(userId, startTime, latestTime);
 		logger.info("executing sql query: " + query);
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query);
 		while (rs.next()) {
 			Tweet tweet = prepareTweetObject(rs);
@@ -243,6 +275,7 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		int likes = SQLConnection.executeUpdate(stringBuilder.toString());
+//		int likes = SQLConnection.db.updateDb(stringBuilder.toString());
 		return likes;
 	}
 	
@@ -252,7 +285,8 @@ public class QueryTweet {
 		String query = generateQueryForUserHome(userId, startTime, latestTime);
 
 		logger.info("executing sql query: " + query.toString());
-		ResultSet rs = SQLConnection.executeQuery(query);
+//		ResultSet rs = SQLConnection.db.queryDb(query);
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
 		while(rs.next()) {
 			Tweet currentTweet = prepareTweetObject(rs);
 			if (currentTweet.getUserId() != rs.getLong("user_id")) {
@@ -338,11 +372,13 @@ public class QueryTweet {
 
 	public static List<Tweet> getAllTweetsForParticularUser(long userId, long startTime, long latestTime) throws ClassNotFoundException, SQLException {
 		List<Tweet> tweetsForParticularUser = new ArrayList<>();
+	
+		StringBuilder query = new StringBuilder("select * from tweets where tweet_id in (select tweet_id from retweets where user_id = ").append(userId)
+				.append(" ) union all select * from tweets where user_id = ").append(userId).append(" order by created_at");
 		
-		StringBuilder query = new StringBuilder("select * from tweets where user_id = ").append(userId)
-				.append(" or tweet_id in (select tweet_id from retweets where user_id = ").append(userId).append(")").append(" and created_at between ").append(startTime).append(" and ").append(latestTime);
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		
 		while (rs.next()) {
 			
@@ -355,10 +391,11 @@ public class QueryTweet {
 	}
 
 	public static boolean checkIsLiked(long userId, long tweetId) throws ClassNotFoundException, SQLException {
-		StringBuilder query = new StringBuilder("select * from likes where userId = ").append(userId)
+		StringBuilder query = new StringBuilder("select * from likes where user_id = ").append(userId)
 				.append(" and tweet_id = ").append(tweetId);
 		
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if(rs.next()) {
 			return true;
 		}
@@ -368,10 +405,50 @@ public class QueryTweet {
 	public static long generateNewTweetId() throws ClassNotFoundException, SQLException {
 		StringBuilder query = new StringBuilder("select max(tweet_id) from tweets");
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if(rs.next()) {
 			return rs.getLong(1);
 		}
 		return 0;
+	}
+
+	public static long getTweetCount(long userId) 
+			throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select count(*) as cnt from tweets where user_id = ")
+				.append(userId);
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
+		if (rs.next()) {
+			return rs.getLong("cnt");
+		}
+		return 0;
+	}
+
+	public static List<String> getHashtags() throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select hash_name from hashtags group by hash_name order by count(hash_name) desc limit 5");
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
+		if(!rs.next()){
+			return null;
+		}
+		List<String> hashtags = new ArrayList<>();
+		while(rs.next()) {
+			hashtags.add(rs.getString("hash_name"));
+		}
+		return hashtags;
+	}
+
+	
+	public static boolean checkIsRetweetedByUser(Long userId, long tweetId) throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select * from retweets where user_id = ").append(userId)
+				.append(" and tweet_id = ").append(tweetId);
+		
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
+		if(rs.next()) {
+			return true;
+		}
+		return false;
 	}
 
 	

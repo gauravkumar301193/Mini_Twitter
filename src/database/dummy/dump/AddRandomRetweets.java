@@ -31,8 +31,8 @@ public class AddRandomRetweets {
 				long timeOriginalTweet = 0;
 				
 				StringBuilder query = new StringBuilder("select user_id, created_at from tweets where tweet_id = ").append(tweetId);
+				//ResultSet rs =  SQLConnection.executeQuery(query.toString());
 				ResultSet rs =  SQLConnection.executeQuery(query.toString());
-				
 				if(rs.next())
 				{
 					authorId = rs.getLong(1);
@@ -44,8 +44,10 @@ public class AddRandomRetweets {
 					continue;
 				}
 				try {
-					
+
 					int result = SQLConnection.executeUpdate(buildString(tweetId, userId, retweetTime, authorId));
+				
+//					int result = SQLConnection.executeUpdate(buildString(tweetId, userId, retweetTime, authorId));
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					System.out.println("Couldn't execute " + buildString(tweetId, userId, retweetTime, authorId));

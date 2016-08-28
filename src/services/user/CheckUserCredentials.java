@@ -10,13 +10,14 @@ import query.database.QueryUser;
 public class CheckUserCredentials {
 
 	static Logger logger = Logger.getLogger(CheckUserCredentials.class);
-	public static boolean checkIfUserExists(String emailId, String password) 
+	public static Long checkIfUserExists(String emailId, String password) 
 			throws ClassNotFoundException, SQLException {
-		if (QueryUser.checkUserCredentials(emailId, password)) {
-			return true;
+		Long userId = QueryUser.checkUserCredentials(emailId, password);
+		if (userId != null) {
+			return userId;
 		} else {
 			logger.error("user does not exists: " + emailId);
 		}
-		return false;
+		return null;
 	}
 }

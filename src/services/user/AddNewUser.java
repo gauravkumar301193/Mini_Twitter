@@ -20,7 +20,7 @@ public class AddNewUser {
 		String handle = user.getHandle();
 		logger.info("handle of user is: " + handle);
 		
-		if(!(QueryUser.checkEmailExists(email_id)) && !(QueryUser.checkHandleExists(email_id))){
+		if(!(QueryUser.checkEmailExists(email_id)) && !(QueryUser.checkHandleExists(handle))){
 			
 			if(UpdateUser.registerUser(user)) {
 				return true;

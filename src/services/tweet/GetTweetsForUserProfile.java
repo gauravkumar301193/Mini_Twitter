@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class GetTweetsForUserProfile {
 	
-	static Logger logger = Logger.getLogger(GetTweetsForUserProfile.class);
+	static Logger logger = Logger.getLogger(GetTweetsForUserProfileTest.class);
 	public static List<Tweet> tweetsForUserProfile(long userId, long startTime, long latestTime)
 			throws ClassNotFoundException, SQLException {
 		

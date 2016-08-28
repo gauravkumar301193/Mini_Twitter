@@ -30,24 +30,26 @@ public class UpdateTweet {
 	
 	public static boolean postTweet(Tweet tweetToAdd) throws ClassNotFoundException, SQLException {
 		
-		int mediaInserted = addMediaToDb(tweetToAdd);
 		int tweetInserted = addTweetToDb(tweetToAdd);
+		
 		TweetParser tp = new TweetParser(tweetToAdd.getTweetText());
+		tp.parseTweet();
 		
 		String[] listOfWords = tp.listToArrayOfWords(); 
 		
-		ArrayList<String> hashtags = (ArrayList<String>) tweetToAdd.getHashtags();
-		ArrayList<Integer> mentions = (ArrayList<Integer>) tweetToAdd.getMentions();
+		List<Integer> hashtags = tp.getHashtags();
+		List<Integer> mentions = tp.getMentions();
+		
 		long tweet_id = tweetToAdd.getTweetId();
 		
-		int hashtagsInserted = addHashtagsToDb(tweet_id, hashtags);
+		int hashtagsInserted = addHashtagsToDb(tweet_id, hashtags, listOfWords);
 		
 		int mentionsInserted = addMentionsToDb(tweet_id, mentions, listOfWords);
 		
 		return (tweetInserted > 0 || hashtagsInserted > 0 || mentionsInserted > 0);
 	}
 	
-	private static int addMediaToDb(Tweet tweetToAdd) {
+//	private static int addMediaToDb(Tweet tweetToAdd) {
 //		StringBuilder sql =new StringBuilder("insert into media values(")
 //				.append(tweetToAdd.getMediaId()).append(SqlQuerySeparators.DOUBLEQUOTE).append().append(",")
 //				.append(tweet_id).append(")");
@@ -55,8 +57,8 @@ public class UpdateTweet {
 //		logger.info("executing sql query in UpdateTweet addMediaToDb: " + sql.toString());
 //		
 //		return SQLConnection.executeUpdate(sql.toString());
-		return 0;
-	}
+//		return 0;
+//	}
 
 	public static int addTweetToDb(Tweet tweetToAdd) throws ClassNotFoundException, SQLException {
 		StringBuilder sql = new StringBuilder("Insert into tweets values( ")
@@ -72,20 +74,24 @@ public class UpdateTweet {
 		logger.info("executing sql query in UpdateTweet addTweetToDb: " + sql.toString());
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
-	public static int addHashtagsToDb(long tweet_id, ArrayList<String> hashtags) throws ClassNotFoundException, SQLException {
+	public static int addHashtagsToDb(long tweet_id, List<Integer> hashtags, String[] listOfWords) throws ClassNotFoundException, SQLException {
 		
 		int hashtagsInserted = 0;
-		Iterator<String> hashtagIterator = hashtags.iterator();
+		Iterator<Integer> hashtagIterator = hashtags.iterator();
 		while (hashtagIterator.hasNext()) {
+			String hashtag = listOfWords[hashtagIterator.next()];
+			hashtag = hashtag.substring(1, hashtag.length());
 			StringBuilder sql =new StringBuilder("insert into hashtags values(")
-					.append(SqlQuerySeparators.DOUBLEQUOTE).append(hashtagIterator.next()).append(SqlQuerySeparators.DOUBLEQUOTE).append(",")
+					.append(SqlQuerySeparators.DOUBLEQUOTE).append(hashtag).append(SqlQuerySeparators.DOUBLEQUOTE).append(",")
 					.append(tweet_id).append(")");
 			
 			logger.info("executing sql query in UpdateTweet addHashtagsToDb: " + sql.toString());
 			
 			hashtagsInserted += SQLConnection.executeUpdate(sql.toString());
+//			hashtagsInserted += SQLConnection.db.updateDb(sql.toString());
 			
 		}
 		
@@ -93,15 +99,16 @@ public class UpdateTweet {
  
 	}
 	
-	public static int addMentionsToDb(long tweet_id, ArrayList<Integer> mentions , String[] allWordsInTweet) throws ClassNotFoundException, SQLException {
+	public static int addMentionsToDb(long tweet_id, List<Integer> mentions , String[] allWordsInTweet) throws ClassNotFoundException, SQLException {
 		int mentionsInserted = 0;
 		
 		Iterator<Integer> mentionIterator = mentions.iterator();
+		long userId = 0;
+		String mention = "";
 		while (mentionIterator.hasNext()) {
-			String handle = allWordsInTweet[mentionIterator.next()];
-			
-			handle = handle.substring(1, handle.length());
-			long userId = QueryUser.getUserID(handle);
+			mention = allWordsInTweet[mentionIterator.next()];
+			mention = mention.substring(1, mention.length());
+			userId = QueryUser.getUserID(mention);
 			
 			StringBuilder sql = new StringBuilder("insert into tweet_mentions values(")
 						.append(tweet_id).append(",") 
@@ -110,6 +117,7 @@ public class UpdateTweet {
 			
 			logger.info("executing sql query in UpdateTweet addMentionsToDb: " + sql.toString());
 			mentionsInserted += SQLConnection.executeUpdate(sql.toString());
+//			mentionsInserted += SQLConnection.db.updateDb(sql.toString());
 			
 		}
 		
@@ -133,6 +141,7 @@ public class UpdateTweet {
 		logger.info("executing sql query in UpdateTweet incrementTweetLikes: " + sql.toString());
 
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 		
 	}
 
@@ -141,7 +150,7 @@ public class UpdateTweet {
 		Tweet tweet = QueryTweet.getTweetByTweetId(tweetId);
 		
 		StringBuilder sql = new StringBuilder("insert into likes values (")
-					.append(tweet.getTweetId()).append(",")
+					.append(tweetId).append(",")
 					.append(likedBy).append(",")
 					.append(tweet.getUserId()).append(",")
 					.append(System.currentTimeMillis()).append(")");
@@ -149,15 +158,13 @@ public class UpdateTweet {
 		logger.info("executing sql query in UpdateTweet insertInLikes: " + sql.toString());
 
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 		
 	}
 
-	public static boolean retweetPost(long userId, long tweetId) throws ClassNotFoundException, SQLException {
+	public static boolean retweetPost(String loggedInUserHandle, long tweetId, long authorId, long loggedInUser) throws ClassNotFoundException, SQLException {
 		
-		long retweetedBy = userId;
-		int insertedInRetweet = insertInRetweet(retweetedBy, tweetId);
-		
-		//long tweet_id = tweet.getTweetId();
+		int insertedInRetweet = insertInRetweet(loggedInUserHandle, tweetId, authorId, loggedInUser);
 		int retweetCountupdated = updateRetweetCount(tweetId);
 		
 		return retweetCountupdated > 0 && insertedInRetweet > 0;
@@ -170,41 +177,41 @@ public class UpdateTweet {
 
 		
 		return SQLConnection.executeUpdate(sql);
+//		return SQLConnection.db.updateDb(sql);
 	}
 
-	private static int insertInRetweet(long retweetedBy, long tweetId) throws ClassNotFoundException, SQLException {
+	private static int insertInRetweet(String loggedInUserHandle, long tweetId ,long authorId, long loggedInUser) throws ClassNotFoundException, SQLException {
 		
-		Tweet tweet = QueryTweet.getTweetByTweetId(tweetId);
 		StringBuilder sql = new StringBuilder("insert into retweets values (") 
-				.append(tweet.getTweetId()).append(",")
-				.append(retweetedBy).append(",")
+				.append(tweetId).append(",")
+				.append(loggedInUser).append(",")
 				.append(System.currentTimeMillis()).append(",")
-				.append(tweet.getUserId()).append(")");
+				.append(authorId).append(",")
+				.append("\"").append(loggedInUserHandle).append("\"").append(" )");
 		
 		logger.info("executing sql query in UpdateTweet insertInRetweet: " + sql.toString());
-
-		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 
-	public static boolean unlikeTweet(User user, Tweet tweet) throws ClassNotFoundException, SQLException {
-		long unlikedBy = user.getUserId();
-		long tweet_id = tweet.getTweetId();
-		int likeDeleted = deleteFromLikes(unlikedBy, tweet_id);
+	public static boolean unlikeTweet(long userId, long tweetId) throws ClassNotFoundException, SQLException {
 		
-		int likesupdateInTweet = decrementTweetLikes(tweet_id);
+		int likeDeleted = deleteFromLikes(userId, tweetId);
+		
+		int likesupdateInTweet = decrementTweetLikes(tweetId);
 		
 		return likeDeleted > 0 || likesupdateInTweet > 0;
 	}
 	
-	private static int decrementTweetLikes(long tweet_id) throws ClassNotFoundException, SQLException {
+	private static int decrementTweetLikes(long tweetId) throws ClassNotFoundException, SQLException {
 		
 		StringBuilder sql = new StringBuilder("Update tweets set likes = likes - 1 where tweet_id = ") 
-				.append(tweet_id);
+				.append(tweetId);
 	
 		logger.info("executing sql query in UpdateTweet decrementTweetLikes: " + sql.toString());
 
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 		
 	}
 
@@ -217,6 +224,7 @@ public class UpdateTweet {
 
 		
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 		
 	}
 
@@ -224,19 +232,28 @@ public class UpdateTweet {
 		
 		Tweet tweet = QueryTweet.getTweetByTweetId(tweetId);
 		
-		ArrayList<String> hashtags = (ArrayList<String>) tweet.getHashtags();
-		ArrayList<Integer> mentions = (ArrayList<Integer>) tweet.getMentions();
+		int mentionsDeleted = deleteMentionsFromDb(tweetId);
 		
 		int retweetsDeleted = deleteRetweets(tweetId);
 		
-		int mentionsDeleted = deleteMentionsFromDb(tweetId, mentions);
+		int hashtagsDeleted = deleteHashtagsFromDb(tweetId);
 		
-		int hashtagsDeleted = deleteHashtagsFromDb(tweetId, hashtags);
+		int likesDelted = deleteLikeForTweet(tweetId);
 		
 		int tweetDeleted = deleteTweetFromDb(tweetId);
 		
 		return (tweetDeleted > 0 || hashtagsDeleted > 0 || mentionsDeleted > 0);
 
+	}
+
+	private static int deleteLikeForTweet(long tweetId) throws ClassNotFoundException, SQLException {
+		StringBuilder sql = new StringBuilder("delete from likes where tweet_id = ")
+				.append(tweetId);
+		
+		logger.info("executing sql query in UpdateTweet deleteRetweets: " + sql.toString());
+
+		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 
 	private static int deleteRetweets(long tweetId) throws ClassNotFoundException, SQLException {
@@ -246,6 +263,7 @@ public class UpdateTweet {
 		logger.info("executing sql query in UpdateTweet deleteRetweets: " + sql.toString());
 
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	
 	}
 
@@ -257,40 +275,26 @@ public class UpdateTweet {
 		logger.info("executing sql query in UpdateTweet deleteTweetFromDb: " + sql.toString());
 
 		return SQLConnection.executeUpdate(sql.toString());
+//		return SQLConnection.db.updateDb(sql.toString());
 	}
 
-	private static int deleteMentionsFromDb(long tweetId, ArrayList<Integer> mentions) throws ClassNotFoundException, SQLException {
+	private static int deleteMentionsFromDb(long tweetId) throws ClassNotFoundException, SQLException {
 		int mentionsDeleted = 0;
-		Iterator<Integer> mentionIterator = mentions.iterator();
-		while (mentionIterator.hasNext()) {
-			StringBuilder sql = new StringBuilder("delete from mentions where tweet_id = ")
+		StringBuilder sql = new StringBuilder("delete from tweet_mentions where tweet_id = ")
 					.append(tweetId);
-			
-
 			logger.info("executing sql query in UpdateTweet deleteMentionsFromDb: " + sql.toString());
 
-			mentionsDeleted += SQLConnection.executeUpdate(sql.toString());
+			return SQLConnection.executeUpdate(sql.toString());
+//			return SQLConnection.db.updateDb(sql.toString());
 			
-		}
-		
-		return mentionsDeleted;
-		
 	}
 
-	private static int deleteHashtagsFromDb(long tweetId, ArrayList<String> hashtags) throws ClassNotFoundException, SQLException {
-
-		int hashtagsDeleted = 0;
-		Iterator<String> hashtagIterator = hashtags.iterator();
-		while (hashtagIterator.hasNext()) {
-			StringBuilder sql = new StringBuilder("delete from hashtags where tweet_id = ")
+	private static int deleteHashtagsFromDb(long tweetId) throws ClassNotFoundException, SQLException {
+		StringBuilder sql = new StringBuilder("delete from hashtags where tweet_id = ")
 						.append(tweetId);
-			
+			logger.info("executing sql query in UpdateTweet deleteHashtagsFromDb: " + sql.toString());
 
-			logger.info("executing sql query in UpdateTweet deleteMentionsFromDb: " + sql.toString());
-
-			hashtagsDeleted += SQLConnection.executeUpdate(sql.toString());
-			
-		}
-		return hashtagsDeleted;
+			return SQLConnection.executeUpdate(sql.toString());
+//			return SQLConnection.db.updateDb(sql.toString());
 	}
 }

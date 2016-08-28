@@ -16,7 +16,7 @@ public class CreateConnection {
 	static Logger logger = Logger.getLogger(CreateConnection.class);
 	public static boolean followUser(long userId, long userToFollowId) throws ClassNotFoundException, SQLException {
 		
-		if(!QueryUser.isNoConnection(userId, userToFollowId)) {
+		if(!QueryUser.isConnection(userId, userToFollowId)) {
 			return UpdateUser.followUser(userId, userToFollowId);
 		}
 		else {
