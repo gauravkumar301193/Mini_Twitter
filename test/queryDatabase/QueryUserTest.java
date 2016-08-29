@@ -2,68 +2,137 @@ package queryDatabase;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.junit.Test;
+
+import models.Tweet;
+import models.User;
+import query.database.QueryTweet;
+import query.database.QueryUser;
 
 public class QueryUserTest {
 
 	@Test
 	public void testCheckUserExists() {
-		fail("Not yet implemented");
+		try {
+		
+			assertTrue(QueryUser.checkUserExists(17));
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCheckUserExistsWhenUserNotPresent() {
+		try {
+		
+			assertFalse(QueryUser.checkUserExists(1));
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	@Test
-	public void testCheckUserCredentials() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testGetLastLogout() {
-		fail("Not yet implemented");
+		try {
+			long time = QueryUser.getLastLogout(913378);
+			assertEquals(Long.parseLong("1428109857056") ,time);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetUserEmail() {
-		fail("Not yet implemented");
+		try {
+			assertEquals("004Nadleeh@mail.com" ,QueryUser.getUserEmail(913378));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	@Test
-	public void testGetProfilePhotoID() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testGetFollowersCount() {
-		fail("Not yet implemented");
+		try {
+			assertEquals(6 ,QueryUser.getFollowersCount(17));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetFollowingCount() {
-		fail("Not yet implemented");
+		try {
+			assertEquals(2 ,QueryUser.getFollowingCount(17));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetUserID() {
-		fail("Not yet implemented");
+		try {
+			assertEquals(17 ,QueryUser.getUserID("ChloeS"));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetUserPasswordLong() {
-		fail("Not yet implemented");
+		try {
+			assertEquals("99200d237b07d6471431fd3f2973b53e" ,QueryUser.getUserPassword(17));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetUserPasswordString() {
-		fail("Not yet implemented");
+		try {
+			assertEquals("99200d237b07d6471431fd3f2973b53e" ,QueryUser.getUserPassword("ChloeS@mail.com"));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetUserDetailsFromDb() {
-		fail("Not yet implemented");
+		try {
+			User user = QueryUser.getUserDetailsFromDb(2);
+			assertEquals("RealRonHoward" , user.getHandle());
+			assertEquals(6 , user.getFollower());
+			assertEquals(2 , user.getFollowing());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetAllFollowers() {
-		fail("Not yet implemented");
+		try {
+			assertEquals(6 ,  QueryUser.getAllFollowers(2));
+			assertEquals(3 ,  QueryUser.getAllFollowers(10));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test

@@ -79,7 +79,6 @@ public class UnlikeATweet extends HttpServlet {
 				}
 			}
 			 catch (ClassNotFoundException | SQLException e) {
-				// TODO Auto-generated catch block
 				logger.error("SQl excetion occurred: " + e.getStackTrace());
 			}
 

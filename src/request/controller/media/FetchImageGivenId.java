@@ -57,16 +57,24 @@ public class FetchImageGivenId extends HttpServlet {
 		}
 		
 		try {
-			String imgName = request.getParameter("image");
+//			String imgName = request.getParameter("image");ssss
 			response.setContentType("image/png");
-			BufferedImage bi = ImageIO.read(new File(IMG_PATH + type + mediaId + ".png"));
+			File f = new File(IMG_PATH + type + mediaId + ".png");
+			BufferedImage bi ;
+			if(f.exists() && !f.isDirectory()) { 
+				 bi = ImageIO.read(f);
+			}
+			else {
+				f = new File(IMG_PATH + 0 + ".png");
+				bi = ImageIO.read(f);
+			}
 			OutputStream out = response.getOutputStream();
 			ImageIO.write(bi, "png", out);
 			out.close();
 		} catch (Exception e) {
 			
 		}
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 	/**

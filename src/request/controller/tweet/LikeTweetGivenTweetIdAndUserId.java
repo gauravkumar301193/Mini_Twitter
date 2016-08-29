@@ -92,8 +92,6 @@ public class LikeTweetGivenTweetIdAndUserId extends HttpServlet {
 				// TODO Auto-generated catch block
 				logger.error("SQl excetion occurred: " + e.getStackTrace());
 			}
-		
-		
 	}
 
 }

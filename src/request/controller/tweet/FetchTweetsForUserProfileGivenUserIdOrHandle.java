@@ -31,6 +31,7 @@ public class FetchTweetsForUserProfileGivenUserIdOrHandle extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		try {
+			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = 0;
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
 		
@@ -56,7 +57,7 @@ public class FetchTweetsForUserProfileGivenUserIdOrHandle extends HttpServlet {
 			List<Tweet> tweetsForProfile = GetTweetsForUserProfile.tweetsForUserProfile(userId, startTime, latestTime);
 			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(tweetsForProfile , loggedInUser);
 			response.setContentType("application/json");
-			response.addHeader("Access-Control-Allow-Origin", "*");
+			
 			response.setStatus(200);
 			response.getWriter().write(tweets.toString());
 		} catch (ClassNotFoundException | SQLException e) {

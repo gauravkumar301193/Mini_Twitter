@@ -75,7 +75,8 @@ public class CreateJSONResponseTweets {
         
         obj.put("noSpaceWords", noSpaceSeparatedWords);
         
-	if (twt.isRetweet()) {
+	
+        if (twt.isRetweet(twt.getTweetId())) {
 			obj.put("isARetweet", true);
 			obj.put("retweetUserId", twt.getRetweetUserId());
 			obj.put("retweetUserHandle", twt.getRetweetHandle());

@@ -232,7 +232,7 @@ public class QueryUser {
 		stringBuilder.append("select * from Authentication where user_id in (");
 		stringBuilder.append("select following from connections where follower = ");
 		stringBuilder.append(userId);
-		stringBuilder.append(" and end_time is null) order by handle");
+		stringBuilder.append(" and end_time = 0) order by handle");
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());

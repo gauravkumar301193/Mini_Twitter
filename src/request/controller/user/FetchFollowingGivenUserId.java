@@ -52,7 +52,7 @@ public class FetchFollowingGivenUserId extends HttpServlet {
 			response.setStatus(500);
 			// TODO log the error statement
 		}
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 }

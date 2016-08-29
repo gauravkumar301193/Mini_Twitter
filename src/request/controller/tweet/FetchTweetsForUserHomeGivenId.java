@@ -37,11 +37,17 @@ public class FetchTweetsForUserHomeGivenId extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = Long.parseLong(request.getParameter("userId"));
 			long latestTime = System.currentTimeMillis();
 			long startTime = 0;
 			if (request.getParameterMap().containsKey("latestTime")) {
-				latestTime = Long.parseLong(request.getParameter("latestTime"));
+				if (request.getParameter("latestTime") != "") {
+					latestTime = Long.parseLong(request.getParameter("latestTime"));
+				}
+			 else {
+				latestTime = System.currentTimeMillis();
+			}
 			}
 			if (request.getParameterMap().containsKey("startTime")) {
 				startTime = Long.parseLong(request.getParameter("startTime"));
@@ -57,7 +63,7 @@ public class FetchTweetsForUserHomeGivenId extends HttpServlet {
 				JSONObject jsonObject = CreateJSONResponseTweets.jsonResponseTweet(listOfTweets ,loggedInUser);
 				logger.info(jsonObject.toString());
 				response.setContentType("application/json");
-				response.addHeader("Access-Control-Allow-Origin", "*");
+				
 				response.setStatus(200);
 				response.getWriter().write(jsonObject.toString());
 			}

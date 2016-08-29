@@ -2,103 +2,342 @@ package queryDatabase;
 
 import static org.junit.Assert.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import org.junit.Test;
 
-public class QueryTweetTest {
+import database.dummy.dump.SQLConnection;
+import models.Tweet;
+import query.database.QueryTweet;
 
+public class QueryTweetTest {
+	
 	@Test
 	public void testGetTweetsWithHashtags() {
-		fail("Not yet implemented");
+		//StringBuilder query = new StringBuilder("select * from hashtags where hash_name = \'WeCantWait\' ");
+		try {
+			List<Tweet> tweets = QueryTweet.getTweetsWithHashtags("WeCantWait", 0, Long.parseLong("1472020664186"));
+			assertEquals(10, tweets.size());
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
+	@Test
+	public void testGetTweetsWithNoHashtag() {
+		try {
+			List<Tweet> tweets = QueryTweet.getTweetsWithHashtags("", 0, 1472020664);
+			assertEquals(0, tweets.size());
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Test
 	public void testGetTweetByTweetId() {
-		fail("Not yet implemented");
+		try {
+			Tweet twt = QueryTweet.getTweetByTweetId(42);
+			assertEquals(34, twt.getUserId());
+			assertEquals("OHMichael", twt.getHandle());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
-
+	
+	@Test
+	public void testGetTweetByTweetIdWhichIsNotPresent() {
+		try {
+			Tweet twt = QueryTweet.getTweetByTweetId(1);
+			assertTrue(twt==null);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	@Test
 	public void testCheckRetweetForUser() {
-		fail("Not yet implemented");
+		try {
+			 assertTrue(QueryTweet.checkRetweetForUser(Long.parseLong("8499846"), Long.parseLong("2649789")));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCheckRetweetForUserIfNotPresent() {
+		try {
+			 assertFalse(QueryTweet.checkRetweetForUser(Long.parseLong("8499845"), Long.parseLong("269789")));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetTweetsByUserId() {
-		fail("Not yet implemented");
+		try {
+			List<Tweet> twts = QueryTweet.getTweetsByUserId(17);
+			
+			assertEquals(28 , twts.size());
+			assertEquals(8 , (twts.get(0)).getTweetId());
+			assertEquals("ChloeS" , (twts.get(0)).getHandle());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
+	@Test
+	public void testGetTweetsByUserIdWhenUserNotPresent() {
+		try {
+			List<Tweet> twts = QueryTweet.getTweetsByUserId(1);
+			
+			assertEquals(0 , twts.size());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	@Test
 	public void testGetAllRetweetForUser() {
-		fail("Not yet implemented");
+		try {
+			List<Tweet> twts = QueryTweet.getAllRetweetForUser(17);
+			assertEquals(2 , twts.size());
+			assertEquals(7, twts.get(0).getTweetId());
+			assertEquals(1245255, twts.get(1).getTweetId());
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetAllRetweetForUserWhichIsNotPresent() {
+		try {
+			List<Tweet> twts = QueryTweet.getAllRetweetForUser(1);
+			assertEquals(0 , twts.size());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetAllHashtagInTweet() {
-		fail("Not yet implemented");
+		try {
+			List<String> hashtags = QueryTweet.getAllHashtagInTweet(2377281);
+			assertEquals(1 , hashtags.size());
+			assertEquals("fanforlife" , hashtags.get(0));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetAllHashtagInTweetWhenTweetIdNotPresent() {
+		try {
+			List<String> hashtags = QueryTweet.getAllHashtagInTweet(1);
+			assertEquals(0 , hashtags.size());
+		
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	
 	@Test
 	public void testGetAllTweetsWithUserMention() {
-		fail("Not yet implemented");
+		try {
+			List<Tweet> mentions = QueryTweet.getAllTweetsWithUserMention(17);
+			assertEquals(3 , mentions.size());
+			assertEquals(1245254 , mentions.get(0).getTweetId());
+			assertEquals(1245255 , mentions.get(1).getTweetId());
+			assertEquals(8168105 , mentions.get(2).getTweetId());
+		
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
+
+	@Test
+	public void testGetAllTweetsWithUserMentionWhenUserNotPresent() {
+		try {
+			List<Tweet> mentions = QueryTweet.getAllTweetsWithUserMention(1);
+			assertEquals(0 , mentions.size());
+		
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 	@Test
 	public void testGetAllLikesForTweet() {
-		fail("Not yet implemented");
+		try {
+			long likes = QueryTweet.getAllLikesForTweet(21);
+			assertEquals(2, likes);
+		
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
+	
 	@Test
-	public void testCheckUserLikeOnTweet() {
-		fail("Not yet implemented");
+	public void testGetAllLikesForTweetWhenTweetNotPresent() {
+		try {
+			long likes = QueryTweet.getAllLikesForTweet(1);
+			assertEquals(0, likes);
+		
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
 
+	
 	@Test
 	public void testGetMentionsAfterTimestamp() {
-		fail("Not yet implemented");
+		
+		try {
+			List<Tweet> twts = QueryTweet.getMentionsAfterTimestamp(0, 2);
+			assertEquals(61, twts.size());
+		
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testGetMentionsAfterTimestampWhenUserNotPresent() {
+		
+		try {
+			List<Tweet> twts = QueryTweet.getMentionsAfterTimestamp(0, 0);
+			assertEquals(0, twts.size());
+		
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testCheckIfRetweet() {
-		fail("Not yet implemented");
+		try {
+			assertTrue(QueryTweet.checkIfRetweet(7, 17));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
+	
+	@Test
+	public void testCheckIfRetweetWhenTweetNotPresent() {
+		try {
+			assertFalse(QueryTweet.checkIfRetweet(1, 17));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Test
 	public void testGetTweetsForUserProfile() {
-		fail("Not yet implemented");
+		try {
+			List<Tweet> twts = QueryTweet.getTweetsForUserProfile(32, 0, Long.parseLong("1472020664186"));
+			assertEquals(20 , twts.size());
+			assertEquals(860353 , twts.get(0).getTweetId());
+		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetLikesAfterTimestamp() {
-		fail("Not yet implemented");
+		try {
+			int likes = QueryTweet.getLikesAfterTimestamp(0, 17);
+			assertEquals(0, likes);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetAllTweetsForUserHome() {
-		fail("Not yet implemented");
+		try {
+			List<Tweet> twts = QueryTweet.getAllTweetsForParticularUser(17, 0, Long.parseLong("1472020664186"));
+			assertEquals(30, twts.size());
+		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Test
 	public void testCheckTweetExists() {
-		fail("Not yet implemented");
+		try {
+				assertTrue(QueryTweet.checkTweetExists(1245255));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetAllTweetsForParticularUser() {
-		fail("Not yet implemented");
+		try {
+			List<Tweet> twts = QueryTweet.getAllTweetsForParticularUser(17, 0, Long.parseLong("1472020664186"));
+			assertEquals(30, twts.size());
+		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testCheckIsLiked() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGenerateNewTweetId() {
-		fail("Not yet implemented");
+		try {
+			assertTrue(QueryTweet.checkIsLiked(2156245, 8839862));
+		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetTweetCount() {
-		fail("Not yet implemented");
+		try {
+			long count = QueryTweet.getTweetCount(2156245);
+			assertEquals(19, count);
+		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -39,7 +39,8 @@ public class FetchFiveMostUsedHashtags extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try {
-			
+			response.setContentType("application/json");
+			response.addHeader("Access-Control-Allow-Origin", "*");
 			List<String> trendingHashtags = GetHashtags.getTrendingHashtags();
 			
 			Long loggedInUserId = (Long) request.getSession().getAttribute("userId");
@@ -47,8 +48,7 @@ public class FetchFiveMostUsedHashtags extends HttpServlet {
 				response.setStatus(404);
 			}
 			JSONObject jsonObjectOfHashtags = CreateJSONResponseHashtags.jsonResponseHashtags(trendingHashtags);
-			response.setContentType("application/json");
-			response.addHeader("Access-Control-Allow-Origin", "*");
+			
 			response.setStatus(200);
 			response.getWriter().write(jsonObjectOfHashtags.toString());
 		} catch (ClassNotFoundException | SQLException e) {
@@ -58,7 +58,6 @@ public class FetchFiveMostUsedHashtags extends HttpServlet {
 			response.setStatus(500);
 			// TODO log the error statement
 		}
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**

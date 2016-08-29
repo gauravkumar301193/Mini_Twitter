@@ -38,7 +38,7 @@ public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		try {
 			if (!request.getParameterMap().containsKey("userId")) {
 				
@@ -50,9 +50,6 @@ public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 			long userId = Long.parseLong(request.getParameter("userId"));
 			long latestTime = System.currentTimeMillis();
 			long startTime = 0;
-			if (request.getParameterMap().containsKey("latestTime")) {
-				latestTime = Long.parseLong(request.getParameter("latestTime"));
-			}
 			if (request.getParameterMap().containsKey("startTime")) {
 				startTime = Long.parseLong(request.getParameter("startTime"));
 			}
@@ -68,7 +65,7 @@ public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(allTweetsForUser, loggedInUser);
 			response.setContentType("application/json");
 			
-			response.addHeader("Access-Control-Allow-Origin", "*");
+		
 			response.setStatus(200);
 			response.getWriter().write(tweets.toString());
 		} catch (ClassNotFoundException | SQLException e) {
@@ -78,7 +75,6 @@ public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 			response.setStatus(500);
 			e.printStackTrace();
 		}
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**

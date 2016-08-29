@@ -32,7 +32,6 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
-//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
 		List<Tweet> tweets = new ArrayList<Tweet>();
 		while (rs.next()) {
 			tweets.add(prepareTweetObject(rs));
@@ -287,6 +286,7 @@ public class QueryTweet {
 		logger.info("executing sql query: " + query.toString());
 //		ResultSet rs = SQLConnection.db.queryDb(query);
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		logger.info("executing sql query: " + query.toString());
 		while(rs.next()) {
 			Tweet currentTweet = prepareTweetObject(rs);
 			if (currentTweet.getUserId() != rs.getLong("user_id")) {
@@ -356,7 +356,7 @@ public class QueryTweet {
 				.append(" and ")
 				.append(latestTime)
 				.append(" ) order by created_at desc limit 40) as c ) as final on t.tweet_id = final.tweet_id order by final.created_at desc limit 40");
-		return query.toString();
+			return query.toString();
 	}
 
 	public static boolean checkTweetExists(long tweetId) throws ClassNotFoundException, SQLException {
@@ -374,7 +374,7 @@ public class QueryTweet {
 		List<Tweet> tweetsForParticularUser = new ArrayList<>();
 	
 		StringBuilder query = new StringBuilder("select * from tweets where tweet_id in (select tweet_id from retweets where user_id = ").append(userId)
-				.append(" ) union all select * from tweets where user_id = ").append(userId).append(" order by created_at");
+				.append(" order by created_at desc) union all select * from tweets where user_id = ").append(userId).append(" order by created_at desc");
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
@@ -451,5 +451,6 @@ public class QueryTweet {
 		return false;
 	}
 
+	
 	
 }

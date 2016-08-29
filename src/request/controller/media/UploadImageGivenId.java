@@ -22,7 +22,7 @@ import services.media.MediaIdGenerator;
 /**
  * Servlet implementation class UploadImageGivenUserId
  */
-@WebServlet("/UploadImageGivenUserId")
+@WebServlet("/UploadImageGivenId")
 public class UploadImageGivenId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(UploadImageGivenId.class);
@@ -59,23 +59,23 @@ public class UploadImageGivenId extends HttpServlet {
 					logger.error("Type not defined");
 					return;
 				}
-				if(request.getParameterMap().containsKey("mediaId")) {
-					mediaId = Long.parseLong(request.getParameter("mediaId"));
-				}
-				else {
-					logger.error("media Id empty");
-					return;
-				}
+//				if(request.getParameterMap().containsKey("mediaId")) {
+//					mediaId = Long.parseLong(request.getParameter("mediaId"));
+//				} else {
+//					logger.error("media Id empty");
+//					return;
+//				}
 				//response.getWriter().print("hello from user")
 				
 		if(ServletFileUpload.isMultipartContent(request)) {
             try {
+            	logger.info("uploading image to " + IMG_PATH);
                 List<FileItem> multiparts = new ServletFileUpload(
                                          new DiskFileItemFactory()).parseRequest(request);
                 for(FileItem item : multiparts){
                     if(!item.isFormField()){
                         String name = new File(item.getName()).getName();
-                        item.write( new File(IMG_PATH + type + mediaId + ".png"));
+                        item.write( new File(IMG_PATH + type + ".png"));
                     }
                 }
         		response.setStatus(200);

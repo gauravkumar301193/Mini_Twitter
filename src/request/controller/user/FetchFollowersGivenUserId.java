@@ -37,6 +37,7 @@ public class FetchFollowersGivenUserId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		try {
 			long userId = Long.parseLong(request.getParameter("userId"));
 			List<User> followersList = GetAllFollowers.getAllFollowers(userId);
@@ -47,7 +48,6 @@ public class FetchFollowersGivenUserId extends HttpServlet {
 			}
 			JSONObject jsonObjectOfFollowers = CreateJSONResponseUsers.jsonResponseUsers(followersList, loggedInUser);
 			response.setContentType("application/json");
-			response.addHeader("Access-Control-Allow-Origin", "*");
 			response.setStatus(200);
 			response.getWriter().write(jsonObjectOfFollowers.toString());
 		} catch (ClassNotFoundException | SQLException e) {
@@ -57,6 +57,5 @@ public class FetchFollowersGivenUserId extends HttpServlet {
 			response.setStatus(500);
 			// TODO log the error statement
 		}
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 }

@@ -42,23 +42,26 @@ public class GetBestMatchingUserGivenPattern extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String textPattern = "";
+		response.setContentType("application/json");
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		
 		try {
 			if (request.getParameterMap().containsKey("textPattern")) {
 				textPattern = request.getParameter("textPattern");
 			}
 			
+				Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
+			
 			//System.out.println(usernameLike);
 				List<User> listOfUsers = new ArrayList<>();
+				//System.out.println("Hello gaurav");
 				listOfUsers = SuggestedUsersService.getAllUsersForUsername(textPattern);
-				Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
+				
 				if (loggedInUser != null) {
 					response.setStatus(404);
 				}
 				
 				JSONObject jsonObject = CreateJSONResponseUsers.jsonResponseUsers(listOfUsers, loggedInUser);
-				response.setContentType("application/json");
-				response.addHeader("Access-Control-Allow-Origin", "*");
 				response.setStatus(200);
 				response.getWriter().write(jsonObject.toString());
 			
@@ -69,14 +72,6 @@ public class GetBestMatchingUserGivenPattern extends HttpServlet {
 			response.setStatus(500);
 			// TODO log
 		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

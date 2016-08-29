@@ -43,17 +43,14 @@ public class FetchUserDetailsGivenUserId extends HttpServlet {
 		try {
 			Long userId = null;
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
-			//System.out.println("here2");
 			if (!request.getParameter("userId").equals("")) {
 				userId = Long.parseLong(request.getParameter("userId"));
 				logger.info("userID :" + userId);
 			}
 			User user = null;
 			if(userId == null){
-				//System.out.println("here4");
 				String handle = request.getParameter("handle");
 				userId = QueryUser.getUserID(handle);
-				//System.out.println("here2");
 				if (userId == null) {
 					response.setStatus(404);
 					return;

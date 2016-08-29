@@ -30,12 +30,14 @@ public class FetchTweetsForHashtagGivenHashtag extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json");
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		try {
-			if (!request.getParameterMap().containsKey("hashtag")) {
+			if (!request.getParameterMap().containsKey("userId")) {
 				response.setStatus(500);
 				return;
 			}
-			String hashtag = request.getParameter("hashtag");
+			String hashtag = request.getParameter("userId");//userId is basically hashtag
 			long latestTime = System.currentTimeMillis();
 			long startTime = 0;
 			if (request.getParameterMap().containsKey("latestTime")) {
@@ -50,8 +52,7 @@ public class FetchTweetsForHashtagGivenHashtag extends HttpServlet {
 			}
 			List<Tweet> tweetsForHashtag = services.tweet.TweetsWithHashtag.getTweetsOfHashtags(hashtag, startTime, latestTime);
 			JSONObject tweets = CreateJSONResponseTweets.jsonResponseTweet(tweetsForHashtag , loggedInUser);
-			response.setContentType("application/json");
-			response.addHeader("Access-Control-Allow-Origin", "*");
+			
 			response.setStatus(200);
 			response.getWriter().write(tweets.toString());
 		} catch (ClassNotFoundException | SQLException e) {
