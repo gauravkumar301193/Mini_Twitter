@@ -38,8 +38,9 @@ public class CreateJSONResponseTweets {
 	public static JSONObject jsonResponseOfSingleTweet(Tweet twt , Long userId) throws ClassNotFoundException, SQLException {
 		
 		TweetParser tp = new TweetParser(twt.getTweetText());
+		if(tp != null) {
 		tp.parseTweet();
-		
+		}
 		JSONObject obj = new JSONObject();
 		obj.put("tweetId", twt.getTweetId());
 		obj.put("authorHandle", twt.getHandle());
@@ -76,7 +77,7 @@ public class CreateJSONResponseTweets {
         obj.put("noSpaceWords", noSpaceSeparatedWords);
         
 	
-        if (twt.isRetweet(twt.getTweetId())) {
+        if (twt.isRetweet()) {
 			obj.put("isARetweet", true);
 			obj.put("retweetUserId", twt.getRetweetUserId());
 			obj.put("retweetUserHandle", twt.getRetweetHandle());
@@ -92,7 +93,8 @@ public class CreateJSONResponseTweets {
 		if(userId != null && CheckValidity.isValidUser(userId)){
 			isLiked = QueryTweet.checkIsRetweetedByUser(userId, twt.getTweetId());
 		}
-		obj.put("isRetweetedByLoggedInUser", isRetweetedByLoggedInUser);
+		
+		//obj.put("isRetweetedByLoggedInUser", isRetweetedByLoggedInUser);
 
 		JSONArray mentions = new JSONArray();
 		JSONArray hashtags = new JSONArray();

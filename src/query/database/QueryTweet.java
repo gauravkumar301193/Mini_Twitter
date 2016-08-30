@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import database.dummy.dump.SQLConnection;
 
 import models.*;
+import response.util.CheckValidity;
 
 /**
  * @author mayank.ra
@@ -267,15 +268,18 @@ public class QueryTweet {
 	public static int getLikesAfterTimestamp(long timestamp, long userId) 
 			throws ClassNotFoundException, SQLException {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("select count(*) from likes where user_id=");
+		stringBuilder.append("select count(*) from likes where author_id = ");
 		stringBuilder.append(userId);
 		stringBuilder.append(" and timestamp >");
 		stringBuilder.append(timestamp);
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
-		int likes = SQLConnection.executeUpdate(stringBuilder.toString());
-//		int likes = SQLConnection.db.updateDb(stringBuilder.toString());
-		return likes;
+		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
+		
+		if(rs.next()) {
+			return (int) rs.getLong(1);
+		}
+		return 0;
 	}
 	
 	public static List<Tweet> getAllTweetsForUserHome(long userId, long startTime, long latestTime)
@@ -286,21 +290,24 @@ public class QueryTweet {
 		logger.info("executing sql query: " + query.toString());
 //		ResultSet rs = SQLConnection.db.queryDb(query);
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
-		logger.info("executing sql query: " + query.toString());
+		logger.info("executing sql query2: " + query.toString());
 		while(rs.next()) {
+			if(rs.next()){
 			Tweet currentTweet = prepareTweetObject(rs);
 			if (currentTweet.getUserId() != rs.getLong("user_id")) {
 				currentTweet.markRetweet();
 				currentTweet.setRetweetUserId(rs.getLong("user_id"));
 			}
 			tweetsForHomepage.add(currentTweet);
+			}
 		}
 		return tweetsForHomepage;
 	}
 
-	private static Tweet prepareTweetObject(ResultSet rs) throws SQLException {
+	private static Tweet prepareTweetObject(ResultSet rs) throws SQLException, ClassNotFoundException {
 		Tweet tweet = new Tweet();
 		tweet.setLikeCount(rs.getInt("likes"));
+		
 		tweet.setMediaId(rs.getLong("media_id"));
 		tweet.setRetweetCount(rs.getInt("retweet_count"));
 		tweet.setTimestamp(rs.getLong("created_at"));
@@ -308,54 +315,65 @@ public class QueryTweet {
 		tweet.setUserId(rs.getLong("user_id"));
 		tweet.setTweetId(rs.getLong("tweet_id"));
 		tweet.setHandle(rs.getString("handle"));
+		logger.info("retweetUser is "  + rs.getLong("retweetUser"));
+		System.out.println(rs.getLong("retweetUser"));
+		if(rs.getLong("user_id") != rs.getLong("retweetUser")) {
+			tweet.markRetweet();
+			tweet.setRetweetUserId(rs.getLong("retweetUser"));
+			tweet.setRetweetHandle(QueryUser.getUserHandle(rs.getLong("retweetUser")));
+		
+		}
+		
 		return tweet;
+		
 	}
 	
 	private static String generateQueryForUserHome(long userId, long startTime, long latestTime) {
-		StringBuilder query = new StringBuilder("select t.tweet_id, t.user_id, t.tweet_text, final.created_at, t.media_id, t.likes, t.retweet_count, t.handle, final.user_id ")
-				.append("as post_user from tweets t inner join ( select * from ( select tweet_id, user_id, created_at from retweets as r inner join connections c on r.user_id = c.following and c.follower = ")
+		StringBuilder query = new StringBuilder("select t.tweet_id, t.user_id, t.tweet_text, final.created_at, t.media_id, t.likes, t.retweet_count, final.retweetUser, t.handle, final.user_id ")
+				.append("as post_user from tweets t inner join ( select * from ( select tweet_id, user_id, created_at, user_id as retweetUser from retweets as r inner join connections c on r.user_id = c.following and c.follower = ")
 				.append(userId)
 				.append(" and  ( ( (c.end_time is null or c.end_time > ")
 				.append(latestTime)
-				.append(" and r.created_at between ")
+				.append(" and r.created_at >= ")
 				.append(startTime)
-				.append(" and ")
+				.append(" and r.created_at < ")
 				.append(latestTime)
-				.append(" ) or ( c.end_time between ")
+				.append(" ) or ( c.end_time >= ")
 				.append(startTime)
-				.append(" and ")
+				.append(" and c.end_time < ")
 				.append(latestTime)
-				.append(") and r.created_at between c.end_time and ")
+				.append(") and r.created_at >= c.end_time and r.created_at < ")
 				.append(startTime)
 				.append(" ) )  order by created_at desc limit 40) as a union all ")
-				.append("select * from ( select tweet_id, user_id, created_at  from tweets as t inner join connections c on t.user_id = c.following and ( ( c.follower = ")
+				.append("select * from ( select tweet_id, user_id, created_at, created_at as retweetUser  from tweets as t inner join connections c on t.user_id = c.following and ( ( c.follower = ")
 				.append(userId)
 				.append(" and ( ( (c.end_time is null or c.end_time > ")
 				.append(latestTime)
-				.append(") and t.created_at between ")
+				.append(") and t.created_at >= ")
 				.append(startTime)
-				.append(" and ")
+				.append(" and t.created_at < ")
 				.append(latestTime)
-				.append(") or ( c.end_time between ")
+				.append(") or ( c.end_time >= ")
 				.append(startTime)
-				.append(" and ")
+				.append(" and c.end_time < ")
 				.append(latestTime)
-				.append(" and t.created_at between c.end_time and ")
+				.append(" and t.created_at >= c.end_time and t.created_at < ")
 				.append(startTime)
 				.append(") ) ) )  order by created_at desc limit 40) as b union all ")
-				.append(" select * from ( select tweet_id, user_id, created_at from tweets as t where ( t.tweet_id in ( select tweet_id from tweet_mentions where user_id = ")
+				.append(" select * from ( select tweet_id, user_id, created_at , created_at as retweetUser from tweets as t where ( t.tweet_id in ( select tweet_id from tweet_mentions where user_id = ")
 				.append(userId)
-				.append(" and timestamp between ")
+				.append(" and timestamp >= ")
 				.append(startTime)
-				.append(" and ")
+				.append(" and timestamp < ")
 				.append(latestTime)
 				.append(" ) ) or ( user_id = ")
 				.append(userId)
-				.append(" and created_at between ")
+				.append(" and created_at >= ")
 				.append(startTime)
-				.append(" and ")
+				.append(" and created_at < ")
 				.append(latestTime)
 				.append(" ) order by created_at desc limit 40) as c ) as final on t.tweet_id = final.tweet_id order by final.created_at desc limit 40");
+	
 			return query.toString();
 	}
 
@@ -373,18 +391,19 @@ public class QueryTweet {
 	public static List<Tweet> getAllTweetsForParticularUser(long userId, long startTime, long latestTime) throws ClassNotFoundException, SQLException {
 		List<Tweet> tweetsForParticularUser = new ArrayList<>();
 	
-		StringBuilder query = new StringBuilder("select * from tweets where tweet_id in (select tweet_id from retweets where user_id = ").append(userId)
-				.append(" order by created_at desc) union all select * from tweets where user_id = ").append(userId).append(" order by created_at desc");
+		StringBuilder query = new StringBuilder("select A.tweet_id, A.user_id, A.tweet_text, B.created_at, A.media_id, A.likes, A.retweet_count, A.handle, B.retweetUser from tweets as A inner join ")  
+					.append("(select * from (select tweet_id , created_at , user_id as retweetUser from retweets where user_id = ").append(userId).append(" ) as C union all  select * from ")
+					.append("(select tweet_id, created_at , created_at as retweetUser from tweets where user_id = ").append(userId).append(") as D) as B on A.tweet_id = B.tweet_id order by B.created_at desc");
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
 //		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		
 		while (rs.next()) {
-			
+			if(QueryUser.checkValidRetweetUser(rs.getLong("retweetUser"))) {
 			Tweet tweet = prepareTweetObject(rs);
-			
 			tweetsForParticularUser.add(tweet);
+			}
 		}
 		//System.out.println(tweetsForParticularUser.size());
 		return tweetsForParticularUser;
@@ -449,6 +468,15 @@ public class QueryTweet {
 			return true;
 		}
 		return false;
+	}
+
+	public static long getRetweetCount(long userId) throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select count(tweet_id) as countRetweets from retweets where user_id = ").append(userId).append(" group by user_id");
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		if(rs.next()) {
+			return rs.getLong("countRetweets");
+		}
+		return 0;
 	}
 
 	

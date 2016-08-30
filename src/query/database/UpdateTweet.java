@@ -297,4 +297,11 @@ public class UpdateTweet {
 			return SQLConnection.executeUpdate(sql.toString());
 //			return SQLConnection.db.updateDb(sql.toString());
 	}
+
+	public static int insertIntoTweetDb(Long tweetId, Long mediaId) throws ClassNotFoundException, SQLException {
+		StringBuilder sql = new StringBuilder("update tweets set media_id = ").append(mediaId).append(" where tweet_id = ").append(tweetId) ;
+		
+		return SQLConnection.executeUpdate(sql.toString());
+		
+	}
 }

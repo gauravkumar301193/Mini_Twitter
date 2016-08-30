@@ -57,7 +57,6 @@ public class QueryUser {
 		ResultSet rs = SQLConnection.executeQuery(query);
 //		ResultSet rs = SQLConnection.db.queryDb(query);
 		if (rs.next()) {
-			// TODO logger statement to be added
 			return rs.getLong("logout");
 		}
 		return 0;
@@ -212,7 +211,7 @@ public class QueryUser {
 			throws ClassNotFoundException, SQLException {
 		List<User> allFollowerIDs = new ArrayList<>();
 		StringBuilder query = new StringBuilder("select * from authentication where user_id in (");
-		query.append("select follower from connections where following=" + userId + " and end_time is NULL) order by handle");
+		query.append("select follower from connections where following= " + userId + " and end_time is null) order by handle");
 
 		logger.info("executing sql query: " + query.toString());		
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
@@ -232,7 +231,7 @@ public class QueryUser {
 		stringBuilder.append("select * from Authentication where user_id in (");
 		stringBuilder.append("select following from connections where follower = ");
 		stringBuilder.append(userId);
-		stringBuilder.append(" and end_time = 0) order by handle");
+		stringBuilder.append(" and end_time is null ) order by handle");
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
@@ -335,7 +334,7 @@ public class QueryUser {
 		
 		StringBuilder query = new StringBuilder("select a.user_id, a.handle from authentication as a where ");
 		query.append("a.user_id in (");
-		query.append("select followers from connections where following = ");
+		query.append("select follower from connections where following = ");
 		query.append(userId);
 		query.append(" and start_time > ");
 		query.append(timestamp);
@@ -432,5 +431,31 @@ public class QueryUser {
 			return rs.getString("handle");
 		}
 		return null;
+	}
+
+	public static void setLogoutAfterLogin(Long userId) throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("update user_details set logout = null where user_id = ").append(userId);
+		int rs = SQLConnection.executeUpdate(query.toString());
+		return;
+		
+	}
+
+	public static void setLogoutAfterSignout(Long userId) throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("update user_details set logout = ").append(System.currentTimeMillis()).append(" where user_id = ").append(userId);
+		logger.info("log out time set");
+		SQLConnection.executeUpdate(query.toString());
+		return;
+	}
+
+	public static boolean checkValidRetweetUser(long long1) throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select * from retweets where user_id=");
+		query.append(long1);
+		
+		logger.info("executing sql query: " + query.toString());
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		if (rs.next()) {
+			return true;
+		}
+		return false;
 	}
 }

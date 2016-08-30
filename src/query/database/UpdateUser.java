@@ -90,7 +90,7 @@ public class UpdateUser {
 				.append(user).append(SqlQuerySeparators.COMMA)
 				.append(userToFollow).append(SqlQuerySeparators.COMMA)
 				 .append(System.currentTimeMillis()).append(SqlQuerySeparators.COMMA) 
-				 .append(0).append(")");
+				 .append("null").append(")");
 		
 		logger.info("executing sql query in UpdateUser addConnections : " + sql.toString());
 	
@@ -321,6 +321,13 @@ public class UpdateUser {
 		
 		return SQLConnection.executeUpdate(sql.toString());
 //		return SQLConnection.db.updateDb(sql.toString());
+	}
+
+	public static int insertIntoUserDb(Long userId, Long mediaId) throws ClassNotFoundException, SQLException {
+		StringBuilder sql = new StringBuilder("update user_details set media_id = ").append(mediaId).append(" where user_id = ").append(userId) ;
+		
+		return SQLConnection.executeUpdate(sql.toString());
+		
 	}
 	
 	

@@ -103,7 +103,7 @@ public class RegisterUser extends HttpServlet {
 			e1.printStackTrace();
 			return;
 		}
-		user.setLogout(0);
+		user.setLogout(null);
 		user.setTweetCount(0);
 		user.setFollower(0);
 		user.setFollowing(0);

@@ -2,6 +2,8 @@ package request.controller.tweet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,10 +34,12 @@ public class GetTweetGivenId extends HttpServlet {
 			long tweetId = Long.parseLong(request.getParameter("tweetId"));
 			Tweet tweet = QueryTweet.getTweetByTweetId(tweetId);
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
-			
+			List<Tweet> twts = new ArrayList<>() ;
+			twts.add(tweet);
+			System.out.println(twts.size());
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			response.setStatus(200);
-			JSONObject obj = CreateJSONResponseTweets.jsonResponseOfSingleTweet(tweet, loggedInUser);
+			JSONObject obj = CreateJSONResponseTweets.jsonResponseTweet(twts, loggedInUser);
 			response.setContentType("application/json");
 			response.getWriter().write(obj.toString());
 		} catch (ClassNotFoundException | SQLException e) {

@@ -46,7 +46,7 @@ public class Tweet {
 		this.retweetUserId = retweetUserId;
 	}
 	
-	public boolean isRetweet(long l) {
+	public boolean isRetweet() {
 		return retweet;
 	}
 	

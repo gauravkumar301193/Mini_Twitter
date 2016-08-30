@@ -17,6 +17,8 @@ import org.apache.tomcat.util.http.fileupload.FileItem;
 
 import models.Tweet;
 import models.User;
+import services.media.MediaIdGenerator;
+import services.media.UpdateImageInfo;
 
 /**
  * Servlet implementation class UploadImageForTweet
@@ -55,7 +57,8 @@ public class UploadImageForTweet extends HttpServlet {
 		
 		if(ServletFileUpload.isMultipartContent(request)) {
 		try {
-			mediaId = Tweet.generateTweetID();
+			mediaId = MediaIdGenerator.generateMediaId();
+			UpdateImageInfo.insertIntoMedia(mediaId);
 			logger.info("uploading image to " + IMG_PATH);
 			List<FileItem> multiparts = new ServletFileUpload(
                                  new DiskFileItemFactory()).parseRequest(request);
@@ -66,6 +69,7 @@ public class UploadImageForTweet extends HttpServlet {
 				}
 			}
 			response.setStatus(200);
+			response.getWriter().write(mediaId + "");
 		} catch (Exception ex) {
 			response.setStatus(503);
 			request.setAttribute("message", "File Upload Failed due to " + ex);

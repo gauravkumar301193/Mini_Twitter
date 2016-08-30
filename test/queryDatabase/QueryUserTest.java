@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import models.RetweetModel;
 import models.Tweet;
 import models.User;
 import query.database.QueryTweet;
@@ -74,7 +75,7 @@ public class QueryUserTest {
 	@Test
 	public void testGetFollowingCount() {
 		try {
-			assertEquals(2 ,QueryUser.getFollowingCount(17));
+			assertTrue(QueryUser.getFollowingCount(17) > 0);
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,8 +128,10 @@ public class QueryUserTest {
 	@Test
 	public void testGetAllFollowers() {
 		try {
-			assertEquals(6 ,  QueryUser.getAllFollowers(2));
-			assertEquals(3 ,  QueryUser.getAllFollowers(10));
+			List<User> users = QueryUser.getAllFollowers(2);
+			List<User> users1 = QueryUser.getAllFollowers(10);
+			assertEquals(6 , users.size() );
+			assertEquals(6 ,  users1.size());
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,67 +140,92 @@ public class QueryUserTest {
 
 	@Test
 	public void testGetAllFollowing() {
-		fail("Not yet implemented");
+		try {
+			List<User> users = QueryUser.getAllFollowing(2);
+			List<User> users1 = QueryUser.getAllFollowing(10);
+			assertEquals(2 , users.size());
+			assertEquals(3 ,  users1.size());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetAllMentionsForTweet() {
-		fail("Not yet implemented");
+		try {
+			List<Long> mentions = QueryUser.getAllMentionsForTweet(7);
+			assertEquals(1 , mentions.size());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetRetweetUsersAfterLogout() {
-		fail("Not yet implemented");
+		try {
+			List<RetweetModel> retweetsCount = QueryUser.getRetweetUsersAfterLogout(15, 0);
+			assertEquals(1 , retweetsCount.size());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testCheckEmailExists() {
-		fail("Not yet implemented");
+		try {
+			assertTrue(QueryUser.checkEmailExists("mayank2@mail.com"));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testCheckHandleExists() {
-		fail("Not yet implemented");
-	}
+		try {
+			assertTrue(QueryUser.checkHandleExists("mayank2"));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-	@Test
-	public void testPrepareUserObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetFollowersAfterTimestamp() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetLogoutTime() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsNoConnection() {
-		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testIsConnection() {
-		fail("Not yet implemented");
+		try {
+			assertTrue(QueryUser.isConnection(1834729, 2));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetAllUsersWithNameStartingWith() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGenerateUserId() {
-		fail("Not yet implemented");
+		try {
+			List<User> users = QueryUser.getAllUsersWithNameStartingWith("ab");
+			assertEquals(5, users.size());
+			assertEquals("ab@mail.com" , users.get(0).getEmail());
+			assertEquals("ab03@mail.com",users.get(1).getEmail());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetUserHandle() {
-		fail("Not yet implemented");
+		try {
+			String handle = QueryUser.getUserHandle(17);
+			assertEquals("ChloeS" , handle);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

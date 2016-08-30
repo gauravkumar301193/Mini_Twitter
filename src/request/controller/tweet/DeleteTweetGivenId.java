@@ -59,7 +59,6 @@ public class DeleteTweetGivenId extends HttpServlet {
 			logger.info("deleting tweet");	
 				response.setContentType("text/html");
 				if( RemoveTweet.deleteTweet(tweetId)) {
-					response.addHeader("Access-Control-Allow-Origin", "*");
 					response.setStatus(200);
 //					response.getWriter().write("Tweet Successfully Removed");
 				}

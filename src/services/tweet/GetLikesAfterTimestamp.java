@@ -14,7 +14,8 @@ public class GetLikesAfterTimestamp {
 	
 	static Logger logger = Logger.getLogger(GetLikesAfterTimestamp.class);
 	public static int likesAfterLogout(long userId) throws ClassNotFoundException, SQLException {
-		String handle = QueryUser.getUserEmail(userId);
+		String handle = QueryUser.getUserHandle(userId);
+		System.out.println(handle);
 		if(QueryUser.checkHandleExists(handle)) {
 			long timestamp = QueryUser.getLastLogout(userId);
 			

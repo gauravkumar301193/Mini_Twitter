@@ -17,13 +17,13 @@ public class User {
     public String handle = "";
     public String password = "";
     public long userId;
-    public long logout;
+    public Long logout;
     
     public long getLogout() {
 		return logout;
 	}
 
-	public void setLogout(long logout) {
+	public void setLogout(Long logout) {
 		this.logout = logout;
 	}
 

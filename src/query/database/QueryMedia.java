@@ -14,6 +14,15 @@ import models.Media;
  */
 
 public class QueryMedia {
+
+	public static Long generateMediIdFromDb() throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("select max(media_id) from media");
+		ResultSet rs = SQLConnection.executeQuery(query.toString());
+		if(rs.next()) {
+			return rs.getLong(1);
+		}
+		return null;
+	}
 	
 //	static Logger logger = Logger.getLogger(QueryMedia.class);
 //	

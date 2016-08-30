@@ -13,8 +13,7 @@ public class PostRetweet {
 	
 	static Logger logger = Logger.getLogger(PostRetweet.class);
 	public static boolean retweetPost( String loggedInUserHandle, long tweetId, long authorId, long loggedInUser) throws ClassNotFoundException, SQLException {
-		
-		if(CheckValidity.isValidUser(loggedInUser)) {
+		if(CheckValidity.isValidUser(loggedInUser) && CheckValidity.isValidUser(authorId)) {
 			if(CheckValidity.isValidTweet(tweetId)) {
 				return UpdateTweet.retweetPost(loggedInUserHandle, tweetId ,authorId, loggedInUser);
 			}

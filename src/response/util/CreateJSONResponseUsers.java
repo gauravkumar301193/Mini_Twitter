@@ -33,7 +33,7 @@ public class CreateJSONResponseUsers {
 			obj.put("name", usr.getUserName());
 			obj.put("handle", usr.getHandle());
 			obj.put("email", usr.getEmail());
-			obj.put("tweetCount", QueryTweet.getTweetCount(usr.getUserId()));
+			obj.put("tweetCount", QueryTweet.getTweetCount(usr.getUserId()) + QueryTweet.getRetweetCount(usr.getUserId()));
 			obj.put("followerCount", QueryUser.getFollowersCount(usr.getUserId()));
 			obj.put("followingCount", QueryUser.getFollowingCount(usr.getUserId()));
 			

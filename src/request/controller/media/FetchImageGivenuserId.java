@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,19 +15,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 /**
- * Servlet implementation class FetchImageGivenUserId
+ * Servlet implementation class FetchImageGivenuserId
  */
-@WebServlet("/FetchImageGivenId")
-public class FetchImageGivenId extends HttpServlet {
+@WebServlet("/FetchImageGivenuserId")
+public class FetchImageGivenuserId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(FetchImageGivenuserId.class);
 	private static final String IMG_PATH = "/Users/gaurav.kum/Desktop/Media/";
-	private static final Logger logger = Logger.getLogger(FetchImageGivenId.class);
-
-       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FetchImageGivenId() {
+    public FetchImageGivenuserId() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,16 +35,20 @@ public class FetchImageGivenId extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String type = "";
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//doGet(request, response);
+		
+		String type = "user";
 		Long mediaId = null;
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		if(request.getParameterMap().containsKey("type")) {
-		 type = request.getParameter("type");
-		}
-		else {
-			logger.error("Type not defined");
-			return;
-		}
+		
 		if(request.getParameterMap().containsKey("mediaId")) {
 			mediaId = Long.parseLong(request.getParameter("mediaId"));
 		}
@@ -74,15 +75,7 @@ public class FetchImageGivenId extends HttpServlet {
 		} catch (Exception e) {
 			
 		}
-		
-	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

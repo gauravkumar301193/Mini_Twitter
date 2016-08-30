@@ -9,6 +9,7 @@ import query.database.QueryUser;
  * @author mayank.ra
  */
 public class CheckValidity {
+	
 	public static boolean isValidTime(long timestamp) {
 		if (timestamp > System.currentTimeMillis() || timestamp < 0)
 			return false;
@@ -19,8 +20,9 @@ public class CheckValidity {
 			throws SQLException, ClassNotFoundException {
 		if (userId < 0)
 			return false;
-		if (QueryUser.checkUserExists(userId))
+		if (QueryUser.checkUserExists(userId)) {
 			return true;
+		}
 		return false;
 	}
 	

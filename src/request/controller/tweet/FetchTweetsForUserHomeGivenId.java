@@ -39,18 +39,19 @@ public class FetchTweetsForUserHomeGivenId extends HttpServlet {
 		try {
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = Long.parseLong(request.getParameter("userId"));
-			long latestTime = System.currentTimeMillis();
+			Long latestTime = null;
 			long startTime = 0;
 			if (request.getParameterMap().containsKey("latestTime")) {
-				if (request.getParameter("latestTime") != "") {
 					latestTime = Long.parseLong(request.getParameter("latestTime"));
-				}
-			 else {
-				latestTime = System.currentTimeMillis();
 			}
+			else {
+					latestTime = System.currentTimeMillis();
 			}
 			if (request.getParameterMap().containsKey("startTime")) {
 				startTime = Long.parseLong(request.getParameter("startTime"));
+			}
+			else {
+				startTime = 0;
 			}
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
 		

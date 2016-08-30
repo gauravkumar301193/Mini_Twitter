@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 
 import models.User;
+import services.media.MediaIdGenerator;
+import services.media.UpdateImageInfo;
 
 /**
  * Servlet implementation class UploadImageForUser
@@ -24,7 +26,7 @@ import models.User;
 public class UploadImageForUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String IMG_PATH = "/Users/gaurav.kum/Desktop/Media/";
-	private static final Logger logger = Logger.getLogger(UploadImageForUser.class);
+	private static final Logger logger = Logger.getLogger(UploadImageForTweet.class);
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,25 +48,27 @@ public class UploadImageForUser extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//doGet(request, response);
 		String type = "user";
 		Long mediaId = null;
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		
 		if(ServletFileUpload.isMultipartContent(request)) {
 		try {
-			mediaId = User.generateUserID();
-			logger.info("uploading image to " + IMG_PATH);
+			mediaId = MediaIdGenerator.generateMediaId();
+			UpdateImageInfo.insertIntoMedia(mediaId);
+			logger.info(mediaId);
+			logger.info("uploading image to " + IMG_PATH + mediaId);
 			List<FileItem> multiparts = new ServletFileUpload(
                                  new DiskFileItemFactory()).parseRequest(request);
 			for(FileItem item : multiparts){
+				logger.info("here");
 				if(!item.isFormField()){
 					String name = new File(item.getName()).getName();
-					item.write( new File(IMG_PATH + type +mediaId + ".png"));
+					item.write( new File(IMG_PATH + type + mediaId + ".png"));
 				}
 			}
 			response.setStatus(200);
+			response.getWriter().write(mediaId + "");
 		} catch (Exception ex) {
 			response.setStatus(503);
 			request.setAttribute("message", "File Upload Failed due to " + ex);

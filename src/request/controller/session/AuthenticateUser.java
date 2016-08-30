@@ -49,8 +49,9 @@ public class AuthenticateUser extends HttpServlet {
 			Long userId = CheckUserCredentials.checkIfUserExists(emailId, password);
 			if (userId != null) {
 				logger.info("Authentication success");
+				//QueryUser.setLogoutAfterLogin(userId);
 				User user = QueryUser.getUserDetailsFromDb(userId);
-
+				
 				JSONObject jsonObject = CreateJSONResponseUsers.jsonResponseOfSingleUser(user, userId);
 				HttpSession session = request.getSession(true);
 				response.addHeader("Access-Control-Allow-Origin", "*");

@@ -41,7 +41,7 @@ public class FetchFollowersGivenUserId extends HttpServlet {
 		try {
 			long userId = Long.parseLong(request.getParameter("userId"));
 			List<User> followersList = GetAllFollowers.getAllFollowers(userId);
-
+			System.out.println(followersList.size());
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
 			if (loggedInUser != null) {
 				response.setStatus(404);
