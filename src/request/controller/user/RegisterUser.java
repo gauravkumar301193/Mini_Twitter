@@ -113,14 +113,13 @@ public class RegisterUser extends HttpServlet {
 			
 			
 			status = AddNewUser.addNewUser(user);
-			response.setContentType("text/html");
+			
 			if(status) {
 				JSONObject jsonObject = CreateJSONResponseUsers.jsonResponseOfSingleUser(user , user.getUserId());
 				response.setStatus(200);
 				logger.info(jsonObject.toString());
 				response.setContentType("application/json");
-				response.getWriter().write(jsonObject.toString());				response.setContentType("text/html");
-//				response.getWriter().write("adasd");
+				response.getWriter().write(jsonObject.toString());				
 				logger.info("user added");
 				return;
 			}

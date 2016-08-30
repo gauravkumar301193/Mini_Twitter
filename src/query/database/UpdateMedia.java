@@ -13,7 +13,7 @@ public class UpdateMedia {
 	static Logger logger = Logger.getLogger(UpdateMedia.class);
 	public static int insertIntoMediaDb(Long mediaId) throws ClassNotFoundException, SQLException {
 		StringBuilder query = new StringBuilder("insert into media values(").append(mediaId).append(",") 
-				.append("image").append(")");
+				.append("\"image\"").append(")");
 		
 		logger.info("executing sql query: " + query.toString());
 		

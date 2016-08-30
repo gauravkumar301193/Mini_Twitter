@@ -1,0 +1,99 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: white;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.photo-upload-image {
+    max-width: 50px;
+}
+
+.signin-buttons {
+    width: 40%;
+    margin-left: 5%;
+    margin-right: 4%;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 15px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.logo-image {
+    position:block;
+    left:0;
+    top:0;
+    width: 200px;
+    height: 70px;
+}
+
+.login-header {
+    position: block;
+    margin-bottom: 10%;
+}
+
+.error-message {
+    display : none;
+    color : red;
+}
+
+.login-input {
+    border-radius: 25px;
+    margin-bottom: 100px;
+}
+
+.modal-body {
+/*
+    background-image: url('background-login-page.jpg');
+    background-size: cover;
+    border-radius: 10px;
+*/
+    background: url('https://secure.static.tumblr.com/d381cb3464be2199e1ff24123a3a226a/jr5fq1d/CY0mvalhj/tumblr_static_background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.modal-title {
+    font-family: cursive;
+}

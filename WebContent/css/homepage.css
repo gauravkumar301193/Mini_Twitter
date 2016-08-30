@@ -1,0 +1,100 @@
+.col {
+    padding:50px;
+}
+
+.right-nav-bar-text {
+    color : gainsboro;
+    font-size: 14px;
+}
+
+.photo-profile {
+    width : 70%;
+    min-width: 80px;
+    padding-left: 10px;
+    max-width: 150px;
+}
+
+.left-panel-text-heading {
+    font-size: 85%;
+    font-family:sans-serif;
+    padding-top: 10px;
+    color : gray;
+}
+
+.left-panel-handle {
+    padding-top: 10px;
+    font-size: 140%;
+    color: gray;
+}
+
+.left-panel {
+    padding-left: 30px;
+}
+
+.left-panel-counts {
+}
+
+.tweet-text {
+    padding-top: 20px;
+    word-wrap: break-word;
+}
+
+.tweet-handle-time .tweet-time{
+    padding-left: 20px;
+}
+
+.photo-thumbnail {
+    max-width: 80px;
+    width : 15%;
+}
+
+.tweet-div {
+    padding-left: 20px;
+}
+
+.tweet-box {
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+
+.new-tweet-text {
+    height: 70px;
+}
+
+.photo-upload-image {
+    max-width: 70px;
+}
+
+.tweet-post-button {
+    border-radius: 25px 25px;
+    margin-top: 10px;
+    background-color: lightblue;
+}
+
+.single-tweet {
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.retweet-header {
+    margin-bottom: 10px;
+    display: none;
+}
+
+.tweet-footer{
+    padding-top: 20px;
+}
+
+.tweet-footer-button {    
+    border-radius: 25px 25px;
+    margin-top: 10px;
+    width: 80px;
+    background-color: lightblue;
+    margin: 0 5px;
+}
+
+.tweet-image {
+    max-width: 500px;
+    margin-top: 20px;
+    display : none;
+}

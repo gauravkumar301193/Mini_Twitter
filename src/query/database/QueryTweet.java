@@ -227,13 +227,14 @@ public class QueryTweet {
 		
 		String query = generateQueryForUserProfile(userId, startTime, latestTime);
 		logger.info("executing sql query: " + query);
-//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
+
 		ResultSet rs = SQLConnection.executeQuery(query);
 		while (rs.next()) {
 			Tweet tweet = prepareTweetObject(rs);
 			if (tweet.getUserId() != userId) {
 				tweet.markRetweet();
 				tweet.setRetweetUserId(userId);
+				tweet.setRetweetHandle(QueryUser.getUserHandle(rs.getLong("retweetUser")));
 			}
 			tweetsForUserProfile.add(tweet);
 		}
@@ -242,20 +243,20 @@ public class QueryTweet {
 	}
 	
 	private static String generateQueryForUserProfile(long userId, long startTime, long latestTime) {
-		StringBuilder query = new StringBuilder("select t.likes,t.media_id, t.retweet_count, e.timestamp as created_at, t.user_id, t.tweet_text, t.tweet_id, t.handle")
-				.append(" from tweets as t inner join  (select * from (select tweet_id, timestamp from tweet_mentions where user_id =") 
+		StringBuilder query = new StringBuilder("select t.likes,t.media_id, t.retweet_count, e.timestamp as created_at, t.user_id, t.tweet_text, t.tweet_id, t.handle, e.retweetUser")
+				.append(" from tweets as t inner join  (select * from (select tweet_id, timestamp, timestamp as retweetUser from tweet_mentions where user_id =") 
 				.append(userId)
 				.append(" and timestamp >") 
 				.append(startTime)
 				.append(" and timestamp <") 
 				.append(latestTime)
-				.append(" order by timestamp desc limit 20) as a union select * from (select tweet_id, created_at as timestamp from retweets where user_id =") 
+				.append(" order by timestamp desc limit 20) as a union select * from (select tweet_id, created_at as timestamp, user_id as retweetUser from retweets where user_id =") 
 				.append(userId)
 				.append(" and created_at >") 
 				.append(startTime)
 				.append(" and created_at <") 
 				.append(latestTime)
-				.append(" order by created_at desc limit 20) as b union select * from (select tweet_id, created_at as timestamp from tweets where user_id =") 
+				.append(" order by created_at desc limit 20) as b union select * from (select tweet_id, created_at as timestamp, created_at as retweetUser from tweets where user_id =") 
 				.append(userId)
 				.append(" and created_at >") 
 				.append(startTime)
@@ -291,15 +292,14 @@ public class QueryTweet {
 //		ResultSet rs = SQLConnection.db.queryDb(query);
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
 		logger.info("executing sql query2: " + query.toString());
-		while(rs.next()) {
-			if(rs.next()){
+		while (rs.next()){
 			Tweet currentTweet = prepareTweetObject(rs);
-			if (currentTweet.getUserId() != rs.getLong("user_id")) {
+			if(rs.getLong("user_id") != rs.getLong("retweetUser")) {
 				currentTweet.markRetweet();
-				currentTweet.setRetweetUserId(rs.getLong("user_id"));
+				currentTweet.setRetweetUserId(rs.getLong("retweetUser"));
+				currentTweet.setRetweetHandle(QueryUser.getUserHandle(rs.getLong("retweetUser")));
 			}
 			tweetsForHomepage.add(currentTweet);
-			}
 		}
 		return tweetsForHomepage;
 	}
@@ -315,15 +315,6 @@ public class QueryTweet {
 		tweet.setUserId(rs.getLong("user_id"));
 		tweet.setTweetId(rs.getLong("tweet_id"));
 		tweet.setHandle(rs.getString("handle"));
-		logger.info("retweetUser is "  + rs.getLong("retweetUser"));
-		System.out.println(rs.getLong("retweetUser"));
-		if(rs.getLong("user_id") != rs.getLong("retweetUser")) {
-			tweet.markRetweet();
-			tweet.setRetweetUserId(rs.getLong("retweetUser"));
-			tweet.setRetweetHandle(QueryUser.getUserHandle(rs.getLong("retweetUser")));
-		
-		}
-		
 		return tweet;
 		
 	}

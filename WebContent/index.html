@@ -1,0 +1,45 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body style="font-family: calibri; font-size: 8pt">
+<div>
+<form id="fileForm">
+	<label for="X">tmc</label>
+    <input type="file" name="file" id="X" style="display:none"/>
+</form>
+    <button id="btnUpload" type="button">Upload file</button>
+    <button id="btnClear" type="button">Clear</button>
+</div>
+</body>
+
+<script type="text/javascript">
+    
+var isJpg = function(name) {
+    return name.match(/jpg$/i)
+};
+    
+var isPng = function(name) {
+    return name.match(/png$/i)
+};
+    
+var CST = "fileForm";    
+var url = "UploadDemoImage";
+$(document).ready(function() {
+    $('#btnUpload').on('click', function() {
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: new FormData(document.getElementById(CST)),
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false
+          });
+        
+    });
+
+});
+    
+</script>
+
+</html>

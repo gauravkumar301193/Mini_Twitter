@@ -1,0 +1,228 @@
+<!--
+ADD PADDING TO THE NAVIGATION BAR
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MiniTwitter Homepage</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="css/try.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/constants.js"></script>
+<script src="js/tweetUtil.js"></script>
+<script src="js/image.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/localStorage.js"></script>
+<script src="js/utilities.js"></script>
+<script src="js/page-function.js"></script>
+<script src="js/hashtags.js"></script>
+<script src="js/page-static-handlers.js"></script>
+<script src="js/users.js"></script>
+<script src="js/fetch-tweet.js"></script>
+<script src="js/post-tweet.js"></script>
+<style type="text/css">
+    .bs-example{
+    	margin: 20px;
+    }
+</style>
+</head> 
+<body style="background-color:floralwhite">
+    <div class="container-fluid">
+        <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand">MiniTwitter</a>
+            </div>
+            <!-- Collection of nav links, forms, and other content for toggling -->
+
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class = "nav navbar-nav" id="notifications">
+                    <li>
+<!--
+                        <form role="search" class="navbar-form navbar-left">
+                            <div class="form-group">
+                                <input type="text" id="search-nav"placeholder="Search" class="form-control">
+                            </div>
+                        </form>
+-->
+                        <a id="search-nav">Search Handle</a>
+                    </li>
+                    <li><a id="notificationNavigation">Notifications</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a class="glyphicon glyphicon-home" id="homeButton"></a></li>
+                    <li><a id="profileButton" class="glyphicon glyphicon-user"></a></li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="col dropdown-toggle" id="optionsButton">Options <b class="caret"></b></a>
+                        <ul role="menu" class="dropdown-menu">
+<!--                            <li><a id="updateProfileButton" >Update Profile</a></li>-->
+                            <li class="divider"></li>
+                            <li><a id="logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="row" name="hashtag-heading" id="hashtag-heading">
+            <div class="col-xs-12 hashtag-heading">
+                <span class="hashtag" id="hashtag">#hashtag</span>
+            </div> 
+            
+        </div>
+        <div class="row" name="panels">
+            <div class="col-sm-3 hidden-xs" name="left-panels">
+                <div class="left-panel" id="left-panel-profile">
+                    <div class="row">
+                        <img src="images/user.png" type="button" data-toggle="modal" data-target="#imageModal" class="photo-profile" id="profilePhoto">
+                    </div>
+
+                    <a id="displayUserHandle" class="left-panel-handle">
+                        @UserHandle</a>
+                    <div class="row left-panel-count">
+                        <a id="left-panel-tweet-heading" class="col-xs-6 left-panel-text-heading">Tweets</a>
+                        <span id="left-panel-tweet-count" class="col-xs-6 left-panel-text-heading">X</span>
+                    </div>
+                    <div class="row left-panel-count">
+                        <a id="left-panel-follower-heading" class="col-xs-6 left-panel-text-heading">Followers</a>
+                        <span id="left-panel-follower-count" class="col-xs-6 left-panel-text-heading">X</span>
+                    </div>
+                    <div class="row left-panel-count">
+                        <a id="left-panel-following-heading" class="col-xs-6 left-panel-text-heading">Following</a>
+                        <span id="left-panel-following-count" class="col-xs-6 left-panel-text-heading">X</span>
+                    </div>
+                </div>
+                <div class="left-panel" id="left-panel-hashtags">
+                    <div class="row left-panel-hashtag">
+                        <a id="left-panel-hashtag-1" class="col-xs-12 left-panel-text-heading">#Tweets</a>
+                    </div>
+                    <div class="row left-panel-hashtag">
+                        <a id="left-panel-hashtag-2" class="col-xs-12 left-panel-text-heading">#Followers</a>
+                    </div>
+                    <div class="row left-panel-hashtag">
+                        <a id="left-panel-hashtag-3" class="col-xs-12 left-panel-text-heading">#Following</a>
+                    </div>
+                    <div class="row left-panel-hashtag">
+                        <a id="left-panel-hashtag-4" class="col-xs-12 left-panel-text-heading">#Followers</a>
+                    </div>
+                    <div class="row left-panel-hashtag">
+                        <a id="left-panel-hashtag-5" class="col-xs-12 left-panel-text-heading">#Following</a>
+                    </div>
+                </div>
+                <div class="left-panel" id="left-panel-follow-button">
+                    <input type="button" class="btn-primary btn-md tweet-footer-button" style="margin-top:10px;margin-bottom:10px"id="follow-button-left-panel" value="Follow">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-9 col-xs-12" id="middle-panels">
+                <div class="row">
+                <div class="col-xs-12 middle-panel" id="middle-panel-new-tweet">
+                    <div class="row" name="newTweetArea">
+                        <div class="col-xs-1" name="empty-alignment-division"></div>
+                        <div class="col-xs-11 tweet-box fixed">
+                            <div class="row">
+                                <textarea class="input-lg col-xs-11 new-tweet-text" id="newTweetText" rows="4" cols="80" placeholder="What's happening?"></textarea>
+                            </div>
+                            <div class="row" id="mediaUploadAndSubmit">
+                                <span class="col-xs-5 tweet-char-left" id="tweet-characters-left">Characters left</span>
+                                <span class="col-xs-2"></span>
+                                    <label for="x" class="col-xs-2 photo-upload-image">
+                                    <img src="images/camera.png" id="new-tweet-image" class="photo-upload-image"></label>
+                                <form id="imageInputForTweet">
+                                    <input type="file" name="file" id="x" style="display:none">
+                                </form>
+                                <div id="imgContainer"></div>
+                                <span class="col-xs-1"></span>
+                                <button class="col-xs-2 btn-primary btn-md tweet-post-button" id="postTweet">Tweet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 middle-panel" id="middle-panel-all-tweets">
+                </div>    
+                <div class="col-xs-12 middle-panel" id="middle-panel-users">
+                    <div class="row" name="followersRow" id="usersParent">
+                        
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-3 hidden-sm hidden-xs" id="right-panels">
+                <div class="right-panel">
+                </div>
+            </div>
+        </div>
+        <div id="imageModal" class="modal">
+
+            <!-- The Close Button -->
+          <div class="modal-content">
+            <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" onclick="document.getElementById('imageModal').style.display='none'">&times;</button>
+            </div>
+            <!-- Modal Content (The Image) -->
+            <div class="modal-body" id="imageBody">
+                <div style="width:100%;padding:20px 10px;;display:block;margin-top:20px;" align="center">
+                    <img class="modal-content" id="modal-image">
+                </div>
+            </div>
+            </div>
+        </div>
+          <div class="modal" id="notificationModal" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" onclick="document.getElementById('notificationModal').style.display='none'">&times;</button>
+                  <h4 class="modal-title">Notifications</h4>
+                </div>
+                <div class="modal-body" id="notificationBody">
+                    <div style="width:100%;padding:20px 10px;;display:block;margin-top:20px;" align="center" id="notificationsParent">
+                    </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        <div class="modal" id="searchModal">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" onclick="document.getElementById('searchModal').style.display='none'">&times;</button>
+                  <h4 class="modal-title">Search For Handle</h4>
+                </div>
+                <div class="modal-body" id="searchBody">
+                    <input type="text" id="searchText" placeholder="Type search text here">
+                    <div style="width:100%;padding:20px 10px;;display:block;margin-top:10px;" align="center">
+                        <a style="margin-top:10px;display:none" id="searchResult-1">This is the first one</a>
+                        <hr>
+                        <a style="margin-top:10px;display:none" id="searchResult-2">This is the second one</a>
+                        <hr>
+                        <a style="margin-top:10px;display:none" id="searchResult-3">This is the third one</a>
+                        <hr>
+                        <a style="margin-top:10px;display:none" id="searchResult-4">This is the fourth one</a>
+                        <hr>
+                        <a style="margin-top:10px;display:none" id="searchResult-5">This is the fifth one</a>
+                        <hr>
+                    </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+    </div>
+</body>
+</html>                                		

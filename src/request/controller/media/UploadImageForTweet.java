@@ -51,7 +51,6 @@ public class UploadImageForTweet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		String type = "tweet";
 		Long mediaId = null;
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		
@@ -65,7 +64,7 @@ public class UploadImageForTweet extends HttpServlet {
 			for(FileItem item : multiparts){
 				if(!item.isFormField()){
 					String name = new File(item.getName()).getName();
-					item.write( new File(IMG_PATH + type + mediaId + ".png"));
+					item.write( new File(IMG_PATH + mediaId + ".png"));
 				}
 			}
 			response.setStatus(200);

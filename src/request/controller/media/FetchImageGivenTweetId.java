@@ -24,42 +24,20 @@ public class FetchImageGivenTweetId extends HttpServlet {
 	private static final String IMG_PATH = "/Users/gaurav.kum/Desktop/Media/";
 	private static final Logger logger = Logger.getLogger(FetchImageGivenTweetId.class);
 
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public FetchImageGivenTweetId() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String type = "tweet";
+		
 		Long mediaId = null;
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		if(request.getParameterMap().containsKey("type")) {
-		 type = request.getParameter("type");
-		}
-		else {
-			logger.error("Type not defined");
-			return;
-		}
+		
 		if(request.getParameterMap().containsKey("mediaId")) {
 			mediaId = Long.parseLong(request.getParameter("mediaId"));
 		}
-		else {
-			logger.error("media Id empty");
-			return;
-		}
 		
 		try {
-//			String imgName = request.getParameter("image");ssss
+			logger.info("Sending media information for id = " + mediaId);
 			response.setContentType("image/png");
-			File f = new File(IMG_PATH + type + mediaId + ".png");
+			File f = new File(IMG_PATH + mediaId + ".png");
 			BufferedImage bi ;
 			if(f.exists() && !f.isDirectory()) { 
 				 bi = ImageIO.read(f);

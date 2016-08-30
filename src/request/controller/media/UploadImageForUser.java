@@ -28,27 +28,7 @@ public class UploadImageForUser extends HttpServlet {
 	private static final String IMG_PATH = "/Users/gaurav.kum/Desktop/Media/";
 	private static final Logger logger = Logger.getLogger(UploadImageForTweet.class);
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public UploadImageForUser() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String type = "user";
 		Long mediaId = null;
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		
@@ -60,15 +40,16 @@ public class UploadImageForUser extends HttpServlet {
 			logger.info("uploading image to " + IMG_PATH + mediaId);
 			List<FileItem> multiparts = new ServletFileUpload(
                                  new DiskFileItemFactory()).parseRequest(request);
-			for(FileItem item : multiparts){
-				logger.info("here");
+			for(FileItem item : multiparts) {
+				logger.info("uploading");
 				if(!item.isFormField()){
+					System.out.println("in here yes..!");
 					String name = new File(item.getName()).getName();
-					item.write( new File(IMG_PATH + type + mediaId + ".png"));
+					item.write( new File(IMG_PATH + mediaId + ".png"));
 				}
 			}
 			response.setStatus(200);
-			response.getWriter().write(mediaId + "");
+//			response.getWriter().write(mediaId + "");
 		} catch (Exception ex) {
 			response.setStatus(503);
 			request.setAttribute("message", "File Upload Failed due to " + ex);

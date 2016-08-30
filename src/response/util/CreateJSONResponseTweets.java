@@ -46,7 +46,7 @@ public class CreateJSONResponseTweets {
 		obj.put("authorHandle", twt.getHandle());
 		obj.put("authorId", twt.getUserId());
 		obj.put("timestamp", twt.getTimestamp());
-		//obj.put("content", twt.getTweetText());
+		obj.put("mediaId", twt.getMediaId());
 		obj.put("likes", twt.getLikeCount());
 		obj.put("retweetCount", twt.getRetweetCount());
 	
@@ -76,9 +76,8 @@ public class CreateJSONResponseTweets {
         
         obj.put("noSpaceWords", noSpaceSeparatedWords);
         
-	
+		obj.put("isARetweet", twt.isRetweet() + "");	
         if (twt.isRetweet()) {
-			obj.put("isARetweet", true);
 			obj.put("retweetUserId", twt.getRetweetUserId());
 			obj.put("retweetUserHandle", twt.getRetweetHandle());
 		} 
