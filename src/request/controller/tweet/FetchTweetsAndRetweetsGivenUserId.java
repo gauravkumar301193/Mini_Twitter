@@ -25,18 +25,7 @@ import services.user.GetAllTweetsForUserIdService;
 @WebServlet("/FetchTweetsAndRetweetsGivenUserId")
 public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public FetchTweetsAndRetweetsGivenUserId() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+   
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		try {

@@ -16,8 +16,7 @@ public class CheckUserCredentials {
 		if (userId != null) {
 			return userId;
 		} else {
-			logger.error("user does not exists: " + emailId);
+			throw new SQLException();
 		}
-		return null;
 	}
 }

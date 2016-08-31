@@ -17,7 +17,8 @@ function designTweet(jsonObject, tweetText) {
             }
 
             tweet += "<div class=\"row tweet-header\" name=\"tweet-header\">" +    
-             "<img class=\"col-xs-2 photo-thumbnail\" src='" + IMAGE_RETRIEVE_URL + "?mediaId=" + jsonObject.authorId + "' id=\"profileImage-" + jsonObject.authorId + "\"" + "style=\"\" onerror=\"brokenProfileImage(this)\">" + 
+             "<img class=\"col-xs-2 photo-thumbnail\" src='" + FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + jsonObject.authorId + "' id=\"profileImage-" + jsonObject.authorId + "\"" + 
+                " onerror=\"brokenProfileImage(this)\">" + 
             "<div class=\"col-xs-9 tweet-handle-time\" name=\"handleTweetTime\">" +
                 "<div class=\"row\" name=\"handleTime\">" + 
                     "<div class=\"col-xs-10\"> " +
@@ -39,7 +40,7 @@ function designTweet(jsonObject, tweetText) {
             "<div class=\"col-xs-2\" name=\"emptyDivForImageAlignment\"></div>";
         if (jsonObject.mediaId != 0) {
             tweet += "<img class=\"col-xs-7 tweet-image\" id=\"tweetImage-" + jsonObject.mediaId +
-             "onerror=\"brokenTweetImage(this)\" src=\"" + IMAGE_RETRIEVE_URL + "?mediaId=" + jsonObject.mediaId +
+             "\" onerror=\"brokenTweetImage(this)\" src=\"" + IMAGE_RETRIEVE_URL + "?mediaId=" + jsonObject.mediaId +
         "\">"; 
         }
         tweet += "</div>" +
@@ -106,14 +107,16 @@ function parseTweetText(singleTweet) {
 }
 
 function changeButtonStatesForTweet(jsonObject, loggedInUser) {
+	console.log("In changing button State");
     var likeButton = "#like-" + jsonObject.tweetId +"-";
-    var retweetButton = "#retweet-" + jsonObject.tweetId + "-";
-    
+    var retweetButton = "#Retweet-" + jsonObject.tweetId + "-" + localStorage.getItem("loggedInUser");
     if (jsonObject.isLikedByLoggedInUser) {
         $(likeButton).val("Unlike");
     }
+    console.log(jsonObject.retweetUserId + "  " + loggedInUser);
     if (jsonObject.retweetUserId == loggedInUser) {
-        $(retweetButton).prop('disabled', true);
+    	console.log("they are equal");
+        $(retweetButton).val("Retweeted");
     }
 }
 
@@ -131,6 +134,8 @@ function parseJSONOfAllTweets(jsonObject) {
 function getTimeDifference(timestamp) {
     var diff = Date.now() - timestamp;
     if (Math.round(diff/1000) < 60) {
+    	if (Math.round(diff/1000) < 0)
+    		return "0 seconds ago";
         return Math.round(diff/1000) + " seconds ago";
     } else if (Math.round(diff/1000/60) < 60) {
         return Math.round(diff/1000/60) + " minutes ago";

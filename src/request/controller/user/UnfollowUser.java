@@ -27,25 +27,7 @@ import services.user.DeleteConnection;
 @WebServlet("/UnfollowUser")
 public class UnfollowUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-
-	static Logger logger = Logger.getLogger(UnfollowUser.class); 
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public UnfollowUser() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+	private static final Logger logger = Logger.getLogger(UnfollowUser.class);
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -57,18 +39,18 @@ public class UnfollowUser extends HttpServlet {
 		Long loggedInUser = null;
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		if(request.getParameterMap().containsKey("userId")) {
-		 userId = Long.parseLong(request.getParameter("userId"));
+			userId = Long.parseLong(request.getParameter("userId"));
 		}
 		else {
-			logger.error("user empty");
+			response.setStatus(503);
 			return;
 		}
 		
 		if(request.getParameterMap().containsKey("loggedInUser")) {
-		 loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
+			loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
 		}
 		else {
-			logger.error("user to unfollow empty");
+			response.setStatus(503);
 			return;
 		}
 		boolean status = false;
@@ -85,8 +67,8 @@ public class UnfollowUser extends HttpServlet {
 				}
 			}
 		} catch (ClassNotFoundException | SQLException e) {
-			logger.error("SQl excetion occurred: " + e.getStackTrace());
-			
+			response.setStatus(503);
+			logger.error("SQl excetion occurred: " + e.getStackTrace());			
 		}
 		
 		

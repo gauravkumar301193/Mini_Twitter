@@ -1,15 +1,19 @@
-function uploadImage(urlForInfo, elementId, id) {
+function uploadImageForTweet(urlForInfo, elementId, id) {
     $.ajax({
-        url: "UploadImage",
+        url: IMAGE_UPLOAD_URL,
         type: "POST",
-        data: new FormData(document.getElementById(IMAGE_FORM_TWEET)), 
+        data: new FormData(document.getElementById(elementId)), 
         enctype: 'multipart/form-data',
         processData: false,
         contentType: false,
+        crossOrigin: true,
+        xhrFields: { 
+            withCredentials: false 
+        },
         success : function(result) {
             console.log("image uploaded successfully ");
             console.log(result);
-            imageInformationUpload(urlForInfo, result, id);
+            imageInformationUploadPostTweet(urlForInfo, result, id);
         },
         error : function (e) {
             console.log("couldn't upload image: " + e);
@@ -17,7 +21,7 @@ function uploadImage(urlForInfo, elementId, id) {
     });
 } 
 
-function imageInformationUpload(url, mediaId, id) {
+function imageInformationUploadPostTweet(url, mediaId, id) {
     $.ajax({
         url: url,
         type: "POST",
@@ -30,7 +34,8 @@ function imageInformationUpload(url, mediaId, id) {
             withCredentials: false 
         },
         success: function() {
-            console.log("image has been uploaded for " + id);
+            console.log("success for information upload..!!!");
+            fetchTweetGivenTweetId(id, localStorage.getItem("loggedInUser"));
         },
         error: function(e) {
             console.log("couldn't upload image information: " + e);
@@ -38,6 +43,52 @@ function imageInformationUpload(url, mediaId, id) {
     });
 }
 
+
+function uploadImageForUser(urlForInfo, elementId, id) {
+    $.ajax({
+        url: IMAGE_UPLOAD_URL,
+        type: "POST",
+        data: new FormData(document.getElementById(elementId)), 
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        crossOrigin: true,
+        xhrFields: { 
+            withCredentials: false 
+        },
+        success : function(result) {
+            console.log("image uploaded successfully ");
+            console.log(result);
+            imageInformationUploadNewUser(urlForInfo, result, id);
+        },
+        error : function (e) {
+            console.log("couldn't upload image: " + e);
+        }
+    });
+} 
+
+
+function imageInformationUploadNewUser(url, mediaId, id) {
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: {
+            mediaId: mediaId,
+            id: id
+        },
+        crossDomain: true,
+        xhrFields: { 
+            withCredentials: false 
+        },
+        success: function() {
+            console.log("success for information upload..!!!");
+            window.location.replace(PROFILE_CUM_HOME_PAGE);
+        },
+        error: function(e) {
+            console.log("couldn't upload image information: " + e);
+        }
+    });
+}
 
 function brokenProfileImage(image) {
     image.src = ALTERNATE_PROFILE_IMAGE;

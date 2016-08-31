@@ -1,4 +1,4 @@
-package request.controller.user;
+package request.controller.media;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +28,13 @@ public class UploadImage extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+		response.addHeader("Access-Control-Allow-Origin", "*");
 
 		if(ServletFileUpload.isMultipartContent(request)) {
     		System.out.println("I am here1");
             try {
     			long mediaId = QueryMedia.generateMediIdFromDb();
-                List<FileItem> multiparts = new ServletFileUpload(
-                                         new DiskFileItemFactory()).parseRequest(request);
+                List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
         		System.out.println("I am he2 " + mediaId);
                 for(FileItem item : multiparts){
                     if(!item.isFormField()){
@@ -45,9 +45,6 @@ public class UploadImage extends HttpServlet {
                         UpdateMedia.insertIntoMediaDb(mediaId);
                     }
                 }
-        		System.out.println("I am here3 " + mediaId);
-
-               //File uploaded successfully
                request.setAttribute("message", "File Uploaded Successfully");
                response.setContentType("text/html");
                response.getWriter().write(mediaId + "");

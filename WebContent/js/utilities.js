@@ -8,7 +8,7 @@ function addInfoToLeftPanelProfile() {
     $(LEFT_PANEL_USER_HANDLE).html("@" + localStorage.getItem("currentUserHandle"));
     
     if (localStorage.getItem("currentUserMediaId")!= null) {
-        $(LEFT_PANEL_PROFILE_PHOTO).attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + localStorage.getItem("currentUser"));
+        $(LEFT_PANEL_PROFILE_PHOTO).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + localStorage.getItem("currentUser"));
         $(LEFT_PANEL_PROFILE_PHOTO).show();
     }
 }
@@ -70,5 +70,31 @@ function fetchAndUpdateMatchingResults(text, loggedInUser) {
                 $("#searchResult-" + i).show();
             }
         }
+    });
+}
+
+function updateProfileInformation(emailId, password, username, userId) {
+    $.ajax({
+        url : UPDATE_PROFILE_INFORMATION,
+        type : "POST",
+        data : {
+            emailId : emailId,
+            password : password,
+            username : username,
+            userId : userId
+        },
+        crossOrigin: true,
+        xhrFields: { 
+            withCredentials: false 
+        },
+        success : function(result) {
+            console.log("Information updated in database");
+            if ($(IMAGE_ELEMENT_MODAL).val()) {
+                uploadImageForUser(IMAGE_INFORMATION_URL_USER, IMAGE_FORM_MODAL, localStorage.getItem("loggedInUser"));
+            } else {
+            	window.location.replace(PROFILE_CUM_HOME_PAGE);
+            }
+        }
+        
     });
 }

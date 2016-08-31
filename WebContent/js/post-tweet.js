@@ -14,9 +14,12 @@ function postANewTweet(tweetText, userId, isMedia) {
         },
         success : function(result) {
             console.log("tweet posted successfully");
-            fetchTweetGivenTweetId(result, localStorage.getItem("loggedInUser"));
+            
             if ($(IMAGE_ELEMENT_TWEET).val()) {
-                uploadImage(IMAGE_INFORMATION_URL_TWEET, IMAGE_FORM_TWEET, result);
+                console.log("Uploading Image");
+                uploadImageForTweet(IMAGE_INFORMATION_URL_TWEET, IMAGE_FORM_TWEET, result);
+            } else {
+                fetchTweetGivenTweetId(result, localStorage.getItem("loggedInUser"));
             }
         },
         error : function(e) {
@@ -123,14 +126,15 @@ $(document).ready(function() {
             fetchAndShowProfileOfCurrentUser(elementId[1], elementId[2], localStorage.getItem("loggedInUser"));
         } else if (elementId[0] == "profileImage") {
             $("#imageModal").show();
-//            $("#imageModal").css("display", "block");
-            $("#modal-image").attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + elementId[1] + "&type=user");
+            $("#modal-image").attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + elementId[1]);
         } else if (elementId[0] == "delete") {
             deleteTweet(elementId[1]);
             decreaseTweetCount();
             $("#" + elementId[1]).html("");
         } else if (elementId[0] == "tweetImage") {
-            //open modal and display
+            console.log("tweetImage Clicked");
+            $(IMAGE_MODAL).show();
+            $(IMAGE_IN_MODAL).attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + elementId[1]);
         } else if (elementId[0] == "like") {
             console.log($("#" + e.target.id).val());
             if ($("#" + e.target.id).val() == "Like") {
@@ -140,9 +144,10 @@ $(document).ready(function() {
                 $("#like-" + elementId[1] + "-").val("Like");
                 unlikeTweet(elementId[1], localStorage.getItem("loggedInUser"));
             }
-        } else if (elementId[0] == "Retweet") {
+        } else if (elementId[0] == "Retweet" && $("#" + e.target.id).val() == "Retweet") {
             postRetweet(elementId[1], elementId[2], localStorage.getItem("loggedInUser"), localStorage.getItem("loggedInUserHandle"));
             increaseTweetCount();
+            $("#" + e.target.id).val("Retweeted");
         } else if (elementId[0] == "hashtag") {
             localStorage.setItem("hashtag", elementId[1]);
             localStorage.setItem("pageFunction", "hashtag");
@@ -156,12 +161,7 @@ $(document).ready(function() {
                 var file = $('[name="file"]');
                 console.log(file.val());
                 increaseTweetCount();
-                if (file.val() != null) {
-                    console.log("here");
-                    postANewTweet($(NEW_TWEET_TEXT).val().trim(), localStorage.getItem("loggedInUser"), true);
-                } else { 
-                    postANewTweet($(NEW_TWEET_TEXT).val().trim(), localStorage.getItem("loggedInUser"), false);
-                }
+                postANewTweet($(NEW_TWEET_TEXT).val().trim(), localStorage.getItem("loggedInUser"), false);
             }
         }
     });
@@ -169,6 +169,9 @@ $(document).ready(function() {
     $(NEW_TWEET_LETTER_COUNT).html("140 Characters left");
     $(NEW_TWEET_TEXT).keypress(function(key) {
         count += 1;
+        count = $(NEW_TWEET_TEXT).val().length;
+        if (count > 140)
+        	count = 140;
         $(NEW_TWEET_LETTER_COUNT).html((140 - count) + " Characters left");
     });
     
@@ -180,6 +183,9 @@ $(document).ready(function() {
             if (count > 140)
                 count = 140;
         }
+        count = $(NEW_TWEET_TEXT).val().length;
+        if (count > 140)
+        	count = 140;
         $(NEW_TWEET_LETTER_COUNT).html((140 - count) + " Characters left");
     });
     
@@ -190,6 +196,9 @@ $(document).ready(function() {
             count = 140;
         }
         $(NEW_TWEET_TEXT).val(text);
+        count = $(NEW_TWEET_TEXT).val().length;
+        if (count > 140)
+        	count = 140;
         $(NEW_TWEET_LETTER_COUNT).html((140 - text.length) + " Characters left");
     });
 

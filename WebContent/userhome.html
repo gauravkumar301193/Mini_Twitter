@@ -14,6 +14,7 @@ ADD PADDING TO THE NAVIGATION BAR
 <link rel="stylesheet" href="css/try.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.md5.min.js"></script>
 <script src="js/constants.js"></script>
 <script src="js/tweetUtil.js"></script>
 <script src="js/image.js"></script>
@@ -67,7 +68,7 @@ ADD PADDING TO THE NAVIGATION BAR
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="col dropdown-toggle" id="optionsButton">Options <b class="caret"></b></a>
                         <ul role="menu" class="dropdown-menu">
-<!--                            <li><a id="updateProfileButton" >Update Profile</a></li>-->
+                            <li><a id="updateProfileButton" >Update Profile</a></li>
                             <li class="divider"></li>
                             <li><a id="logout">Logout</a></li>
                         </ul>
@@ -162,17 +163,17 @@ ADD PADDING TO THE NAVIGATION BAR
                 </div>
             </div>
         </div>
-        <div id="imageModal" class="modal">
+        <div id="imageModal" class="modal" align="center">
 
             <!-- The Close Button -->
-          <div class="modal-content">
+          <div class="modal-content" style="position:'relative';width:55%;height:87%;margin-top:50px;" align="center">
             <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" onclick="document.getElementById('imageModal').style.display='none'">&times;</button>
+                  <button type="button" class="close" data-dismiss="imageModal" onclick="document.getElementById('imageModal').style.display='none'">&times;</button>
             </div>
             <!-- Modal Content (The Image) -->
-            <div class="modal-body" id="imageBody">
-                <div style="width:100%;padding:20px 10px;;display:block;margin-top:20px;" align="center">
-                    <img class="modal-content" id="modal-image">
+            <div class="modal-body"  id="imageBody">
+                <div align="center">
+                    <img class="modal-content" id="modal-image" style="position:'absolute';width:80%;border:none">
                 </div>
             </div>
             </div>
@@ -183,7 +184,7 @@ ADD PADDING TO THE NAVIGATION BAR
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" onclick="document.getElementById('notificationModal').style.display='none'">&times;</button>
+                  <button type="button" class="close" data-dismiss="notificationModal" onclick="document.getElementById('notificationModal').style.display='none'">&times;</button>
                   <h4 class="modal-title">Notifications</h4>
                 </div>
                 <div class="modal-body" id="notificationBody">
@@ -200,7 +201,7 @@ ADD PADDING TO THE NAVIGATION BAR
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" onclick="document.getElementById('searchModal').style.display='none'">&times;</button>
+                  <button type="button" class="close" data-dismiss="searchModal" onclick="document.getElementById('searchModal').style.display='none'">&times;</button>
                   <h4 class="modal-title">Search For Handle</h4>
                 </div>
                 <div class="modal-body" id="searchBody">
@@ -222,7 +223,38 @@ ADD PADDING TO THE NAVIGATION BAR
 
             </div>
           </div>
+          <div class="modal" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="myModal" onclick="document.getElementById('myModal').style.display='none'">&times;</button>
+                  <h4 class="modal-title">Update Information</h4>
+                </div>
+                <div class="modal-body" background="background-login-page.jpg">
+                    <h5 id="emailExistsError" class="error-message">This email already exists</h5>
+                    <h2 class="form-signin-heading"></h2>
+                    <label for="signUpEmail" class="sr-only">Email address</label>
+                    <input type="email" id="signUpEmail" class="form-control" style="margin:2% 0;" placeholder="Email address" required autofocus>
+
+                    <label for="signUpPassword" class="sr-only">Password</label>
+                    <input type="password" id="signUpPassword" class="form-control" style="margin:2% 0;" placeholder="Password" required>
+                    <label for="userName" class="sr-only">Username</label>
+                    <input type="text" id="userName" class="form-control" style="margin:2% 0;" placeholder="Username" required>
+                    <form id="imageInputForLogin">
+                        <label for="imageUserUpload">
+                        <img src="images/camera.png" id="new-tweet-image" class="photo-upload-image"> Upload Image</label>
+                        <input type="file" name="file" id="imageUserUpload" style="display:none">
+                    </form>
+                  <div style="width:100%">
+                    <button id="signUpButton" class="btn btn-lg btn-primary signin-buttons">Update</button>
+                  </div>            
+                </div>
+              </div>
+            </div>
+          </div>
 
     </div>
 </body>
-</html>                                		
+</html>

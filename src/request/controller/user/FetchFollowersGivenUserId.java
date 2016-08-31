@@ -26,15 +26,7 @@ import services.user.GetAllFollowers;
 @WebServlet("/FetchFollowersGivenUserId")
 public class FetchFollowersGivenUserId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public FetchFollowersGivenUserId() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
+      
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.addHeader("Access-Control-Allow-Origin", "*");

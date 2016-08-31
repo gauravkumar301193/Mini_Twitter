@@ -25,9 +25,7 @@ public class AuthenticateUser extends HttpServlet {
 	
     static Logger logger = Logger.getLogger(AuthenticateUser.class); 
     
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String emailId = "";
 		String password = "";
@@ -64,8 +62,9 @@ public class AuthenticateUser extends HttpServlet {
 				response.setContentType("application/json");
 				response.getWriter().write(jsonObject.toString());
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (Exception e) {
 			logger.error("SQl excetion occurred: " + e.getStackTrace());
+			response.setStatus(503);
 		}
 	}
 

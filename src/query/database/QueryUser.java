@@ -293,8 +293,7 @@ public class QueryUser {
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
 //		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		if (rs.next()) {
-			logger.info("email doesn't exists");
-			
+			logger.info("email exists");
 			return true;
 		}
 		return false;

@@ -1,13 +1,11 @@
 // URLs
-//var IPAddress = "http://localhost:8080/Mini_twitter/";
+//var IPAddress = "http://172.16.28.96:8080/Mini_twitter/";
 var IPAddress = "";
 var AUTHENTICATION_URL = IPAddress + "AuthenticateUser";
 var EMAIL_VERIFICATION_URL = IPAddress + "CheckEmailExists";
 var HANDLE_VERIFICATION_URL = IPAddress + "CheckHandleExists";
 var USER_REGISTER_URL = IPAddress + "RegisterUser";
-var DELETE_TWEET_URL = "";
 var RETWEET_URL = IPAddress + "RetweetGivenUserIdAndTweetId";
-var USER_PROFILE_SETTINGS_URL = "";
 var FIVE_MOST_USED_HASHTAGS_URl = IPAddress + "FetchFiveMostUsedHashtags";
 var TWEETS_FOR_USER_HOME_URL = IPAddress + "FetchTweetsForUserHomeGivenId";
 var TWEETS_FOR_USER_PROFILE = IPAddress + "FetchTweetsForUserProfileGivenUserIdOrHandle";
@@ -19,7 +17,6 @@ var FETCH_ALL_FOLLOWERS_GIVEN_USERID = IPAddress + "FetchFollowersGivenUserId";
 var FETCH_ALL_FOLLOWING_GIVEN_USERID = IPAddress + "FetchFollowingGivenUserId";
 var FOLLOW_A_USER_URL = IPAddress + "FollowUser";
 var UNFOLLOW_A_USER_URL = IPAddress + "UnfollowUser";
-var HASHTAG_URL = "";
 var LIKE_TWEET_URL = IPAddress + "LikeTweetGivenTweetIdAndUserId";
 var UNLIKE_TWEET_URL = IPAddress + "UnlikeATweet";
 var DELETE_TWEET_URL = IPAddress + "DeleteTweetGivenId";
@@ -27,7 +24,6 @@ var TWEETS_BY_A_SPECIFIC_USER = IPAddress + "FetchTweetsAndRetweetsGivenUserId";
 var LOGOUT_URL = IPAddress + "EndUserSession";
 var IMAGE_UPLOAD_TWEET_URL = IPAddress + "UploadImageForTweet";
 var POST_A_NEW_TWEET_URL = IPAddress + "PostNewTweet";
-var MAKE_CONNECTION_BETWEEN_USER_URL = "";
 var TWEETS_FOR_A_HASHTAG = IPAddress + "TweetsWithHashtag";
 
 // Profile
@@ -45,7 +41,7 @@ var NO_USER_MESSAGE = "#noUserMessage";
 var NOTIFICATION_BUTTON = "#notificationNavigation";
 var NOTIFICATION_MODAL = "#notificationModal";
 // Pages
-var LOGIN_AND_REGISTRATION_PAGE = "loginAndRegister.html";
+var LOGIN_AND_REGISTRATION_PAGE = "index.html";
 var PROFILE_CUM_HOME_PAGE = "userhome.html";
 
 var NOTIFICATIONS_MODAL_PARENT = "#notificationsParent";
@@ -71,8 +67,13 @@ var EMAIL_EXISTS_ERROR = "#emailExistsError";
 var HANDLE_TAKEN_ERROR = "#handleTakenError";
 var INVALID_CREDENTIALS_ENTERED = "#invalidCredentials";
 var INVALID_USERNAME_ENTERED = "#usernameInvalidError";
+var INVALID_EMAIL_ENTERED ="#invalidEmailError";
+
+
 var LEFT_PANEL_FOLLOW_BUTTON = "#follow-button-left-panel";
 var MODAL_SEARCHES = "#searchBody";
+
+
 // Buttons
 var SIGN_UP_BUTTON = "#signUpButton";
 var SIGN_IN_BUTTON = "#signIn";
@@ -105,13 +106,22 @@ var MIDDLE_PANEL_TWEET_PARENT = "#middle-panel-all-tweets";
 var MIDDLE_PANELS_FOR_USERS = "#middle-panel-users";
 var PARENT_FOR_USERS_ELEMENT = "#usersParent";
 
-
-var IMAGE_UPLOAD_URL = "UploadImageForUser";
-var IMAGE_RETRIEVE_URL = "FetchImageGivenTweetId";
+var IMAGE_MODAL = "#imageModal";
+var IMAGE_IN_MODAL = "#modal-image";
+var IMAGE_UPLOAD_URL = IPAddress + "UploadImage";
+var IMAGE_RETRIEVE_URL = IPAddress + "FetchImageGivenTweetId";
 var IMAGE_ELEMENT_MODAL = "#imageUserUpload";
 var IMAGE_FORM_MODAL = "imageInputForLogin";
 var IMAGE_FORM_TWEET = "imageInputForTweet";
 var IMAGE_ELEMENT_TWEET = "#x";
-var IMAGE_INFORMATION_URL_USER = "AccknowledgmentForUserMedia";
-var IMAGE_INFORMATION_URL_TWEET = "AccknowledgmentForTweetMedia";
-var FETCH_IMAGE_GIVEN_USER_ID = "FetchImageGivenUserId";
+var IMAGE_INFORMATION_URL_USER = IPAddress + "AccknowledgmentForUserMedia";
+var IMAGE_INFORMATION_URL_TWEET = IPAddress + "AccknowledgmentForTweetMedia";
+var FETCH_IMAGE_GIVEN_USER_ID = IPAddress + "FetchImageGivenUserId";
+
+var UPDATE_PROFILE_MODAL = "#myModal";
+var UPDATE_PROFILE_EMAIL_ID = "#signUpEmail";
+var UPDATE_PROFILE_PASSWORD = "#signUpPassword";
+var UPDATE_PROFILE_USERNAME = "#userName";
+var UPDATE_PROFILE_HANDLE = "#signUpHandle";
+var UPDATE_PROFILE_SUBMIT = "#signUpButton";
+var UPDATE_PROFILE_INFORMATION = IPAddress + "UpdateUserDetails";

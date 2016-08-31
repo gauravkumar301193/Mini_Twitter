@@ -11,7 +11,6 @@ function fetchTweetsBetweenTimeStamps(url, data, isNew) {
         xhrFields: { 
             withCredentials: false 
         },
-        async : false,
         success : function(result) {
             console.log(result);
             var tweets = result.Tweets;
@@ -24,39 +23,18 @@ function fetchTweetsBetweenTimeStamps(url, data, isNew) {
                     for (var i = tweetsHTMLArray.length - 1; i >= 0; i--) {
                         $(MIDDLE_PANEL_TWEET_PARENT).prepend(tweetsHTMLArray[i]);
                     }
-//                    for (var i = 0; i < tweets.length; i++) {
-//                        var tweetProfilePhotoId = "#profileImage-" + tweets[i].authorId;
-//                        var tweetPostImage = "#tweetImage-" + tweets[i].mediaId;
-//                        $(tweetProfilePhotoId).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?mediaId=" + tweets[i].authorId);
-//                        $(tweetProfilePhotoId).show();
-//                        if (tweets[i].mediaId != 0) {
-//                        	console.log("Fetching from URL = " + IMAGE_RETRIEVE_URL + "?mediaId=" + tweets[i].mediaId);
-//	                        $(tweetPostImage).attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + tweets[i].mediaId);
-//	                        $(tweetPostImage).show();
-//                        }
-//                    }
+
                     localStorage.setItem("latestTime", tweets[0].timestamp);
                 } else {
                     for (var i = 0; i < tweetsHTMLArray.length; i++) {
                         $(MIDDLE_PANEL_TWEET_PARENT).append(tweetsHTMLArray[i]);       
                     }
-//                    for (var i = 0; i < tweets.length; i++) {
-//                    	console.log("here11");
-//                        var tweetProfilePhotoId = "#profileImage-" + tweets[i].authorId;
-//                        var tweetPostImage = "#tweetImage-" + tweets[i].mediaId;
-//                        $(tweetProfilePhotoId).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?mediaId=" + tweets[i].authorId);
-//                        $(tweetProfilePhotoId).show();
-//                    	console.log("here22");
-//                        if (tweets[i].mediaId != 0) {
-//                        	console.log("here33");
-//                        	console.log("Fetching from URL = " + IMAGE_RETRIEVE_URL + "?mediaId=" + tweets[i].mediaId);
-//	                        $(tweetPostImage).attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + tweets[i].mediaId);
-//	                        $(tweetPostImage).show();
-//                        }
-//                    }
-                    localStorage.setItem("latestTime", tweets[0].timestamp);
+
+                    localStorage.setItem("startTime", tweets[tweets.length - 1].timestamp);
                 }
+                localStorage.removeItem("sent");
                 for (var i = 0; i < tweets.length; i++) {
+                	console.log("Changing button states");
                     changeButtonStatesForTweet(tweets[i], localStorage.getItem("loggedInUser"));
                 }
             } else if (isNew == false) {

@@ -36,6 +36,10 @@ public class FetchTweetsForUserHomeGivenId extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = Long.parseLong(request.getParameter("userId"));

@@ -39,6 +39,21 @@ body {
     margin-bottom: 10px;
 }
 
+.signin-buttons {
+    width: 40%;
+    margin-left: 5%;
+    margin-right: 4%;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 15px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.error-message {
+    display : none;
+    color : red;
+}
+
 .modal {
     display : none;
 }

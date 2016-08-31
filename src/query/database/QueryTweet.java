@@ -214,7 +214,6 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + stringBuilder.toString());
 		ResultSet rs = SQLConnection.executeQuery(stringBuilder.toString());
-//		ResultSet rs = SQLConnection.db.queryDb(stringBuilder.toString());
 		if (rs.next()) {
 			return true;
 		}
@@ -231,7 +230,7 @@ public class QueryTweet {
 		ResultSet rs = SQLConnection.executeQuery(query);
 		while (rs.next()) {
 			Tweet tweet = prepareTweetObject(rs);
-			if (tweet.getUserId() != userId) {
+			if (rs.getLong("user_id") != rs.getLong("retweetUser") && QueryTweet.checkIfRetweet(tweet.getTweetId(), rs.getLong("retweetUser"))) {
 				tweet.markRetweet();
 				tweet.setRetweetUserId(userId);
 				tweet.setRetweetHandle(QueryUser.getUserHandle(rs.getLong("retweetUser")));
@@ -294,7 +293,7 @@ public class QueryTweet {
 		logger.info("executing sql query2: " + query.toString());
 		while (rs.next()){
 			Tweet currentTweet = prepareTweetObject(rs);
-			if(rs.getLong("user_id") != rs.getLong("retweetUser")) {
+			if(rs.getLong("user_id") != rs.getLong("retweetUser") && QueryTweet.checkIfRetweet(currentTweet.getTweetId(), rs.getLong("retweetUser"))) {
 				currentTweet.markRetweet();
 				currentTweet.setRetweetUserId(rs.getLong("retweetUser"));
 				currentTweet.setRetweetHandle(QueryUser.getUserHandle(rs.getLong("retweetUser")));
@@ -388,18 +387,21 @@ public class QueryTweet {
 		
 		logger.info("executing sql query: " + query.toString());
 		ResultSet rs = SQLConnection.executeQuery(query.toString());
-//		ResultSet rs = SQLConnection.db.queryDb(query.toString());
 		
 		while (rs.next()) {
-			if(QueryUser.checkValidRetweetUser(rs.getLong("retweetUser"))) {
 			Tweet tweet = prepareTweetObject(rs);
-			tweetsForParticularUser.add(tweet);
+			if(QueryTweet.checkIfRetweet(tweet.getTweetId(), rs.getLong("retweetUser"))) {
+				tweet.setRetweetUserId(rs.getLong("retweetUser"));
+				tweet.markRetweet();
+				tweet.setRetweetHandle(QueryUser.getUserHandle(rs.getLong("retweetUser")));
 			}
+			tweetsForParticularUser.add(tweet);
 		}
 		//System.out.println(tweetsForParticularUser.size());
+		logger.info("returning " + tweetsForParticularUser.size() + " objects");
 		return tweetsForParticularUser;
 	}
-
+	
 	public static boolean checkIsLiked(long userId, long tweetId) throws ClassNotFoundException, SQLException {
 		StringBuilder query = new StringBuilder("select * from likes where user_id = ").append(userId)
 				.append(" and tweet_id = ").append(tweetId);
@@ -469,7 +471,5 @@ public class QueryTweet {
 		}
 		return 0;
 	}
-
-	
 	
 }

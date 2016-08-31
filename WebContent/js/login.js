@@ -1,8 +1,21 @@
 $(document).ready(function(){
     var previousEmailValue = "";
+    var invalidHandle = false;
+    var invalidEmail = false;
     $(SIGN_UP_EMAIL).focusout(function() {
+    	$(INVALID_EMAIL_ENTERED).hide();
         var emailEntered = $(SIGN_UP_EMAIL).val();
-
+        var validEmail = new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+        
+        console.log("checking email");
+        if (validEmail.test(emailEntered) == false) {
+        	$(INVALID_EMAIL_ENTERED).show();
+        	console.log("email invalid");
+        	invalidEmail = true;
+        	return;
+        }
+        
+        
         if (previousEmailValue != emailEntered) {
             previousEmailValue = emailEntered;
             console.log(emailEntered);
@@ -17,12 +30,15 @@ $(document).ready(function(){
                     withCredentials: false 
                 },
                 success : function(result) {
-                    if (result != "EXISTS") {
+                    if (result != "true") {
                         $(EMAIL_EXISTS_ERROR).hide();
+                        $(INVALID_EMAIL_ENTERED).hide();
                         console.log("new Email");
+                        invalidEmail = false;
                     } else {
                         $(EMAIL_EXISTS_ERROR).show();
                         console.log("Email exists");
+                        invalidEmail = true;
                     }
                 },
                 error : function(jqXHR, textStatus, errorThrown) {
@@ -41,6 +57,7 @@ $(document).ready(function(){
 
         if (validHandle.test(handle) == false) {
             $(INVALID_USERNAME_ENTERED).show();
+            invalidHandle = true;
             return;
         }
         if (previousHandleEntered != handle) {
@@ -56,11 +73,14 @@ $(document).ready(function(){
                     withCredentials: false 
                 },
                 success : function(result) {
-                    if (result != "EXISTS") {
+                    if (result != "true") {
                         $(HANDLE_TAKEN_ERROR).hide();
+                        $(INVALID_USERNAME_ENTERED).hide();
+                        invalidHandle = false;
                         console.log("New Handle!");
                     } else {
-                        $(HANDLE_TAKEN_ERROR).show();                        
+                        $(HANDLE_TAKEN_ERROR).show(); 
+                        invalidHandle = true;
                         console.log("Handle Exists");
                     }
                 },
@@ -108,6 +128,8 @@ $(document).ready(function(){
         var handle = $(SIGN_UP_HANDLE).val();
         var password = MD5($(SIGN_UP_PASSWORD).val());
         var name = $(SIGN_UP_NAME).val();
+        if (invalidHandle == true || invalidEmail == true)
+        	return;
         var tryResult;
         $.ajax({
             url : USER_REGISTER_URL,
@@ -129,9 +151,10 @@ $(document).ready(function(){
                 setCurrentEqualLoggedIn();
                 localStorage.setItem("pageFunction", "home");
                 if ($(IMAGE_ELEMENT_MODAL).val()) {
-                    uploadImage(IMAGE_INFORMATION_URL_USER, IMAGE_ELEMENT_MODAL, localStorage.getItem("loggedInUser"));
+                    uploadImageForUser(IMAGE_INFORMATION_URL_USER, IMAGE_FORM_MODAL, localStorage.getItem("loggedInUser"));
+                } else {
+                    window.location.replace(PROFILE_CUM_HOME_PAGE);
                 }
-                window.location.replace(PROFILE_CUM_HOME_PAGE);
             },
             error : function(e) {
                 console.log("error occured: ");

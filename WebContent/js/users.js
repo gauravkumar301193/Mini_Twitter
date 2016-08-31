@@ -83,7 +83,8 @@ function fetchAllUsers(url, userId, loggedInUser) {
 function fetchUserHTML(jsonObject) {
     var tweet = "<div class=\"col-md-6 col-sm-6\" style=\"margin-top:30px\">" +
                     "<div class=\"row\">" +
-                        "<img class=\"col-xs-5\" id=\"user-" + jsonObject.userId + "\"style=\"max-width:70px\" onerror=\"brokenProfileImage(this)\">" + 
+                        "<img class=\"col-xs-5\" id=\"user-" + jsonObject.userId + "\"style=\"max-width:70px\" onerror=\"brokenProfileImage(this)\"" + "src=\"" + FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + jsonObject.userId + "\"" +
+                            ">" + 
                         "<div class=\"col-xs-7\" align=\"center\">" +
                             "<a id=\"profile-" + jsonObject.userId + "\" style=\"font-size:15px;word-break:break-word\">@" + jsonObject.handle + "</a>" + 
                         "</div>" +
@@ -110,9 +111,6 @@ function displayAllUsers(jsonObject) {
             console.log("here #follow-" + jsonObject[i].userId);
             $("#follow-" + jsonObject[i].userId).val("Unfollow");
         }
-        console.log(IMAGE_RETRIEVE_URL + "?mediaId=" + jsonObject[i].userId + "&type=user");
-        $("#user-" + jsonObject[i].userId).attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + jsonObject[i].userId);
-        $("#follow-" + jsonObject[i].userId).show();
     }
 }
 
@@ -171,7 +169,7 @@ function unfollowAUser(userId, loggedInUser) {
 $(document).ready(function() {
     $(MIDDLE_PANELS_FOR_USERS).click(function(e) {
         var elementId = e.target.id.split("-");
-        console.log("clicked  " + e.target.id + "  " + elementId[0] + "  " + $(e.target.id).val());        
+        console.log("clicked  " + e.target.id + "  " + elementId[0] + "  " + $("#" + e.target.id).val());        
         if (elementId[0] == "profile") {
             fetchAndShowProfileOfCurrentUser("", elementId[1], localStorage.getItem("loggedInUser"));
         } else if (elementId[0] == "follow") {

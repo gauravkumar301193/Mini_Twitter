@@ -1,45 +1,104 @@
-<html>
-<head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-</head>
-<body style="font-family: calibri; font-size: 8pt">
-<div>
-<form id="fileForm">
-	<label for="X">tmc</label>
-    <input type="file" name="file" id="X" style="display:none"/>
-</form>
-    <button id="btnUpload" type="button">Upload file</button>
-    <button id="btnClear" type="button">Clear</button>
-</div>
-</body>
 
-<script type="text/javascript">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+      <script src="js/constants.js"></script>
+      <script src="js/jquery.md5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/localStorage.js"></script>
+    <script src="js/image.js"></script> 
+    <script src="js/login.js"></script>  
+    <title>Signin Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+
+    <script src="js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
     
-var isJpg = function(name) {
-    return name.match(/jpg$/i)
-};
-    
-var isPng = function(name) {
-    return name.match(/png$/i)
-};
-    
-var CST = "fileForm";    
-var url = "UploadDemoImage";
-$(document).ready(function() {
-    $('#btnUpload').on('click', function() {
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: new FormData(document.getElementById(CST)),
-            enctype: 'multipart/form-data',
-            processData: false,
-            contentType: false
-          });
+  <body background = "images/background-login-page.jpg" style="background-repeat: no-repeat;padding:20">
+    <header class="login-header" data-position="fixed">
+        <img src="images/twitter.png" class="logo-image">
+    </header>
+
+    <div class="container">
         
-    });
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <h5 class="error-message" id="invalidCredentials">Invalid user credentials.</h5>
+        <label for="signInEmail" class="sr-only">Email address</label>
+        <input type="email" id="signInEmail" class="form-control login-input" placeholder="Email address" required autofocus>
+          
+        <label for="signInPassword" class="sr-only">Password</label>
+        <input type="password" id="signInPassword" class="form-control login-input" placeholder="Password" required>
+      <div style="width:100%">
+        <button class="btn btn-lg btn-primary signin-buttons" type="button" data-toggle="modal" data-target="#myModal">Register</button>
 
-});
+        <button class="btn btn-lg btn-primary signin-buttons" id="signIn" type="button">Sign in</button>
+      </div>
+      </form>
+        
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
     
-</script>
-
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Please Enter your details</h4>
+        </div>
+        <div class="modal-body" background="background-login-page.jpg">
+            <h5 id="emailExistsError" class="error-message">This email already exists</h5>
+            <h5 id="invalidEmailError" class="error-message">Invalid Email entered</h5>
+            <h5 id="handleTakenError" class="error-message">This handle already taken</h5>
+            <h5 id="usernameInvalidError" class="error-message">Invalid handle entered</h5>
+            <h2 class="form-signin-heading"></h2>
+            <label for="signUpEmail" class="sr-only">Email address</label>
+            <input type="email" id="signUpEmail" class="form-control" style="margin:2% 0;" placeholder="Email address" required autofocus>
+            
+            <label for="signUpPassword" class="sr-only">Password</label>
+            <input type="password" id="signUpPassword" class="form-control" style="margin:2% 0;" placeholder="Password" required>
+            <label for="userName" class="sr-only">Username</label>
+            <input type="text" id="userName" class="form-control" style="margin:2% 0;" placeholder="Username" required>
+            <label for="signUpHandle" class="sr-only">Handle</label>
+            <input type="text" id="signUpHandle" class="form-control" style="margin:2% 0;" placeholder="inputHandle" required>
+            <form id="imageInputForLogin">
+                <label for="imageUserUpload">
+                <img src="images/camera.png" id="new-tweet-image" class="photo-upload-image"> Upload Image</label>
+                <input type="file" name="file" id="imageUserUpload" style="display:none">
+            </form>
+          <div style="width:100%">
+            <button id="signUpButton" class="btn btn-lg btn-primary signin-buttons">Sign Up!</button>
+          </div>            
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  </div>
+      
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>

@@ -87,9 +87,8 @@ $(document).ready(function() {
             followersPage();
             fetchAllFollowing(localStorage.getItem("currentUser"), localStorage.getItem("loggedInUser"));
         } else if (id == photo.substr(1, photo.length)) {
-            $("#imageModal").show();
-//            $("#imageModal").css("display", "block");
-            $("#modal-image").attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + localStorage.getItem("currentUser") + "&type=user");
+            $(IMAGE_MODAL).show();
+            $(IMAGE_IN_MODAL).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + localStorage.getItem("currentUser"));
         } else if (id == handle.substr(1, handle.length)) {
             localStorage.setItem("pageFunction", "profile");
             setCurrentEqualLoggedIn();
@@ -148,16 +147,28 @@ $(document).ready(function() {
         console.log("herer 1 ");
         var current = $(document).scrollTop();
         console.log("height " + doc + "  " + current + "  " + Math.round(doc * 0.7));
-        if (current == Math.round(doc * 0.7) && localStorage.getItem("sent") == null) {
-            console.log("here");
+        if (Math.abs(Math.round(doc * 0.7) - current) <= 5 && localStorage.getItem("sent") == null) {
             localStorage.setItem("sent", true);
+            console.log("here " + flag);
             fetchOlderTweetsFromServer(url, userId, localStorage.getItem("loggedInUser"));
         }
     });
     
     $(UPDATE_PROFILE_BUTTON).click(function() {
-        // open modal to update the information;
+        $(UPDATE_PROFILE_MODAL).show();
+        console.log("here");
     })
+    
+    $(UPDATE_PROFILE_SUBMIT).click(function() {
+        var emailId = $(UPDATE_PROFILE_EMAIL_ID).val();
+        var password ="";
+        if ($(UPDATE_PROFILE_PASSWORD).val() != "") {
+            password = MD5($(UPDATE_PROFILE_PASSWORD).val());
+        }
+        var username = $(UPDATE_PROFILE_USERNAME).val();
+        console.log("pass = " + password + " user=" + username + " email=" + emailId);
+        updateProfileInformation(emailId, password, username, localStorage.getItem("loggedInUser"));
+    });
     
     $("#search-nav").click(function(){
         console.log("here");
@@ -211,6 +222,40 @@ $(document).ready(function() {
             destroyTimeStamps();
             localStorage.setItem("pageFunction", "singleTweet");
             window.location.replace(PROFILE_CUM_HOME_PAGE);
+        }
+    });
+    
+    var previousEmailValue = "";
+    $(UPDATE_PROFILE_EMAIL_ID).focusout(function() {
+        console.log("here");
+        var emailEntered = $(UPDATE_PROFILE_EMAIL_ID).val();
+        
+        if (previousEmailValue != emailEntered) {
+            previousEmailValue = emailEntered;
+            console.log(emailEntered);
+            $.ajax({
+                url : EMAIL_VERIFICATION_URL,
+                type : "GET",
+                data : {
+                  emailId : emailEntered  
+                },
+                crossOrigin: true,
+                xhrFields: { 
+                    withCredentials: false 
+                },
+                success : function(result) {
+                    if (result != "true") {
+                        $(EMAIL_EXISTS_ERROR).hide();
+                        console.log("new Email");
+                    } else {
+                        $(EMAIL_EXISTS_ERROR).show();
+                        console.log("false");
+                    }
+                },
+                error : function(jqXHR, textStatus, errorThrown) {
+                    $(EMAIL_EXISTS_ERROR).show();
+                }
+            });
         }
     });
 

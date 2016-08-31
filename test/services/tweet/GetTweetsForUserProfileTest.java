@@ -15,7 +15,8 @@ public class GetTweetsForUserProfileTest {
 		try {
 			List<Tweet> twts = GetTweetsForUserProfile.tweetsForUserProfile(50 , 0 , Long.parseLong("1472020664186"));
 			assertTrue(twts.size() > 0);
-			assertTrue(twts.get(0).getUserId() > 0);		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+			assertTrue(twts.get(0).getUserId() > 0);		
+		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

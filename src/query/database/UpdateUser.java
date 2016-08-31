@@ -82,7 +82,6 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser incrementFollowerCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
-//		return SQLConnection.db.updateDb(sql.toString());
 	}
 
 	private static int addConnections(long user, long userToFollow) throws ClassNotFoundException, SQLException {
@@ -95,7 +94,6 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser addConnections : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
-//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int incrementFollowingCount(long user) throws ClassNotFoundException, SQLException {
@@ -106,7 +104,6 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser incrementFollowingCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
-//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	public static boolean unfollowUser(long user, long userToUnfollow) throws SQLException, ClassNotFoundException {
@@ -128,31 +125,27 @@ public class UpdateUser {
 		logger.info("executing sql query in UpdateUser decrementFollowerCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
-//		return SQLConnection.db.updateDb(sql.toString());
-
 	}
 
 	private static int updateConnectionEndTime(long user, long userToUnfollow) throws ClassNotFoundException, SQLException {
 		StringBuilder sql = new StringBuilder("Update connections set end_time = ") 
 				.append(System.currentTimeMillis()).append(" where following = ") 
-				.append(userToUnfollow);
+				.append(userToUnfollow)
+				.append(" and follower = ")
+				.append(user);
 	
 
 		logger.info("executing sql query in UpdateUser updateConnectionEndTime : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
-//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	private static int decrementFollowingCount(long user) throws ClassNotFoundException, SQLException {
 		StringBuilder sql = new StringBuilder("Update user_details set following_count = following_count - 1") 
 				.append(" where user_id = ") 
 				.append(user);
-
-//		logger.info("executing sql query in UpdateUser decrementFollowingCount : " + sql.toString());
 	
 		return SQLConnection.executeUpdate(sql.toString());
-//		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
 	public static boolean deleteUser(long userId) throws ClassNotFoundException, SQLException {
