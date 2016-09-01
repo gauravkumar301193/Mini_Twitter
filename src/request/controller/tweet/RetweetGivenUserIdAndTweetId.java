@@ -35,6 +35,10 @@ public class RetweetGivenUserIdAndTweetId extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		long tweetId = 0 ;
 		String loggedInUserHandle = "" ;
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		long authorId = 0;
 		if(request.getParameterMap().containsKey("tweetId")) {
 		 tweetId = Long.parseLong(request.getParameter("tweetId"));

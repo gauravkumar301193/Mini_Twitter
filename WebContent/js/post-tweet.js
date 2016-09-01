@@ -19,7 +19,7 @@ function postANewTweet(tweetText, userId, isMedia) {
                 console.log("Uploading Image");
                 uploadImageForTweet(IMAGE_INFORMATION_URL_TWEET, IMAGE_FORM_TWEET, result);
             } else {
-                fetchTweetGivenTweetId(result, localStorage.getItem("loggedInUser"));
+                fetchTweetGivenTweetId(result, getLoggedInUser());
             }
         },
         error : function(e) {
@@ -123,7 +123,7 @@ $(document).ready(function() {
         var elementId = x.split("-");
         console.log("here " + elementId[0]);
         if (elementId[0] == "profile") {
-            fetchAndShowProfileOfCurrentUser(elementId[1], elementId[2], localStorage.getItem("loggedInUser"));
+            fetchAndShowProfileOfCurrentUser(elementId[1], elementId[2], getLoggedInUser());
         } else if (elementId[0] == "profileImage") {
             $("#imageModal").show();
             $("#modal-image").attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + elementId[1]);
@@ -133,19 +133,19 @@ $(document).ready(function() {
             $("#" + elementId[1]).html("");
         } else if (elementId[0] == "tweetImage") {
             console.log("tweetImage Clicked");
-            $(IMAGE_MODAL).show();
+//            $(IMAGE_MODAL).show();
             $(IMAGE_IN_MODAL).attr("src", IMAGE_RETRIEVE_URL + "?mediaId=" + elementId[1]);
         } else if (elementId[0] == "like") {
             console.log($("#" + e.target.id).val());
             if ($("#" + e.target.id).val() == "Like") {
                 $("#like-" + elementId[1] + "-").val("Unlike");               
-                likeTweet(elementId[1], localStorage.getItem("loggedInUser"));
+                likeTweet(elementId[1], getLoggedInUser());
             } else {
                 $("#like-" + elementId[1] + "-").val("Like");
-                unlikeTweet(elementId[1], localStorage.getItem("loggedInUser"));
+                unlikeTweet(elementId[1], getLoggedInUser());
             }
         } else if (elementId[0] == "Retweet" && $("#" + e.target.id).val() == "Retweet") {
-            postRetweet(elementId[1], elementId[2], localStorage.getItem("loggedInUser"), localStorage.getItem("loggedInUserHandle"));
+            postRetweet(elementId[1], elementId[2], getLoggedInUser(), getLoggedInUserHandle());
             increaseTweetCount();
             $("#" + e.target.id).val("Retweeted");
         } else if (elementId[0] == "hashtag") {
@@ -157,11 +157,21 @@ $(document).ready(function() {
     
     $(MIDDLE_PANEL_NEW_TWEET).click(function(e){
         if (("#" + e.target.id) == POST_A_NEW_TWEET_BUTTON) {
-            if (localStorage.getItem("loggedInUser") != null && $(NEW_TWEET_TEXT).val().trim() != "") {
-                var file = $('[name="file"]');
-                console.log(file.val());
+        	if ($(NEW_TWEET_TEXT).val().trim() == "") {
+        		alert("Please enter some text first");
+        		return;
+        	}
+            if (getLoggedInUser() != null && $(NEW_TWEET_TEXT).val().trim() != "") {
+                if ($(IMAGE_ELEMENT_TWEET).val()) {
+                    var file = $(IMAGE_ELEMENT_TWEET);
+                    var filename = $.trim(file.val());
+                	if (!(isJpg(filename) || (isPng(filename)))) {
+                		alert("only Jpg and Png formats");
+                		return;
+                	}
+                }
                 increaseTweetCount();
-                postANewTweet($(NEW_TWEET_TEXT).val().trim(), localStorage.getItem("loggedInUser"), false);
+                postANewTweet($(NEW_TWEET_TEXT).val().trim(), getLoggedInUser(), false);
             }
         }
     });
@@ -201,5 +211,6 @@ $(document).ready(function() {
         	count = 140;
         $(NEW_TWEET_LETTER_COUNT).html((140 - text.length) + " Characters left");
     });
+    
 
 });

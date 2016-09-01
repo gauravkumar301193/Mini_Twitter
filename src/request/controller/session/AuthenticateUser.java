@@ -57,8 +57,8 @@ public class AuthenticateUser extends HttpServlet {
 				
 				logger.info(jsonObject.toString());
 				session.setAttribute("email_id", emailId);
-				session.setAttribute("password", password);
 				session.setAttribute("userId", userId);
+				logger.info("session created");
 				response.setContentType("application/json");
 				response.getWriter().write(jsonObject.toString());
 			}

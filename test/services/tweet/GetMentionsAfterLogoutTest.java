@@ -12,14 +12,15 @@ import models.Tweet;
 public class GetMentionsAfterLogoutTest {
 	
 	@Test
-	public void testGetMentionsAfterLogout() {
-		try {
-			List<Tweet> mentions = GetMentionsAfterLogout.getMentionsAfterLogout(2622766);
+	public void testGetMentionsAfterLogout() throws ClassNotFoundException, SQLException {
+			List<Tweet> mentions = GetMentionsAfterLogout.getMentionsAfterLogout(1);
 			assertEquals(0, mentions.size());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	}
+	
+	@Test
+	public void testGetMentionsAfterLogoutWhenuserNotPresent() throws ClassNotFoundException, SQLException {
+			List<Tweet> mentions = GetMentionsAfterLogout.getMentionsAfterLogout(-12);
+			assertEquals(null, mentions);
 	}
 
 }

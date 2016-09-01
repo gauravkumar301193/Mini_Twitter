@@ -9,25 +9,15 @@ import org.junit.Test;
 public class GetLikesAfterTimestampTest {
 
 	@Test
-	public void testLikesAfterLogout() {
-		try {
-			int likeCount = GetLikesAfterTimestamp.likesAfterLogout(2622766);
-			assertTrue(likeCount >=0 );
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testLikesAfterLogout() throws ClassNotFoundException, SQLException {
+			int likeCount = GetLikesAfterTimestamp.likesAfterLogout(1);
+			assertEquals(0 , likeCount);
 	}
 	
 	@Test
-	public void testLikesAfterLogoutWhenInvalidUser() {
-		try {
+	public void testLikesAfterLogoutWhenInvalidUser() throws ClassNotFoundException, SQLException {
 			int likeCount = GetLikesAfterTimestamp.likesAfterLogout(-50);
 			assertEquals(0, likeCount);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

@@ -30,6 +30,10 @@ public class GetTweetGivenId extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			long tweetId = Long.parseLong(request.getParameter("tweetId"));
 			Tweet tweet = QueryTweet.getTweetByTweetId(tweetId);

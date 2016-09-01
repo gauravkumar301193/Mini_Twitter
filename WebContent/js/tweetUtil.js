@@ -18,15 +18,15 @@ function designTweet(jsonObject, tweetText) {
 
             tweet += "<div class=\"row tweet-header\" name=\"tweet-header\">" +    
              "<img class=\"col-xs-2 photo-thumbnail\" src='" + FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + jsonObject.authorId + "' id=\"profileImage-" + jsonObject.authorId + "\"" + 
-                " onerror=\"brokenProfileImage(this)\">" + 
+                " onerror=\"brokenProfileImage(this)\" data-toggle=\"modal\" data-target=\"#imageModal\">" + 
             "<div class=\"col-xs-9 tweet-handle-time\" name=\"handleTweetTime\">" +
                 "<div class=\"row\" name=\"handleTime\">" + 
                     "<div class=\"col-xs-10\"> " +
                         "<a id=\"profile-" + jsonObject.authorHandle + "-" + jsonObject.authorId + "\">@" + jsonObject.authorHandle + "</a>" + 
                         "<span class=\"tweet-time\" name=\"tweetTime\">" + getTimeDifference(jsonObject.timestamp) + "</span>" +
                     "<hr></div>";
-        console.log("for delete button" + localStorage.getItem("loggedInUser") + "   " + jsonObject.authorId);
-        if (localStorage.getItem("loggedInUser") == jsonObject.authorId) {
+        console.log("for delete button" + getLoggedInUser() + "   " + jsonObject.authorId);
+        if (getLoggedInUser() == jsonObject.authorId) {
                     tweet += "<div class=\"col-xs-1\">" +
                             "<button type=\"button\" class=\"close\" id=\"delete-" + jsonObject.tweetId + "\">&times;</button>" +
                         "</div>";
@@ -47,10 +47,13 @@ function designTweet(jsonObject, tweetText) {
         "<div class=\"row tweet-footer\" name=\"tweetFooter\">" +
             "<div class=\"col-sm-6\" name=\"allButtonsForTweet\">" +
                 "<div class=\"row\">" + 
-                    "<input type=\"button\" class=\"col-sm-4 btn-primary btn-md tweet-footer-button\" id=\"like-" + jsonObject.tweetId +"-" + "\" value=\"Like\">" +
-                    "<input type=\"button\" class=\"col-sm-4 btn-primary btn-md tweet-footer-button\" id=\"Retweet-" + jsonObject.tweetId + "-" + localStorage.getItem("loggedInUser") 
- + "\" value=\"Retweet\">" +
-                "</div>" +
+                    "<input type=\"button\" class=\"col-sm-4 btn-primary btn-md tweet-footer-button\" id=\"like-" + jsonObject.tweetId +"-" + "\" value=\"Like\">";
+                    if(jsonObject.authorId != getLoggedInUser()) { 
+                    	tweet += "<input type=\"button\" style=\"width:100px;\" class=\"col-sm-4 btn-primary btn-md tweet-footer-button\" id=\"Retweet-" + jsonObject.tweetId + "-" + getLoggedInUser() 
+                    	+ "\" value=\"Retweet\">";
+                    }
+                    
+               tweet += "</div>" +
             "</div>" +
         "</div>" +
         "<div class=\"row\" name=\"line-break-after-tweet\">" +
@@ -109,12 +112,12 @@ function parseTweetText(singleTweet) {
 function changeButtonStatesForTweet(jsonObject, loggedInUser) {
 	console.log("In changing button State");
     var likeButton = "#like-" + jsonObject.tweetId +"-";
-    var retweetButton = "#Retweet-" + jsonObject.tweetId + "-" + localStorage.getItem("loggedInUser");
+    var retweetButton = "#Retweet-" + jsonObject.tweetId + "-" + getLoggedInUser();
     if (jsonObject.isLikedByLoggedInUser) {
         $(likeButton).val("Unlike");
     }
     console.log(jsonObject.retweetUserId + "  " + loggedInUser);
-    if (jsonObject.retweetUserId == loggedInUser) {
+    if (jsonObject.retweetUserId == loggedInUser || jsonObject.userId == getCurrentUser()) {
     	console.log("they are equal");
         $(retweetButton).val("Retweeted");
     }
@@ -149,23 +152,23 @@ function getTimeDifference(timestamp) {
 }
 
 function increaseTweetCount() {
-    if (localStorage.getItem("currentUser") == localStorage.getItem("loggedInUser")) {
+    if (getCurrentUser() == getLoggedInUser()) {
         var count = $(LEFT_PANEL_TWEET_COUNT).html();
         count++;
         $(LEFT_PANEL_TWEET_COUNT).html(count);                
     }
-    var x = localStorage.getItem("loggedInUserTweetCount");
+    var x = getLoggedInUserTweetCount();
     x++;
     localStorage.setItem("loggedInUserTweetCount", x);
 }
 
 function decreaseTweetCount() {
-    if (localStorage.getItem("currentUser") == localStorage.getItem("loggedInUser")) {
+    if (getCurrentUser() == getLoggedInUser()) {
         var count = $(LEFT_PANEL_TWEET_COUNT).html();
         count--;
         $(LEFT_PANEL_TWEET_COUNT).html(count);                
     }
-    var x = localStorage.getItem("loggedInUserTweetCount");
+    var x = getLoggedInUserTweetCount();
     x--;
     localStorage.setItem("loggedInUserTweetCount", x);
 }

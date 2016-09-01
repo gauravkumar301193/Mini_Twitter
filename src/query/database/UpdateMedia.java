@@ -20,4 +20,10 @@ public class UpdateMedia {
 		return SQLConnection.executeUpdate(query.toString());
 	}
 	
+	public static int deleteFromMedia(Long mediaId) throws ClassNotFoundException, SQLException {
+		StringBuilder query = new StringBuilder("delete from media where media_id = ").append(mediaId);
+		return SQLConnection.executeUpdate(query.toString());
+		
+	}
+	
 }

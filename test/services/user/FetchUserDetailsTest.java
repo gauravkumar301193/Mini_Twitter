@@ -11,28 +11,15 @@ import models.User;
 public class FetchUserDetailsTest {
 
 	@Test
-	public void testGetUserDetails() {
-		try {
-			User user = FetchUserDetails.getUserDetails(17);
-			assertEquals("ChloeS", user.getHandle());
-			assertEquals("ChloeS@mail.com", user.getEmail());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	public void testGetUserDetails() throws ClassNotFoundException, SQLException {
+			User user = FetchUserDetails.getUserDetails(1);
+			assertEquals("abc", user.getUserName());
 	}
 	
 	@Test
-	public void testGetUserDetailsWhenInvalidUser() {
-		try {
-			User user = FetchUserDetails.getUserDetails(1);
+	public void testGetUserDetailsWhenInvalidUser() throws ClassNotFoundException, SQLException {
+			User user = FetchUserDetails.getUserDetails(0);
 			assertEquals(null, user);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 
 }

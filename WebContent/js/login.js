@@ -3,7 +3,8 @@ $(document).ready(function(){
     var invalidHandle = false;
     var invalidEmail = false;
     $(SIGN_UP_EMAIL).focusout(function() {
-    	$(INVALID_EMAIL_ENTERED).hide();
+        $(EMAIL_EXISTS_ERROR).hide();
+        $(INVALID_EMAIL_ENTERED).hide();
         var emailEntered = $(SIGN_UP_EMAIL).val();
         var validEmail = new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
         
@@ -17,6 +18,8 @@ $(document).ready(function(){
         
         
         if (previousEmailValue != emailEntered) {
+            $(EMAIL_EXISTS_ERROR).hide();
+            $(INVALID_EMAIL_ENTERED).hide();
             previousEmailValue = emailEntered;
             console.log(emailEntered);
             $.ajax({
@@ -114,7 +117,7 @@ $(document).ready(function(){
                 saveDetailsToLocalStorage(tryResult);
                 $(INVALID_CREDENTIALS_ENTERED).hide();
                 localStorage.setItem("pageFunction", "home");
-                window.location.replace(PROFILE_CUM_HOME_PAGE);
+                window.location = PROFILE_CUM_HOME_PAGE;
             },
             error : function(e) {
                 console.log("authentication failed");
@@ -128,6 +131,12 @@ $(document).ready(function(){
         var handle = $(SIGN_UP_HANDLE).val();
         var password = MD5($(SIGN_UP_PASSWORD).val());
         var name = $(SIGN_UP_NAME).val();
+        if (name == "" || password == "" || handle == "" || email == "") {
+        	alert("Please fill out all the fields");
+        	return;
+        }
+        $(SIGN_UP_EMAIL).focusout();
+        $(SIGN_UP_HANDLE).focusout();
         if (invalidHandle == true || invalidEmail == true)
         	return;
         var tryResult;
@@ -146,14 +155,17 @@ $(document).ready(function(){
             },
             success : function(result) {
                 console.log("user registered");
-                tryResult = result;
-                saveDetailsToLocalStorage(result);
-                setCurrentEqualLoggedIn();
-                localStorage.setItem("pageFunction", "home");
                 if ($(IMAGE_ELEMENT_MODAL).val()) {
-                    uploadImageForUser(IMAGE_INFORMATION_URL_USER, IMAGE_FORM_MODAL, localStorage.getItem("loggedInUser"));
+                    var file = $(IMAGE_ELEMENT_MODAL);
+                    var filename = $.trim(file.val());
+                	if (!(isJpg(filename) || (isPng(filename) || (isJpeg(filename))))) {
+                		alert("only Jpg, Jpeg and Png formats");
+                		return;
+                	}                	
+                    uploadImageForUser(IMAGE_INFORMATION_URL_USER, IMAGE_FORM_MODAL, result.userId, LOGIN_AND_REGISTRATION_PAGE);
+                    alert("successful registration");
                 } else {
-                    window.location.replace(PROFILE_CUM_HOME_PAGE);
+                    window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
                 }
             },
             error : function(e) {
@@ -170,5 +182,17 @@ $(document).ready(function(){
         localStorage.setItem("loggedInUserTweetCount", jsonObject.tweetCount);
         localStorage.setItem("loggedInUserFollowerCount", jsonObject.followerCount)
         localStorage.setItem("loggedInUserFollowingCount", jsonObject.followingCount);
+    }
+    
+    function isJpg(filename) {
+    	return filename.match(/jpg$/i);
+    }
+
+    function isPng(filename) {
+    	return filename.match(/png$/i);
+    }
+    
+    function isJpeg(filename) {
+    	return filename.match(/jpeg$/i);
     }
 });

@@ -38,6 +38,10 @@ public class FetchNotificationsGivenUserId extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			response.setContentType("application/json");
 			response.addHeader("Access-Control-Allow-Origin", "*");

@@ -9,33 +9,19 @@ import org.junit.Test;
 public class LikeTweetServiceTest {
 
 	@Test
-	public void testLikeTweet() {
-		try {
-			assertTrue(LikeTweetService.likeTweet(17, 15));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testLikeTweet() throws ClassNotFoundException, SQLException {
+			assertTrue(LikeTweetService.likeTweet(1, 2));
+			assertTrue(UnlikeTweetService.unlikeTweet(1, 2));
 	}
 	
 	@Test
-	public void testLikeTweetWhenInvalidUser() {
-		try {
+	public void testLikeTweetWhenInvalidUser() throws ClassNotFoundException, SQLException {
 			assertFalse(LikeTweetService.likeTweet(-1, 15));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testLikeTweetWhenInvalidTweet() {
-		try {
-			assertFalse(LikeTweetService.likeTweet(16, 1));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testLikeTweetWhenInvalidTweet() throws ClassNotFoundException, SQLException {
+			assertFalse(LikeTweetService.likeTweet(16, 0));
 	}
 
 }

@@ -13,47 +13,28 @@ import query.database.QueryTweet;
 public class TweetsWithHashtagTest {
 
 	@Test
-	public void testGetTweetsOfHashtags() {
-		try {
-			List<Tweet> twts = QueryTweet.getTweetsWithHashtags("WeCantWait" ,0 , Long.parseLong("1472020664186"));
-			assertTrue(twts.size() > 0);
-			assertTrue(twts.get(0).getUserId() > 0);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testGetTweetsOfHashtags() throws NumberFormatException, ClassNotFoundException, SQLException {
+			List<Tweet> twts = QueryTweet.getTweetsWithHashtags("feeling" ,0 , Long.parseLong("1472720664186"));
+			assertEquals(3, twts.size());
 	}
 	
 	@Test
-	public void testGetTweetsOfHashtagsWhenHashtagIsNotPresent() {
-		try {
+	public void testGetTweetsOfHashtagsWhenHashtagIsNotPresent() throws NumberFormatException, ClassNotFoundException, SQLException {
 			List<Tweet> twts = QueryTweet.getTweetsWithHashtags("" ,0 , Long.parseLong("1472020664186"));
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			assertEquals(0 , twts.size());
 	}
 	
 	@Test
-	public void testGetTweetsOfHashtagsWhenInvalidTime() {
-		try {
+	public void testGetTweetsOfHashtagsWhenInvalidTime() throws NumberFormatException, ClassNotFoundException, SQLException {
 			List<Tweet> twts = TweetsWithHashtag.getTweetsOfHashtags("jobs" , Long.parseLong("1472020664186") ,0);
 			assertEquals(null , twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetsOfHashtagsWhenInvalidStartTime() {
-		try {
+	public void testGetTweetsOfHashtagsWhenInvalidStartTime() throws NumberFormatException, ClassNotFoundException, SQLException {
 			List<Tweet> twts = TweetsWithHashtag.getTweetsOfHashtags("jobs" , -1  ,Long.parseLong("1472020664186"));
 			assertEquals(null , twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 }

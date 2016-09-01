@@ -30,6 +30,10 @@ public class FetchFollowersGivenUserId extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			long userId = Long.parseLong(request.getParameter("userId"));
 			List<User> followersList = GetAllFollowers.getAllFollowers(userId);

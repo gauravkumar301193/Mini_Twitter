@@ -10,24 +10,21 @@ public class DeleteConeectionTest {
 
 
 	@Test
-	public void testFollowUserWhenInvalidUserToUnfollowId() {
-		try {
+	public void testFollowUserWhenInvalidUserToUnfollowId() throws ClassNotFoundException, SQLException {
 			assertFalse(DeleteConnection.unfollowUser(17, -40));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 
 	@Test
-	public void testFollowUserWhenInvalidUserWhoWantToUnfollowId() {
-		try {
+	public void testFollowUserWhenInvalidUserWhoWantToUnfollowId() throws ClassNotFoundException, SQLException {
 			assertFalse(DeleteConnection.unfollowUser(-50, 17));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
+	
 
+	@Test
+	public void testUnFollowUser() throws ClassNotFoundException, SQLException {
+			CreateConnection.followUser(2, 3);
+			assertTrue(DeleteConnection.unfollowUser(2, 3));
+			
+	}
 }

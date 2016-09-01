@@ -135,7 +135,7 @@ $(document).ready(function() {
         } else if (elementid[0] == "profileImage") {
             // open in modal
         } else if (elementid[0] == "follow") {
-            follow(localStorage.getItem("loggedInUser"), elementid[1], e.target.id);
+            follow(getLoggedInUser(), elementid[1], e.target.id);
         }
     });
     
@@ -172,7 +172,7 @@ $(document).ready(function() {
                 closeThisSession();
                 window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
             }
-            var userId = localStorage.getItem("loggedInUser");
+            var userId = getLoggedInUser();
             var userHandle = localStorage.getItem("loggedInUserHandle");
             tweetId = postNewTweet($(NEW_TWEET_TEXT).val(), userId, userHandle);
             if ($(IMAGE_UPLOAD_WITH_TWEET).get(0).files.length != 0) {

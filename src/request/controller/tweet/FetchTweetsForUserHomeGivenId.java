@@ -68,7 +68,6 @@ public class FetchTweetsForUserHomeGivenId extends HttpServlet {
 				JSONObject jsonObject = CreateJSONResponseTweets.jsonResponseTweet(listOfTweets ,loggedInUser);
 				logger.info(jsonObject.toString());
 				response.setContentType("application/json");
-				
 				response.setStatus(200);
 				response.getWriter().write(jsonObject.toString());
 			}

@@ -1,7 +1,6 @@
 $(document).ready(function() {
     if (localStorage.getItem("pageFunction") == null) {
-        clearLocalStorage();
-        window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
+    	localStorage.setItem("pageFunctions", "home");
     }
     var pageRole = localStorage.getItem("pageFunction");
     var url = "";
@@ -16,7 +15,7 @@ $(document).ready(function() {
         url = TWEETS_FOR_USER_HOME_URL;
         homePage();
         addInfoToLeftPanelProfile();
-        userId = localStorage.getItem("currentUser");
+        userId = getCurrentUser();
     } else if (pageRole == "profile") {
         destroyTimeStamps();
         if (!checkIfCurrentUserSet() && !checkIfLoggedInUserSet()) {
@@ -26,7 +25,7 @@ $(document).ready(function() {
         url = TWEETS_FOR_USER_PROFILE;
         profilePage();
         addInfoToLeftPanelProfile();
-        userId = localStorage.getItem("currentUser");
+        userId = getCurrentUser();
         if (localStorage.getItem("isFollowed") == true) {
             $(LEFT_PANEL_FOLLOW_BUTTON).val("Unfollow");
         } else if (localStorage.getItem("isFollowed") == false) {
@@ -49,7 +48,7 @@ $(document).ready(function() {
             clearLocalStorage();
             window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
         }
-        userId = localStorage.getItem("currentUser");
+        userId = getCurrentUser();
         url = TWEETS_BY_A_SPECIFIC_USER;
         profilePage();
         addInfoToLeftPanelProfile();
@@ -63,10 +62,12 @@ $(document).ready(function() {
         url = "";
         homePage();
         addInfoToLeftPanelProfile();
-        fetchTweetGivenTweetId(localStorage.getItem("singleTweet"), localStorage.getItem("loggedInUser"));
+        fetchTweetGivenTweetId(localStorage.getItem("singleTweet"), getLoggedInUser());
     }
     localStorage.setItem("sent", true);
-    fetchOlderTweetsFromServer(url, userId, localStorage.getItem("loggedInUser"));
+    fetchOlderTweetsFromServer(url, userId, getLoggedInUser());
+    
+    setTimeout(function() {setInterval(fetchNewTweetsFromServer(url, userId, getLoggedInUser()), 30000)}, 50000);
     
     $(LEFT_PANEL_PROFILE_DETAILS).click(function(e) {
         var id = e.target.id;
@@ -82,13 +83,13 @@ $(document).ready(function() {
             window.location.replace(PROFILE_CUM_HOME_PAGE);
         } else if (id == followers.substr(1, followers.length)) {
             followersPage();
-            fetchAllFollowers(localStorage.getItem("currentUser"), localStorage.getItem("loggedInUser"));
+            fetchAllFollowers(getCurrentUser(), getLoggedInUser());
         } else if (id == following.substr(1, following.length)) {
             followersPage();
-            fetchAllFollowing(localStorage.getItem("currentUser"), localStorage.getItem("loggedInUser"));
+            fetchAllFollowing(getCurrentUser(), getLoggedInUser());
         } else if (id == photo.substr(1, photo.length)) {
-            $(IMAGE_MODAL).show();
-            $(IMAGE_IN_MODAL).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + localStorage.getItem("currentUser"));
+//            $(IMAGE_MODAL).show();
+            $(IMAGE_IN_MODAL).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + getCurrentUser());
         } else if (id == handle.substr(1, handle.length)) {
             localStorage.setItem("pageFunction", "profile");
             setCurrentEqualLoggedIn();
@@ -125,7 +126,7 @@ $(document).ready(function() {
             url : LOGOUT_URL,
             type : "POST",
             data: {
-                userId : localStorage.getItem("loggedInUser")
+                userId : getLoggedInUser()
             },
             crossOrigin: true,
             xhrFields: { 
@@ -144,13 +145,13 @@ $(document).ready(function() {
     
     $(window).scroll(function(){
         var doc = $(document).height() - $(window).height();
-        console.log("herer 1 ");
         var current = $(document).scrollTop();
         console.log("height " + doc + "  " + current + "  " + Math.round(doc * 0.7));
         if (Math.abs(Math.round(doc * 0.7) - current) <= 5 && localStorage.getItem("sent") == null) {
+            console.log("herer 1 ");
             localStorage.setItem("sent", true);
-            console.log("here " + flag);
-            fetchOlderTweetsFromServer(url, userId, localStorage.getItem("loggedInUser"));
+//            console.log("here " + flag);
+            fetchOlderTweetsFromServer(url, userId, getLoggedInUser());
         }
     });
     
@@ -166,8 +167,16 @@ $(document).ready(function() {
             password = MD5($(UPDATE_PROFILE_PASSWORD).val());
         }
         var username = $(UPDATE_PROFILE_USERNAME).val();
+        if ($(IMAGE_ELEMENT_MODAL).val()) {
+            var file = $(IMAGE_ELEMENT_MODAL);
+            var filename = $.trim(file.val());
+        	if (!(isJpg(filename) || (isPng(filename) || (isJpeg(filename))))) {
+        		alert("only Jpg, Jpeg and Png formats");
+        		return;
+        	}
+        }
         console.log("pass = " + password + " user=" + username + " email=" + emailId);
-        updateProfileInformation(emailId, password, username, localStorage.getItem("loggedInUser"));
+        updateProfileInformation(emailId, password, username, getLoggedInUser());
     });
     
     $("#search-nav").click(function(){
@@ -176,20 +185,20 @@ $(document).ready(function() {
     });
     
     $("#searchText").keyup(function(){
-        fetchAndUpdateMatchingResults($("#searchText").val(), localStorage.getItem("loggedInUser"));
+        fetchAndUpdateMatchingResults($("#searchText").val(), getLoggedInUser());
     });
     
     $(LEFT_PANEL_FOLLOW_BUTTON).click(function(){
         var val = $(LEFT_PANEL_FOLLOW_BUTTON).val();
         var x = $(LEFT_PANEL_FOLLOWER_COUNT).html();
-        var y = localStorage.getItem("loggedInUserFollowingCount");
+        var y = getLoggedInUserFollowingCount();
         if (val == "Follow") {
-            followAUser(localStorage.getItem("currentUser"), localStorage.getItem("loggedInUser"));
+            followAUser(getCurrentUser(), getLoggedInUser());
             $(LEFT_PANEL_FOLLOW_BUTTON).val("Unfollow");
             x++;
             y++;
         } else {
-            unfollowAUser(localStorage.getItem("currentUser"), localStorage.getItem("loggedInUser"));
+            unfollowAUser(getCurrentUser(), getLoggedInUser());
             $(LEFT_PANEL_FOLLOW_BUTTON).val("Follow");
             x--;
             y--;
@@ -202,20 +211,20 @@ $(document).ready(function() {
     $(MODAL_SEARCHES).click(function(e){
         var x = $("#" + e.target.id).text();
         x = x.substr(1, x.length);
-        fetchAndShowProfileOfCurrentUser(x, "", localStorage.getItem("loggedInUser"));
+        fetchAndShowProfileOfCurrentUser(x, "", getLoggedInUser());
     });
     
     $(NOTIFICATION_BUTTON).click(function(){
         console.log("here button pressed");
-        $("#notificationModal").css("display", "block");
-        fetchAndDisplayNotifications(localStorage.getItem("loggedInUser"));
+//        $("#notificationModal").css("display", "block");
+        fetchAndDisplayNotifications(getLoggedInUser());
     });
     
     $(NOTIFICATION_MODAL).click(function(e) {
         var elementId = e.target.id.split("-");
         console.log("here " + e.target.id);
         if (elementId[0] == "profile") {
-            fetchAndShowProfileOfCurrentUser("", elementId[1], localStorage.getItem("loggedInUser"));
+            fetchAndShowProfileOfCurrentUser("", elementId[1], getLoggedInUser());
         } else if (elementId[0] == "tweet" || elementId[1] == "tweet") {
             console.log("in tweet");
             localStorage.setItem("singleTweet", elementId[1]);

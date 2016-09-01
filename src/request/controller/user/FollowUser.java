@@ -37,6 +37,10 @@ public class FollowUser extends HttpServlet {
 		String follower = "";
 		String userToFollow = "";
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		if(request.getParameterMap().containsKey("userId")) {
 		 userToFollow = request.getParameter("userId");
 		}

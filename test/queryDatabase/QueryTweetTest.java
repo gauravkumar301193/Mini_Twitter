@@ -15,327 +15,170 @@ import query.database.QueryTweet;
 public class QueryTweetTest {
 	
 	@Test
-	public void testGetTweetsWithHashtags() {
-		//StringBuilder query = new StringBuilder("select * from hashtags where hash_name = \'WeCantWait\' ");
-		try {
-			List<Tweet> tweets = QueryTweet.getTweetsWithHashtags("WeCantWait", 0, Long.parseLong("1472020664186"));
-			assertEquals(10, tweets.size());
-			
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testGetTweetsWithHashtags() throws NumberFormatException, ClassNotFoundException, SQLException {
+		
+			List<Tweet> tweets = QueryTweet.getTweetsWithHashtags("feeling", 0, Long.parseLong("1472720664186"));
+		
 		
 	}
 
 	@Test
-	public void testGetTweetsWithNoHashtag() {
-		try {
+	public void testGetTweetsWithNoHashtag() throws ClassNotFoundException, SQLException {
 			List<Tweet> tweets = QueryTweet.getTweetsWithHashtags("", 0, 1472020664);
 			assertEquals(0, tweets.size());
-			
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetByTweetId() {
-		try {
-			Tweet twt = QueryTweet.getTweetByTweetId(42);
-			assertEquals(34, twt.getUserId());
-			assertEquals("OHMichael", twt.getHandle());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	@Test
-	public void testGetTweetByTweetIdWhichIsNotPresent() {
-		try {
+	public void testGetTweetByTweetId() throws ClassNotFoundException, SQLException {
 			Tweet twt = QueryTweet.getTweetByTweetId(1);
+			assertEquals(1, twt.getUserId());
+	}
+	
+	@Test
+	public void testGetTweetByTweetIdWhichIsNotPresent() throws ClassNotFoundException, SQLException {
+			Tweet twt = QueryTweet.getTweetByTweetId(0);
 			assertTrue(twt==null);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 	
 	@Test
-	public void testCheckRetweetForUser() {
-		try {
-			 assertTrue(QueryTweet.checkRetweetForUser(Long.parseLong("8499846"), Long.parseLong("2649789")));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testCheckRetweetForUser() throws NumberFormatException, ClassNotFoundException, SQLException {
+			 assertFalse(QueryTweet.checkRetweetForUser(Long.parseLong("1"), Long.parseLong("2649789")));
 	}
 	
 	@Test
-	public void testCheckRetweetForUserIfNotPresent() {
-		try {
+	public void testCheckRetweetForUserIfNotPresent() throws ClassNotFoundException, SQLException{
 			 assertFalse(QueryTweet.checkRetweetForUser(Long.parseLong("8499845"), Long.parseLong("269789")));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Test
-	public void testGetTweetsByUserId() {
-		try {
-			List<Tweet> twts = QueryTweet.getTweetsByUserId(17);
-			
-			assertEquals(14 , twts.size());
-			assertEquals(8 , (twts.get(0)).getTweetId());
-			assertEquals("ChloeS" , (twts.get(0)).getHandle());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void testGetTweetsByUserId() throws ClassNotFoundException, SQLException {
+			List<Tweet> twts = QueryTweet.getTweetsByUserId(2);
+			assertEquals(3 , twts.size());
 		}
-	}
 	
 	@Test
-	public void testGetTweetsByUserIdWhenUserNotPresent() {
-		try {
-			List<Tweet> twts = QueryTweet.getTweetsByUserId(1);
-			
+	public void testGetTweetsByUserIdWhenUserNotPresent() throws ClassNotFoundException, SQLException {
+		
+			List<Tweet> twts = QueryTweet.getTweetsByUserId(0);
 			assertEquals(0 , twts.size());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 
 	@Test
-	public void testGetAllRetweetForUser() {
-		try {
-			List<Tweet> twts = QueryTweet.getAllRetweetForUser(17);
-			assertEquals(2 , twts.size());
-			assertEquals(7, twts.get(0).getTweetId());
-			assertEquals(9, twts.get(1).getTweetId());
-			
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testGetAllRetweetForUserWhichIsNotPresent() {
-		try {
+	public void testGetAllRetweetForUser() throws ClassNotFoundException, SQLException {
 			List<Tweet> twts = QueryTweet.getAllRetweetForUser(1);
 			assertEquals(0 , twts.size());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	}
+	
+	@Test
+	public void testGetAllRetweetForUserWhichIsNotPresent() throws ClassNotFoundException, SQLException {
+			List<Tweet> twts = QueryTweet.getAllRetweetForUser(17);
+			assertEquals(0 , twts.size());
 	}
 
 	@Test
-	public void testGetAllHashtagInTweet() {
-		try {
-			List<String> hashtags = QueryTweet.getAllHashtagInTweet(2377281);
+	public void testGetAllHashtagInTweet() throws ClassNotFoundException, SQLException {
+			List<String> hashtags = QueryTweet.getAllHashtagInTweet(2);
 			assertEquals(1 , hashtags.size());
-			assertEquals("fanforlife" , hashtags.get(0));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetAllHashtagInTweetWhenTweetIdNotPresent() {
-		try {
-			List<String> hashtags = QueryTweet.getAllHashtagInTweet(1);
+	public void testGetAllHashtagInTweetWhenTweetIdNotPresent() throws ClassNotFoundException, SQLException {
+			List<String> hashtags = QueryTweet.getAllHashtagInTweet(17);
 			assertEquals(0 , hashtags.size());
-		
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	
 	@Test
-	public void testGetAllTweetsWithUserMention() {
-		try {
-			List<Tweet> mentions = QueryTweet.getAllTweetsWithUserMention(17);
-			assertEquals(2 , mentions.size());
-			assertEquals(1245254 , mentions.get(0).getTweetId());
-			assertEquals(8168105 , mentions.get(1).getTweetId());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-
-	@Test
-	public void testGetAllTweetsWithUserMentionWhenUserNotPresent() {
-		try {
+	public void testGetAllTweetsWithUserMention() throws ClassNotFoundException, SQLException {
 			List<Tweet> mentions = QueryTweet.getAllTweetsWithUserMention(1);
 			assertEquals(0 , mentions.size());
-		
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 
 	@Test
-	public void testGetAllLikesForTweet() {
-		try {
+	public void testGetAllTweetsWithUserMentionWhenUserNotPresent() throws ClassNotFoundException, SQLException {
+			List<Tweet> mentions = QueryTweet.getAllTweetsWithUserMention(17);
+			assertEquals(0 , mentions.size());
+		
+	}
+	
+
+	@Test
+	public void testGetAllLikesForTweet() throws ClassNotFoundException, SQLException {
 			long likes = QueryTweet.getAllLikesForTweet(21);
-			assertEquals(2, likes);
-		
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testGetAllLikesForTweetWhenTweetNotPresent() {
-		try {
-			long likes = QueryTweet.getAllLikesForTweet(1);
 			assertEquals(0, likes);
-		
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	}
+	
+	@Test
+	public void testGetAllLikesForTweetWhenTweetNotPresent() throws ClassNotFoundException, SQLException {
+			long likes = QueryTweet.getAllLikesForTweet(10);
+			assertEquals(0, likes);
 	}
 	
 
 	
 	@Test
-	public void testGetMentionsAfterTimestamp() {
-		
-		try {
+	public void testGetMentionsAfterTimestamp() throws ClassNotFoundException, SQLException {
 			List<Tweet> twts = QueryTweet.getMentionsAfterTimestamp(0, 2);
-			assertEquals(61, twts.size());
-		
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			assertEquals(0, twts.size());
 	}
 
 	@Test
-	public void testGetMentionsAfterTimestampWhenUserNotPresent() {
-		
-		try {
+	public void testGetMentionsAfterTimestampWhenUserNotPresent() throws ClassNotFoundException, SQLException {
 			List<Tweet> twts = QueryTweet.getMentionsAfterTimestamp(0, 0);
 			assertEquals(0, twts.size());
-		
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Test
-	public void testCheckIfRetweet() {
-		try {
-			assertTrue(QueryTweet.checkIfRetweet(7, 17));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testCheckIfRetweetWhenTweetNotPresent() {
-		try {
+	public void testCheckIfRetweet() throws ClassNotFoundException, SQLException {
 			assertFalse(QueryTweet.checkIfRetweet(1, 17));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetsForUserProfile() {
-		try {
-			List<Tweet> twts = QueryTweet.getTweetsForUserProfile(32, 0, Long.parseLong("1472020664186"));
-			assertEquals(20 , twts.size());
-			assertEquals(860353 , twts.get(0).getTweetId());
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testCheckIfRetweetWhenTweetNotPresent() throws ClassNotFoundException, SQLException{
+		
+			assertFalse(QueryTweet.checkIfRetweet(17, 17));
+	}
+	
+	@Test
+	public void testGetTweetsForUserProfile() throws NumberFormatException, ClassNotFoundException, SQLException {
+			List<Tweet> twts = QueryTweet.getTweetsForUserProfile(1, 0, Long.parseLong("1472720664186"));
+			assertEquals(1 , twts.size());
 	}
 
 	@Test
-	public void testGetLikesAfterTimestamp() {
-		try {
-			int likes = QueryTweet.getLikesAfterTimestamp(0, 17);
-			assertTrue(likes>0);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testGetLikesAfterTimestamp() throws NumberFormatException, ClassNotFoundException, SQLException {
+			int likes = QueryTweet.getLikesAfterTimestamp(0, 1);
+			assertTrue(likes>=0);
 	}
 
-	@Test
-	public void testGetAllTweetsForUserHome() {
-		try {
-			List<Tweet> twts = QueryTweet.getAllTweetsForParticularUser(17, 0, Long.parseLong("1472020664186"));
-			assertTrue(twts.size() > 0);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testGetAllTweetsForUserHome() throws ClassNotFoundException, SQLException {
+			List<Tweet> twts = QueryTweet.getAllTweetsForParticularUser(17, 0, Long.parseLong("1472720664186"));
+			assertTrue(twts.size() >= 0);
 		
 	}
 
 	@Test
-	public void testCheckTweetExists() {
-		try {
-				assertFalse(QueryTweet.checkTweetExists(2));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testCheckTweetExists() throws ClassNotFoundException, SQLException {
+				assertTrue(QueryTweet.checkTweetExists(2));
 	}
 
 	@Test
-	public void testGetAllTweetsForParticularUser() {
-		try {
-			List<Tweet> twts = QueryTweet.getAllTweetsForParticularUser(17, 0, Long.parseLong("1472020664186"));
+	public void testGetAllTweetsForParticularUser() throws ClassNotFoundException, SQLException {
+			List<Tweet> twts = QueryTweet.getAllTweetsForParticularUser(1, 0, Long.parseLong("1472720664186"));
 			assertTrue(twts.size() > 0);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Test
-	public void testCheckIsLiked() {
-		try {
-			assertTrue(QueryTweet.checkIsLiked(2156245, 8839862));
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testCheckIsLiked() throws ClassNotFoundException, SQLException {
+			assertFalse(QueryTweet.checkIsLiked(2156245, 8839862));
 	}
 
 	@Test
-	public void testGetTweetCount() {
-		try {
-			long count = QueryTweet.getTweetCount(2156245);
-			assertEquals(19, count);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testGetTweetCount() throws ClassNotFoundException, SQLException {
+			long count = QueryTweet.getTweetCount(2);
+			assertEquals(3, count);
 	}
 
 }

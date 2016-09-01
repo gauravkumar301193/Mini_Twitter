@@ -11,81 +11,46 @@ import services.tweet.TweetsForUserHome;
 
 public class TestTweetsForUserHome {
 
-
 	@Test
-	public void testGetTweetsForUserHome() {
-		try {
+	public void testGetTweetsForUserHomeWhenUserNotPresent() throws NumberFormatException, ClassNotFoundException, SQLException {
 			List<Tweet> twts = TweetsForUserHome.getTweetsForUserHome(10 , 0 , Long.parseLong("1472020664186"));
-			assertTrue(twts.size() > 0);
-			assertTrue(twts.get(0).getUserId() > 0);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Test
-	public void testGetTweetsForUserHomeWhenUserNotPresent() {
-		try {
-			List<Tweet> twts = TweetsForUserHome.getTweetsForUserHome(1 , 0 , Long.parseLong("1472020664186"));
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	@Test
-	public void testGetTweetsForUserHomeWhenInvalidTimestamp() {
-		try {
+	public void testGetTweetsForUserHomeWhenInvalidTimestamp() throws NumberFormatException, ClassNotFoundException, SQLException {
 			List<Tweet> twts = TweetsForUserHome.getTweetsForUserHome(10 , Long.parseLong("1472020664186") , 0);
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetsForUserHomeWhenInvalidStartTime() {
-		try {
+	public void testGetTweetsForUserHomeWhenInvalidStartTime() throws ClassNotFoundException, SQLException {
 			List<Tweet> twts = TweetsForUserHome.getTweetsForUserHome(10 , -1 , 100);
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetsForUserHomeWhenInvalidEndTime() {
-		try {
+	public void testGetTweetsForUserHomeWhenInvalidEndTime() throws ClassNotFoundException, SQLException {
 			List<Tweet> twts = TweetsForUserHome.getTweetsForUserHome(10 , 100 , -1);
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testCheckValidInput() {
-		try {
-			assertTrue(TweetsForUserHome.checkValidInput(10, 0, Long.parseLong("1472020664186")));
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testCheckValidInput() throws NumberFormatException, ClassNotFoundException, SQLException {
+			assertTrue(TweetsForUserHome.checkValidInput(1, 0, Long.parseLong("1472020664186")));
 	}
 	
 	@Test
-	public void testCheckValidInputWhenWrongUserId() {
-		try {
+	public void testCheckValidInputWhenWrongUserId() throws NumberFormatException, ClassNotFoundException, SQLException {
 			assertFalse(TweetsForUserHome.checkValidInput(-1, 0, Long.parseLong("1472020664186")));
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	}
+	
+
+	@Test
+	public void testGetTweetsForUserHome() throws NumberFormatException, ClassNotFoundException, SQLException {
+			List<Tweet> twts = TweetsForUserHome.getTweetsForUserHome(1 , 0 , Long.parseLong("1472720664186"));
+			assertEquals(null, twts);
 	}
 
 }

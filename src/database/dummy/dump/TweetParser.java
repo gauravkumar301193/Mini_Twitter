@@ -228,19 +228,6 @@ public class TweetParser {
         return words;
     }
 
-    public static void main(String[] args) {
-        String tweet = "mayankra: Thank you @ChloeS and @twittermedia team for the awesome gift! She's too young to Tweet but obviously loves it too. http://t.co/w7SQaZCQA5";
-        String tweet2 = "rondavies: RT @RealRonHoward: “@jeca332: @RealRonHoward  I adore Hans Zimmers music.  He is amazing!”find his music @ #Rushmovie.com";
-        TweetParser tp = new TweetParser(tweet);
-
-        System.out.println(tweet);
-        tp.parseTweet();
-        if (tp.isRetweeet())
-            System.out.println("yes, it is a retweet");
-        tp.displayWordsInTweet();
-       
-//        System.out.println(tp.getTweetText());
-    }
-   
+    
 }
 

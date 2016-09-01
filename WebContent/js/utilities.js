@@ -1,14 +1,14 @@
 function addInfoToLeftPanelProfile() {
-    $(LEFT_PANEL_FOLLOWER_COUNT).html(localStorage.getItem("currentUserFollowerCount"));
-    if (localStorage.getItem("currentUserFollowingCount") == null) 
+    $(LEFT_PANEL_FOLLOWER_COUNT).html(getCurrentUserFollowerCount());
+    if (getCurrentUserFollowingCount() == null) 
         console.log("here");
-    $(LEFT_PANEL_FOLLOWING_COUNT).html(localStorage.getItem("currentUserFollowingCount"));
-    $(LEFT_PANEL_TWEET_COUNT).html(localStorage.getItem("currentUserTweetCount"));
+    $(LEFT_PANEL_FOLLOWING_COUNT).html(getCurrentUserFollowingCount());
+    $(LEFT_PANEL_TWEET_COUNT).html(getCurrentUserTweetCount());
     
-    $(LEFT_PANEL_USER_HANDLE).html("@" + localStorage.getItem("currentUserHandle"));
+    $(LEFT_PANEL_USER_HANDLE).html("@" + getCurrentUserHandle());
     
-    if (localStorage.getItem("currentUserMediaId")!= null) {
-        $(LEFT_PANEL_PROFILE_PHOTO).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + localStorage.getItem("currentUser"));
+    if (getCurrentUserMediaId()!= null) {
+        $(LEFT_PANEL_PROFILE_PHOTO).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + getCurrentUser());
         $(LEFT_PANEL_PROFILE_PHOTO).show();
     }
 }
@@ -90,11 +90,23 @@ function updateProfileInformation(emailId, password, username, userId) {
         success : function(result) {
             console.log("Information updated in database");
             if ($(IMAGE_ELEMENT_MODAL).val()) {
-                uploadImageForUser(IMAGE_INFORMATION_URL_USER, IMAGE_FORM_MODAL, localStorage.getItem("loggedInUser"));
+                uploadImageForUser(IMAGE_INFORMATION_URL_USER, IMAGE_FORM_MODAL, getLoggedInUser(), PROFILE_CUM_HOME_PAGE);
             } else {
             	window.location.replace(PROFILE_CUM_HOME_PAGE);
             }
         }
         
     });
+}
+
+function isJpg(filename) {
+	return filename.match(/jpg$/i);
+}
+
+function isPng(filename) {
+	return filename.match(/png$/i);
+}
+
+function isJpeg(filename) {
+	return filename.match(/jpeg$/i);
 }

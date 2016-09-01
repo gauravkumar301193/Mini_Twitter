@@ -38,6 +38,10 @@ public class DeleteAUserGivenId extends HttpServlet {
 //		doGet(request, response);
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		String user = "";
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		if(request.getParameterMap().containsKey("userId")) {
 		user = request.getParameter("userId");
 		}

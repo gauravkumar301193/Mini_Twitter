@@ -4,7 +4,7 @@ function profilePage() {
     $(LEFT_PANEL_HASHTAGS).hide();
     $(LEFT_PANEL_FOLLOW_BUTTON).hide();
     console.log()
-    if (localStorage.getItem("currentUser") != localStorage.getItem("loggedInUser")) {
+    if (getCurrentUser() != getLoggedInUser()) {
         $(LEFT_PANEL_FOLLOW_BUTTON).show();
         if (localStorage.getItem("followState") == "unfollow") {
             console.log("here in followState unfollw " + LEFT_PANEL_FOLLOW_BUTTON);

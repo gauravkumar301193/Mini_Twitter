@@ -9,21 +9,18 @@ import org.junit.Test;
 import models.User;
 
 public class AddNewUserTest {
-
+	
 	@Test
-	public void testAddNewUser() {
+	public void testAddNewUser() throws ClassNotFoundException, SQLException {
 		User user = new User();
 		user.setEmail("mayank@mail.com");
 		user.setFollower(0);
 		user.setFollowing(0);
 		user.setHandle("mayank");
-		user.setUserId(-1);
+		user.setUserId(User.generateUserID());
 		
-		try {
-			assertFalse(AddNewUser.addNewUser(user));
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+		assertTrue(AddNewUser.addNewUser(user));
+		RemoveUser.deleteUser(User.generateUserID() - 1);
 	}
 
 }

@@ -17,12 +17,10 @@ public class UnlikeTweetService {
 				return UpdateTweet.unlikeTweet(userId, tweetId);
 			}
 			else {
-				logger.error("Wrong user id received: " + userId);
 				return false;
 			}
 		}
 		else {
-			logger.error("Wrong tweet id received: " + tweetId);
 			return false;
 		}
 		

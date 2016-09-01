@@ -33,6 +33,10 @@ public class UnlikeATweet extends HttpServlet {
 		String tweetLiked = "";
 		String unLikedBy = "";
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		if (request.getParameterMap().containsKey("tweetId")) {
 		 tweetLiked = request.getParameter("tweetId");
 		}

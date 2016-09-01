@@ -39,6 +39,10 @@ public class PostNewTweet extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		String tweetText = "";
 		long userId = 0;
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		if (request.getParameterMap().containsKey("tweetText")) {
 		 tweetText = request.getParameter("tweetText");
 		}

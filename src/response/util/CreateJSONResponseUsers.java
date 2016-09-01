@@ -27,25 +27,27 @@ public class CreateJSONResponseUsers {
 	}
 	
 	public static JSONObject jsonResponseOfSingleUser(User usr, Long loggedInUserId) throws ClassNotFoundException, SQLException {
+			
+					JSONObject obj = new JSONObject();
+					obj.put("userId", usr.getUserId());
+					obj.put("name", usr.getUserName());
+					obj.put("handle", usr.getHandle());
+					obj.put("email", usr.getEmail());
+					obj.put("tweetCount", QueryTweet.getTweetCount(usr.getUserId()) + QueryTweet.getRetweetCount(usr.getUserId()));
+					obj.put("followerCount", QueryUser.getFollowersCount(usr.getUserId()));
+					obj.put("followingCount", QueryUser.getFollowingCount(usr.getUserId()));
+					
+					boolean isFollowing= false;
+					System.out.println(loggedInUserId + " " + usr.getUserId());
+					if(loggedInUserId != usr.getUserId() && QueryUser.isConnection(loggedInUserId, usr.getUserId())) {
+						isFollowing = true;
+					}
+					
+					obj.put("isFollowing" , isFollowing);
+					
+					return obj;
+			
 				
-			JSONObject obj = new JSONObject();
-			obj.put("userId", usr.getUserId());
-			obj.put("name", usr.getUserName());
-			obj.put("handle", usr.getHandle());
-			obj.put("email", usr.getEmail());
-			obj.put("tweetCount", QueryTweet.getTweetCount(usr.getUserId()) + QueryTweet.getRetweetCount(usr.getUserId()));
-			obj.put("followerCount", QueryUser.getFollowersCount(usr.getUserId()));
-			obj.put("followingCount", QueryUser.getFollowingCount(usr.getUserId()));
-			
-			boolean isFollowing= false;
-			System.out.println(loggedInUserId + " " + usr.getUserId());
-			if(loggedInUserId != usr.getUserId() && QueryUser.isConnection(loggedInUserId, usr.getUserId())) {
-				isFollowing = true;
-			}
-			
-			obj.put("isFollowing" , isFollowing);
-			
-			return obj;
 	}
 }
 

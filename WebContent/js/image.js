@@ -35,7 +35,7 @@ function imageInformationUploadPostTweet(url, mediaId, id) {
         },
         success: function() {
             console.log("success for information upload..!!!");
-            fetchTweetGivenTweetId(id, localStorage.getItem("loggedInUser"));
+            fetchTweetGivenTweetId(id, getLoggedInUser());
         },
         error: function(e) {
             console.log("couldn't upload image information: " + e);
@@ -44,7 +44,7 @@ function imageInformationUploadPostTweet(url, mediaId, id) {
 }
 
 
-function uploadImageForUser(urlForInfo, elementId, id) {
+function uploadImageForUser(urlForInfo, elementId, id, pageToBeLoaded) {
     $.ajax({
         url: IMAGE_UPLOAD_URL,
         type: "POST",
@@ -59,7 +59,7 @@ function uploadImageForUser(urlForInfo, elementId, id) {
         success : function(result) {
             console.log("image uploaded successfully ");
             console.log(result);
-            imageInformationUploadNewUser(urlForInfo, result, id);
+            imageInformationUploadNewUser(urlForInfo, result, id, pageToBeLoaded);
         },
         error : function (e) {
             console.log("couldn't upload image: " + e);
@@ -68,7 +68,7 @@ function uploadImageForUser(urlForInfo, elementId, id) {
 } 
 
 
-function imageInformationUploadNewUser(url, mediaId, id) {
+function imageInformationUploadNewUser(url, mediaId, id, pageToBeLoaded) {
     $.ajax({
         url: url,
         type: "POST",
@@ -82,7 +82,7 @@ function imageInformationUploadNewUser(url, mediaId, id) {
         },
         success: function() {
             console.log("success for information upload..!!!");
-            window.location.replace(PROFILE_CUM_HOME_PAGE);
+            window.location.replace(pageToBeLoaded);
         },
         error: function(e) {
             console.log("couldn't upload image information: " + e);

@@ -245,7 +245,7 @@ public class UpdateTweet {
 		return (tweetDeleted > 0 || hashtagsDeleted > 0 || mentionsDeleted > 0);
 
 	}
-
+	
 	private static int deleteLikeForTweet(long tweetId) throws ClassNotFoundException, SQLException {
 		StringBuilder sql = new StringBuilder("delete from likes where tweet_id = ")
 				.append(tweetId);
@@ -253,7 +253,6 @@ public class UpdateTweet {
 		logger.info("executing sql query in UpdateTweet deleteRetweets: " + sql.toString());
 
 		return SQLConnection.executeUpdate(sql.toString());
-//		return SQLConnection.db.updateDb(sql.toString());
 	}
 
 	private static int deleteRetweets(long tweetId) throws ClassNotFoundException, SQLException {
@@ -304,4 +303,5 @@ public class UpdateTweet {
 		return SQLConnection.executeUpdate(sql.toString());
 		
 	}
+
 }

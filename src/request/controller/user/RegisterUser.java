@@ -37,12 +37,12 @@ public class RegisterUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		
+		response.addHeader("Access-Control-Allow-Origin", "*");
+
 		String userName = "";
 		String handle = "";
 		String password = "";
 		String emailId = "";
-		
 		if(request.getParameterMap().containsKey("userName")) {
 			userName = request.getParameter("userName");
 		}
@@ -93,7 +93,6 @@ public class RegisterUser extends HttpServlet {
 		user.setFollowing(0);
 		boolean status = false;
 		try {
-			response.addHeader("Access-Control-Allow-Origin", "*");
 			
 			
 			status = AddNewUser.addNewUser(user);

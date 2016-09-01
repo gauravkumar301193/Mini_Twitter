@@ -18,7 +18,7 @@ function updateLoggedInUserDetails(jsonObject) {
 }
 
 function setCurrentEqualLoggedIn() {
-    localStorage.setItem("currentUser", localStorage.getItem("loggedInUser"));
+    localStorage.setItem("currentUser", getLoggedInUser());
     localStorage.setItem("currentUserHandle", localStorage.getItem("loggedInUserHandle"));
     localStorage.setItem("currentUserMediaId", localStorage.getItem("loggedInUserMediaId"));
     localStorage.setItem("currentUserFollowerCount", localStorage.getItem("loggedInUserFollowerCount"));
@@ -36,7 +36,7 @@ function clearCurrentUserFromLocalStorage() {
 }
 
 function checkIfLoggedInUserSet() {
-    if (localStorage.getItem("loggedInUser") == null) {
+    if (getLoggedInUser() == null) {
         return false;
     }
     if (localStorage.getItem("loggedInUserHandle") == null) {
@@ -81,4 +81,109 @@ function destroyTimeStamps() {
     localStorage.removeItem("startTime");
     localStorage.removeItem("latestTime");
     localStorage.removeItem("moreOlderTweets");
+}
+
+function getLoggedInUser() {
+//	if (localStorage.getItem("loggedInUser") == null) {
+//		clearLocalStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
+//	}
+	return localStorage.getItem("loggedInUser");
+}
+
+function getLoggedInUserHandle() {
+//	if (localStorage.getItem("loggedInUserHandle") == nul) {
+//		clearLocalStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("loggedInUserHandle");
+}
+
+function getLoggedInMediaId() {
+//	if (localStorage.getItem("loggedInMediaId") == null) {
+//		clearLocalStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("loggedInMediaId");
+}
+
+function getLoggedInUserFollowingCount() {
+//	if (localStorage.getItem("loggedInUserFollowingCount") == null) {
+//		clearLocalStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("loggedInUserFollowingCount");
+}
+
+function getLoggedInUserFollowerCount() {
+//	if (localStorage.getItem("loggedInUserFollowerCount") == null) {
+//		clearLocalStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("loggedInUserFollowerCount");
+}
+
+function getLoggedInUserTweetCount() {
+//	if (localStorage.getItem("loggedInUserTweetCount") == null) {
+//		clearLocalStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("loggedInUserTweetCount");
+}
+
+
+function getCurrentUser() {
+//	if (localStorage.getItem("currentUser") == null) {
+//		clearLocasStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("currentUser");
+}
+
+function getCurrentUserHandle() {
+//	if (localStorage.getItem("currentUserHandle") == null) {
+//		clearLocasStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("currentUserHandle");
+}
+
+function getCurrentUserMediaId() {
+//	if (localStorage.getItem("currentUserMediaId") == null) {
+//		clearLocasStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("currentUserMediaId");
+}
+
+function getCurrentUserFollowingCount() {
+//	if (localStorage.getItem("currentUserFollowingCount") == null) {
+//		clearLocasStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("currentUserFollowingCount");
+}
+
+function getCurrentUserFollowerCount() {
+//	if (localStorage.getItem("currentUserFollowerCount") == null) {
+//		clearLocasStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("currentUserFollowerCount");
+}
+
+function getCurrentUserTweetCount() {
+//	if (localStorage.getItem("currentUserTweetCount") == null) {
+//		clearLocasStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("currentUserTweetCount");
+}
+
+function checkIfCurrentUserIsFollowed() {
+//	if (localStorage.getItem("isFollowed") == null) {
+//		clearLocasStorage();
+//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+//	}
+	return localStorage.getItem("isFollowed");
 }

@@ -38,6 +38,10 @@ public class UnfollowUser extends HttpServlet {
 		Long userId = null;
 		Long loggedInUser = null;
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		if(request.getParameterMap().containsKey("userId")) {
 			userId = Long.parseLong(request.getParameter("userId"));
 		}

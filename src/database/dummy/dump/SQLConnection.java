@@ -1,7 +1,7 @@
 package database.dummy.dump;
 
 /**
- * @author mayank.ra
+ * @author gaurav.kum
  */
 
 import java.sql.Connection;
@@ -20,8 +20,11 @@ public class SQLConnection {
         try {
         	Class.forName("com.mysql.jdbc.Driver");
     		
+//    		conn = (Connection) DriverManager.getConnection(
+//    				"jdbc:mysql://localhost:3306/test", "root", "");
     		conn = (Connection) DriverManager.getConnection(
     				"jdbc:mysql://localhost:3306/TwitterDatabase", "root", "");
+    		
           }
         catch (Exception sqle) {
             sqle.printStackTrace();
@@ -53,19 +56,5 @@ public class SQLConnection {
 		statement = db.conn.createStatement();
 		return statement.executeUpdate(sqlQuery);
 	}
-	
-	       
-//	    public ResultSet queryDb(String query) throws SQLException{
-//	        statement = db.conn.createStatement();
-//	        ResultSet res = statement.executeQuery(query);
-//	        return res;
-//	    }
-//	   
-//	    public int updateDb(String query) throws SQLException {
-//	        statement = db.conn.createStatement();
-//	        int result = statement.executeUpdate(query);
-//	        return result;
-//	    }
-//	 
 }
 	

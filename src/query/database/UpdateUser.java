@@ -63,14 +63,13 @@ public class UpdateUser {
 //		return SQLConnection.db.updateDb(sql.toString());
 	}
 	
-	public static boolean followUser(long userId, long userToFollow) throws SQLException, ClassNotFoundException {
+	public static boolean followUser(long userId, long userToFollow) 
+			throws SQLException, ClassNotFoundException {
 		
-		int rowsInserted = addConnections(userId, userToFollow);
-		
-		int rowsUpdated = incrementFollowingCount(userId);
-		int rowsUpdated1 = incrementFollowerCount(userToFollow);
-		
-		return rowsInserted > 0  || rowsUpdated > 0 ;
+		int rowsInserted = addConnections2(userId, userToFollow);
+		int	rowsUpdated = incrementFollowingCount(userId);
+		int	rowsUpdated1 = incrementFollowerCount(userToFollow);
+		return rowsInserted > 0;
 		
 	}
 	
@@ -84,6 +83,35 @@ public class UpdateUser {
 		return SQLConnection.executeUpdate(sql.toString());
 	}
 
+	private static int addConnections2(long user, long userToFollow) throws ClassNotFoundException, SQLException {
+		StringBuilder queryToCheck = new StringBuilder("select * from connections where follower = ")
+				.append(user)
+				.append(" and following = ")
+				.append(userToFollow);
+		ResultSet rs = SQLConnection.executeQuery(queryToCheck.toString());
+		if (rs.next()) {
+			logger.info("Updating older Connection");
+			StringBuilder queryToUpdate = new StringBuilder("update connections set end_time = null ")
+					.append(" where follower = ")
+					.append(user)
+					.append(" and following = ")
+					.append(userToFollow);
+			SQLConnection.executeUpdate(queryToUpdate.toString());
+			return 1;
+		}
+		
+		StringBuilder sql = new StringBuilder("insert into connections(follower, following, start_time, end_time) values (")
+				.append(user).append(SqlQuerySeparators.COMMA)
+				.append(userToFollow).append(SqlQuerySeparators.COMMA)
+				 .append(System.currentTimeMillis()).append(SqlQuerySeparators.COMMA) 
+				 .append("null").append(")");
+		
+		logger.info("executing sql query in UpdateUser addConnections : " + sql.toString());
+	
+		return SQLConnection.executeUpdate(sql.toString());
+		
+	}
+	
 	private static int addConnections(long user, long userToFollow) throws ClassNotFoundException, SQLException {
 		StringBuilder sql = new StringBuilder("insert into connections(follower, following, start_time, end_time) values (")
 				.append(user).append(SqlQuerySeparators.COMMA)

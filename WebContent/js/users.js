@@ -69,9 +69,8 @@ function fetchAllUsers(url, userId, loggedInUser) {
             if (users.length > 0) {
                 displayAllUsers(users);
             } else {
-                var x = $(MIDDLE_PANELS_FOR_USERS);
-                x.empty();
-                x.append("<span id=\"noUserMessage\">No Users to be displayed.</span>");
+            	$(PARENT_FOR_USERS_ELEMENT).empty();
+            	$(PARENT_FOR_USERS_ELEMENT).append("<div id=\"noUserMessage\">No Users to be displayed.</div>");
             }
         },
         error : function(e) {
@@ -98,15 +97,11 @@ function fetchUserHTML(jsonObject) {
 }
 
 function displayAllUsers(jsonObject) {
-    x = $(PARENT_FOR_USERS_ELEMENT);
-    x.empty();
-    $(NO_USER_MESSAGE).remove();
-    console.log(x.text());
-    while (x.text() != "");
+	$(PARENT_FOR_USERS_ELEMENT).empty();
     for (var i = 0; i < jsonObject.length; i++) {
         var userHTML = fetchUserHTML(jsonObject[i]);
         console.log("here");
-        x.append($(userHTML));
+        $(PARENT_FOR_USERS_ELEMENT).append($(userHTML));
         if (jsonObject[i].isFollowing == true) {
             console.log("here #follow-" + jsonObject[i].userId);
             $("#follow-" + jsonObject[i].userId).val("Unfollow");
@@ -171,20 +166,22 @@ $(document).ready(function() {
         var elementId = e.target.id.split("-");
         console.log("clicked  " + e.target.id + "  " + elementId[0] + "  " + $("#" + e.target.id).val());        
         if (elementId[0] == "profile") {
-            fetchAndShowProfileOfCurrentUser("", elementId[1], localStorage.getItem("loggedInUser"));
+            fetchAndShowProfileOfCurrentUser("", elementId[1], getLoggedInUser());
         } else if (elementId[0] == "follow") {
-            var x = localStorage.getItem("loggedInUserFollowingCount");
+            var x = getLoggedInUserFollowingCount();
             if ($("#" + e.target.id).val() == "Unfollow") {
-                unfollowAUser(elementId[1], localStorage.getItem("loggedInUser"));
+                unfollowAUser(elementId[1], getLoggedInUser());
                 x--;
                 $("#" + e.target.id).val("Follow");
+                localStorage.setItem("loggedInUserFollowingCount", x);
             } else if ($("#" + e.target.id).val() == "Follow") {
                 x++;
-                followAUser(elementId[1], localStorage.getItem("loggedInUser"));
+                followAUser(elementId[1], getLoggedInUser());
                 $("#" + e.target.id).val("Unfollow");
+                localStorage.setItem("loggedInUserFollowingCount", x);
             }
             localStorage.setItem("loggedInUserFollowingCount", x);
-            if (localStorage.getItem("currentUser") == localStorage.getItem("loggedInUser")) {
+            if (getCurrentUser() == getLoggedInUser()) {
                 $(LEFT_PANEL_FOLLOWING_COUNT).html(x);
             }
         }

@@ -14,7 +14,9 @@ import org.json.simple.JSONObject;
 
 import models.Tweet;
 import response.util.CreateJSONResponseTweets;
-
+/*
+ * @author: gaurav.kum
+ */
 /**
  * Input: String hashtag
  * Output: JSON object of all tweets
@@ -29,6 +31,10 @@ public class FetchTweetsForHashtagGivenHashtag extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			if (!request.getParameterMap().containsKey("userId")) {
 				response.setStatus(500);

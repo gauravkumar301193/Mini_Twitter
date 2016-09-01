@@ -20,8 +20,7 @@ public class RemoveUser {
 			return UpdateUser.deleteUser(userId);
 		}
 		else {
-			logger.error("Inalid user to delete: " + userId);
-		return false;
+			return false;
 		}
 	}
 }

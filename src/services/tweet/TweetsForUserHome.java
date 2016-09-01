@@ -22,22 +22,21 @@ public class TweetsForUserHome {
 		List<Tweet> listOfTweetsForHome = new ArrayList<>();
 		if (checkValidInput(userId, startTime, latestTime)) {
 			List<Tweet> listOfTweetIds = QueryTweet.getAllTweetsForUserHome(userId, startTime, latestTime);
-			logger.info("All tweet Ids fetched");
-			for (Tweet tweet : listOfTweetIds) {
-				Tweet currentTweet = QueryTweet.getTweetByTweetId(tweet.getTweetId());
-				if (currentTweet.getUserId() != tweet.getUserId()) {
-					currentTweet.markRetweet();
-					currentTweet.setRetweetUserId(tweet.getUserId());
-					currentTweet.setHandle(tweet.getHandle());
-				}
-				
-				logger.info(currentTweet.getTweetId() + " fetched");
-				listOfTweetsForHome.add(currentTweet);
-			}
-			return listOfTweetsForHome;
+			return listOfTweetIds;
 		}
 		return null;
 	}
+//			logger.info("All tweet Ids fetched");
+//			for (Tweet tweet : listOfTweetIds) {
+//				Tweet currentTweet = QueryTweet.getTweetByTweetId(tweet.getTweetId());
+//				
+//				logger.info(currentTweet.getTweetId() + " fetched");
+//				listOfTweetsForHome.add(currentTweet);
+//			}
+//			return listOfTweetsForHome;
+//		}
+//		return null;
+//	}
 	
 	public static boolean checkValidInput(long userId, long startTime, long latestTime) 
 			throws ClassNotFoundException, SQLException {

@@ -16,10 +16,10 @@ ADD PADDING TO THE NAVIGATION BAR
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.md5.min.js"></script>
 <script src="js/constants.js"></script>
+<script src="js/localStorage.js"></script>
 <script src="js/tweetUtil.js"></script>
 <script src="js/image.js"></script>
 <script src="js/notifications.js"></script>
-<script src="js/localStorage.js"></script>
 <script src="js/utilities.js"></script>
 <script src="js/page-function.js"></script>
 <script src="js/hashtags.js"></script>
@@ -58,9 +58,9 @@ ADD PADDING TO THE NAVIGATION BAR
                             </div>
                         </form>
 -->
-                        <a id="search-nav">Search Handle</a>
+                        <a id="search-nav" data-toggle="modal" data-target="#searchModal">Search Handle</a>
                     </li>
-                    <li><a id="notificationNavigation">Notifications</a></li>
+                    <li><a id="notificationNavigation" data-toggle="modal" data-target="#notificationModal">Notifications</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a class="glyphicon glyphicon-home" id="homeButton"></a></li>
@@ -68,7 +68,7 @@ ADD PADDING TO THE NAVIGATION BAR
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="col dropdown-toggle" id="optionsButton">Options <b class="caret"></b></a>
                         <ul role="menu" class="dropdown-menu">
-                            <li><a id="updateProfileButton" >Update Profile</a></li>
+                            <li><a id="updateProfileButton" data-toggle="modal" data-target="#myModal">Update Profile</a></li>
                             <li class="divider"></li>
                             <li><a id="logout">Logout</a></li>
                         </ul>
@@ -163,22 +163,12 @@ ADD PADDING TO THE NAVIGATION BAR
                 </div>
             </div>
         </div>
-        <div id="imageModal" class="modal" align="center">
+        <div id="imageModal" class="modal fade" align="center" role="dialog">
 
             <!-- The Close Button -->
-          <div class="modal-content" style="position:'relative';width:55%;height:87%;margin-top:50px;" align="center">
-            <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="imageModal" onclick="document.getElementById('imageModal').style.display='none'">&times;</button>
-            </div>
-            <!-- Modal Content (The Image) -->
-            <div class="modal-body"  id="imageBody">
-                <div align="center">
-                    <img class="modal-content" id="modal-image" style="position:'absolute';width:80%;border:none">
-                </div>
-            </div>
-            </div>
+                    <img class="modal-content" id="modal-image" style="max-width:50%;width:400px;border:none;margin-top:100px;">
         </div>
-          <div class="modal" id="notificationModal" role="dialog">
+          <div class="modal fade" id="notificationModal" role="dialog">
             <div class="modal-dialog">
 
               <!-- Modal content-->
@@ -195,7 +185,7 @@ ADD PADDING TO THE NAVIGATION BAR
 
             </div>
           </div>
-        <div class="modal" id="searchModal">
+        <div class="modal fade" id="searchModal">
             <div class="modal-dialog">
 
               <!-- Modal content-->
@@ -223,7 +213,7 @@ ADD PADDING TO THE NAVIGATION BAR
 
             </div>
           </div>
-          <div class="modal" id="myModal" role="dialog">
+          <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
 
               <!-- Modal content-->

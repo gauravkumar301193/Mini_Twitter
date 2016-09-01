@@ -12,26 +12,20 @@ import models.User;
 public class GetAllFollowingTest {
 
 	@Test
-	public void testGetAllFollowing() {
+	public void testGetAllFollowing() throws ClassNotFoundException, SQLException {
 		 List<User> users;
-		try {
-			users = GetAllFollowingUsers.getAllFollowingUsers(10);
+		
+			users = GetAllFollowingUsers.getAllFollowingUsers(2);
 			assertTrue(users.size() > 0);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	@Test
-	public void testGetAllFollowingWhenInvalidUser() {
+	public void testGetAllFollowingWhenInvalidUser() throws ClassNotFoundException, SQLException {
 		 List<User> users;
-		try {
+		
 			users = GetAllFollowingUsers.getAllFollowingUsers(-20);
 			assertTrue(users == null);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 }

@@ -22,7 +22,7 @@ public class QueryUser {
 		StringBuilder query = new StringBuilder("select * from authentication where user_id=");
 		query.append(userId);
 		
-		logger.info("executing sql query: " + query.toString());
+		//logger.info("executing sql query: " + query.toString());
 		if (SQLConnection.executeQuery(query.toString()).next()) {
 			return true;
 		}

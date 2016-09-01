@@ -11,59 +11,33 @@ import models.Tweet;
 public class GetTweetsForUserProfileTest {
 
 	@Test
-	public void testGetTweetsForUserProfile() {
-		try {
-			List<Tweet> twts = GetTweetsForUserProfile.tweetsForUserProfile(50 , 0 , Long.parseLong("1472020664186"));
-			assertTrue(twts.size() > 0);
-			assertTrue(twts.get(0).getUserId() > 0);		
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testGetTweetsForUserProfile() throws NumberFormatException, ClassNotFoundException, SQLException {
+			List<Tweet> twts = GetTweetsForUserProfile.tweetsForUserProfile(1 , 0 , Long.parseLong("1472020664186"));
+			assertEquals(0, twts.size());	
 	}
 
 	@Test
-	public void testGetTweetsForUserProfileWhenInvalidUserId() {
-		try {
+	public void testGetTweetsForUserProfileWhenInvalidUserId() throws NumberFormatException, ClassNotFoundException, SQLException {
 			List<Tweet> twts = GetTweetsForUserProfile.tweetsForUserProfile(-1 , 0 , Long.parseLong("1472020664186"));
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetsForUserProfileWhenInvalidTimestamp() {
-		try {
+	public void testGetTweetsForUserProfileWhenInvalidTimestamp() throws NumberFormatException, ClassNotFoundException, SQLException {
 			List<Tweet> twts = GetTweetsForUserProfile.tweetsForUserProfile(10 , Long.parseLong("1472020664186") , 0);
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetsForUserProfileWhenInvalidStartTime() {
-		try {
+	public void testGetTweetsForUserProfileWhenInvalidStartTime() throws ClassNotFoundException, SQLException {
 			List<Tweet> twts = GetTweetsForUserProfile.tweetsForUserProfile(10 , -1 , 100);
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Test
-	public void testGetTweetsForUserProfileWhenInvalidEndTime() {
-		try {
+	public void testGetTweetsForUserProfileWhenInvalidEndTime() throws ClassNotFoundException, SQLException {
 			List<Tweet> twts = GetTweetsForUserProfile.tweetsForUserProfile(10 , 100 , -1);
 			assertEquals(null, twts);
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 

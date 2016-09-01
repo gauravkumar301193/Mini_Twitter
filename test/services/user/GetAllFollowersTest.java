@@ -12,26 +12,16 @@ import models.User;
 public class GetAllFollowersTest {
 
 	@Test
-	public void testGetAllFollowers() {
+	public void testGetAllFollowers() throws ClassNotFoundException, SQLException {
 		 List<User> users;
-		try {
-			users = GetAllFollowers.getAllFollowers(17);
+			users = GetAllFollowers.getAllFollowers(1);
 			assertTrue(users.size() > 0);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 	
 	@Test
-	public void testGetAllFollowersWhenInvalidUser() {
-		 List<User> users;
-		try {
-			users = GetAllFollowers.getAllFollowers(-20);
+	public void testGetAllFollowersWhenInvalidUser() throws ClassNotFoundException, SQLException {
+		 List<User> users = GetAllFollowers.getAllFollowers(-20);
 			assertTrue(users == null);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

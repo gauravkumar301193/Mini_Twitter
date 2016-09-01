@@ -26,7 +26,6 @@ public class AddNewUser {
 				return true;
 			}
 			else {
-				logger.error("Invaid user received: " + user);
 				return false;
 			}
 		}

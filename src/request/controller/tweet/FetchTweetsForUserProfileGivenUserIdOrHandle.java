@@ -16,7 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
+/*
+ * @author: gaurav.kum
+ */
 /**
  * Servlet implementation class TweetForUser
  */
@@ -30,6 +32,10 @@ public class FetchTweetsForUserProfileGivenUserIdOrHandle extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = 0;

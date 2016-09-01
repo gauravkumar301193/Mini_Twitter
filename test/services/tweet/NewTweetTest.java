@@ -7,48 +7,28 @@ import java.sql.SQLException;
 import org.junit.Test;
 
 import models.Tweet;
+import request.controller.tweet.DeleteTweetGivenId;
 
 public class NewTweetTest {
 
 	@Test
-	public void testPostTweet() {
+	public void testPostTweet() throws ClassNotFoundException, SQLException {
 		Tweet twt = new Tweet();
-		try {
-			twt.setTweetId(Tweet.generateTweetID());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		twt.setTweetId(Tweet.generateTweetID());
 		twt.setTweetText("Hello Mayank");
-		twt.setUserId(17);
-		try {
-			boolean status = NewTweet.postTweet(twt);
-			assertTrue(status);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		twt.setUserId(1);
+		twt.setMediaId(Long.parseLong("0"));
+		assertTrue(NewTweet.postTweet(twt));
+		assertTrue(RemoveTweet.deleteTweet(Tweet.generateTweetID() - 1));	
 	}
 	
-	@Test
-	public void testPostTweetWhenInvalidUser() {
+	@Test(expected=SQLException.class)
+	public void testPostTweetWhenInvalidUser() throws ClassNotFoundException, SQLException {
 		Tweet twt = new Tweet();
-		try {
-			twt.setTweetId(Tweet.generateTweetID());
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		twt.setTweetId(Tweet.generateTweetID());
 		twt.setTweetText("Hello Mayank");
 		twt.setUserId(-1);
-		try {
-			boolean status = NewTweet.postTweet(twt);
-			assertFalse(status);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		twt.setMediaId(Long.parseLong("0"));
+		assertFalse(NewTweet.postTweet(twt));
 	}
-	
-
 }

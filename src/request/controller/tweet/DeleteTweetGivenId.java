@@ -29,6 +29,11 @@ public class DeleteTweetGivenId extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
+		
 		if (request.getParameterMap().containsKey("tweetId")) {
 			String tweet = request.getParameter("tweetId");
 		

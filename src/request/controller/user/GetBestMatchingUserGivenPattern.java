@@ -36,7 +36,10 @@ public class GetBestMatchingUserGivenPattern extends HttpServlet {
 		String textPattern = "";
 		response.setContentType("application/json");
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			if (request.getParameterMap().containsKey("textPattern")) {
 				textPattern = request.getParameter("textPattern");

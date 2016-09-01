@@ -29,7 +29,10 @@ public class UpdateUserDetails extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		Long userId = null;
 		boolean updatePassword = false , updateUsername = false , updateEmail = false;
-		
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			if(request.getParameterMap().containsKey("userId")) {
 				userId = Long.parseLong(request.getParameter("userId"));

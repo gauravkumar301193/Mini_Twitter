@@ -38,10 +38,11 @@ public class CheckEmailExists extends HttpServlet {
 			response.setStatus(200);
             if (QueryUser.checkEmailExists(email)) {
                 response.getWriter().write("true");
+                logger.info("email exists");
             } else {
                 response.getWriter().write("false");
+                logger.info("email doesn't exist");
             }
-            logger.info("response sent");
         } catch (ClassNotFoundException | SQLException e) {
             // TODO Auto-generated catch block
             response.setStatus(503);

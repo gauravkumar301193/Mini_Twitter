@@ -42,6 +42,10 @@ public class LikeTweetGivenTweetIdAndUserId extends HttpServlet {
 		String tweetLiked = "";
 		String likedBy = "";
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		if (request.getParameterMap().containsKey("tweetId")) {
 		 tweetLiked = request.getParameter("tweetId");
 		}

@@ -32,6 +32,10 @@ public class FetchFollowingGivenUserId extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			long userId = Long.parseLong(request.getParameter("userId"));
 			List<User> followersList = GetAllFollowingUsers.getAllFollowingUsers(userId);

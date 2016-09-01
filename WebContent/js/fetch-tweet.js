@@ -2,8 +2,10 @@ function fetchTweetsBetweenTimeStamps(url, data, isNew) {
     if (url == "")
         return;
     console.log("appending");
-    $(MIDDLE_PANEL_TWEET_PARENT).append("<div class=\"loader\" id=\"loader\"></div>");
-    localStorage.setItem("sent", "true");
+    if (isNew != true) {
+	    $(MIDDLE_PANEL_TWEET_PARENT).append("<div class=\"loader\" id=\"loader\"></div>");
+	    localStorage.setItem("sent", "true");
+    }
     $.ajax({
         url : url,
         data : data,
@@ -35,7 +37,7 @@ function fetchTweetsBetweenTimeStamps(url, data, isNew) {
                 localStorage.removeItem("sent");
                 for (var i = 0; i < tweets.length; i++) {
                 	console.log("Changing button states");
-                    changeButtonStatesForTweet(tweets[i], localStorage.getItem("loggedInUser"));
+                    changeButtonStatesForTweet(tweets[i], getLoggedInUser());
                 }
             } else if (isNew == false) {
                 localStorage.setItem("moreOlderTweets", false);
@@ -108,23 +110,23 @@ function fetchNewTweetsForHashtag(hashtag, loggedInUser) {
 }
 
 function fetchTweetsByASingleUser(userId) {
-    fetchOlderTweetsFromServer(TWEETS_BY_A_SPECIFIC_USER, userId, localStorage.getItem("loggedInUser"));
+    fetchOlderTweetsFromServer(TWEETS_BY_A_SPECIFIC_USER, userId, getLoggedInUser());
 }
 
 function fetchOlderTweetsForUserHome(userId) {
-    fetchOlderTweetsFromServer(TWEETS_FOR_USER_HOME_URL, userId, localStorage.getItem("loggedInUser"));
+    fetchOlderTweetsFromServer(TWEETS_FOR_USER_HOME_URL, userId, getLoggedInUser());
 }
 
 function fetchNewerTweetsForUserHome(userId) {
-    fetchNewTweetsFromServer(TWEETS_FOR_USER_HOME_URL, userId, localStorage.getItem("loggedInUser"));
+    fetchNewTweetsFromServer(TWEETS_FOR_USER_HOME_URL, userId, getLoggedInUser());
 }
 
 function fetchOlderTweetsForUserProfile(userId) {
-    fetchOlderTweetsFromServer(TWEETS_FOR_USER_PROFILE, userId, localStorage.getItem("loggedInUser"));
+    fetchOlderTweetsFromServer(TWEETS_FOR_USER_PROFILE, userId, getLoggedInUser());
 }
 
 function fetchNewerTweetsForUserProfile(userId) {
-    fetchNewerTweetsFromServer(TWEETS_FOR_USER_PROFILE, userId, localStorage.getItem("loggedInUser"));
+    fetchNewerTweetsFromServer(TWEETS_FOR_USER_PROFILE, userId, getLoggedInUser());
 }
 
 function fetchTweetGivenTweetId(tweetId, loggedInUser) {

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import models.Tweet;
@@ -26,8 +27,13 @@ import services.user.GetAllTweetsForUserIdService;
 public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
    
+	static Logger logger = Logger.getLogger(FetchTweetsAndRetweetsGivenUserId.class);
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		if(request.getSession(false) == null) {
+			response.setStatus(504);
+			return;
+		}
 		try {
 			if (!request.getParameterMap().containsKey("userId")) {
 				
@@ -38,6 +44,10 @@ public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 			
 			long userId = Long.parseLong(request.getParameter("userId"));
 			long latestTime = System.currentTimeMillis();
+			if (request.getParameterMap().containsKey("latestTime") && request.getParameter("latestTime") != "") {
+				latestTime = Long.parseLong(request.getParameter("latestTime"));
+			}
+			
 			long startTime = 0;
 			if (request.getParameterMap().containsKey("startTime")) {
 				startTime = Long.parseLong(request.getParameter("startTime"));
@@ -47,6 +57,7 @@ public class FetchTweetsAndRetweetsGivenUserId extends HttpServlet {
 			if (loggedInUser != null) {
 				response.setStatus(404);
 			}
+			logger.info("startTime = " + startTime + "  latestTime = " + latestTime);
 			//response.getWriter().write("hello here");
 			List<Tweet> allTweetsForUser = GetAllTweetsForUserIdService.allTweetsForUserId(userId, startTime, latestTime);
 			
