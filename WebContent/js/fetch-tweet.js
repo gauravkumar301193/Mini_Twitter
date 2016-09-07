@@ -17,12 +17,11 @@ function fetchTweetsBetweenTimeStamps(url, data, isNew) {
             console.log(result);
             var tweets = result.Tweets;
             console.log(tweets);
-            localStorage.removeItem("sent");
             var totalTweetsFetched = tweets.length;
             if (totalTweetsFetched > 0) {
-                var tweetsHTMLArray = parseJSONOfAllTweets(tweets);
+                var tweetsHTMLArray = parseJSONOfAllTweets(tweets, isNew);
                 if (isNew == true) {
-                    for (var i = tweetsHTMLArray.length - 1; i >= 0; i--) {
+                    for (var i = tweetsHTMLArray.length - 1; i >= 0; i--) {                    	
                         $(MIDDLE_PANEL_TWEET_PARENT).prepend(tweetsHTMLArray[i]);
                     }
 
@@ -31,10 +30,12 @@ function fetchTweetsBetweenTimeStamps(url, data, isNew) {
                     for (var i = 0; i < tweetsHTMLArray.length; i++) {
                         $(MIDDLE_PANEL_TWEET_PARENT).append(tweetsHTMLArray[i]);       
                     }
-
+                    if (localStorage.getItem("latestTime") == null) {
+                    	localStorage.setItem("latestTime", tweets[0].timestamp);
+                    }
                     localStorage.setItem("startTime", tweets[tweets.length - 1].timestamp);
                 }
-                localStorage.removeItem("sent");
+                REQUEST_FOR_TWEETS_SENT = false;
                 for (var i = 0; i < tweets.length; i++) {
                 	console.log("Changing button states");
                     changeButtonStatesForTweet(tweets[i], getLoggedInUser());
@@ -42,8 +43,12 @@ function fetchTweetsBetweenTimeStamps(url, data, isNew) {
             } else if (isNew == false) {
                 localStorage.setItem("moreOlderTweets", false);
             }
-            localStorage.removeItem("sent");
+            REQUEST_FOR_TWEETS_SENT = false;
             $(LOADER).remove();
+        },
+        error : function(e) {
+        	redirectToLoginIfError(e);
+            REQUEST_FOR_TWEETS_SENT = false;
         }
     });
 }
@@ -52,12 +57,13 @@ function fetchNewTweetsFromServer(url, userId, loggedInUser) {
     var startTime = 0;
     if (localStorage.getItem("latestTime") != null) {
         startTime = localStorage.getItem("latestTime");
+        startTime++;
     }
     var latestTime = Date.now();
     var data = {};
     data["userId"] = userId;
     data["startTime"] = startTime;
-    data["latestTime"] = latestTime;
+//    data["latestTime"] = latestTime;
     data["loggedInUser"] = loggedInUser;
     fetchTweetsBetweenTimeStamps(url, data, true);
 }
@@ -67,9 +73,6 @@ function fetchOlderTweetsFromServer(url, userId, loggedInUser) {
     if (localStorage.getItem("startTime") != null) {
         latestTime = localStorage.getItem("startTime");
     } 
-    if (localStorage.getItem("moreOlderTweets") == true) {
-        return;
-    }
     var startTime = 0;
     console.log(latestTime + "  " + startTime);
     var startTime = 0;
@@ -150,6 +153,7 @@ function fetchTweetGivenTweetId(tweetId, loggedInUser) {
             }
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("error occurred: " + e);
         }
     });

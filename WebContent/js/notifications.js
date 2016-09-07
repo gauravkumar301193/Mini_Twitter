@@ -1,5 +1,5 @@
-function parseMentionNotification(tweetId) {
-    var element = "<a style=\"margin-top:3px;\" id=\"tweet-" + tweetId + "\">You were mentioned in a tweet</a><hr>"; 
+function parseMentionNotification(tweetId, handle) {
+    var element = "<a style=\"margin-top:3px;\" id=\"tweet-" + tweetId + "\">@" + handle + " mentioned you in a tweet</a><hr>"; 
     return element;
 }
 
@@ -33,13 +33,16 @@ function fetchAndDisplayNotifications(userId) {
                 $(NOTIFICATIONS_MODAL_PARENT).append(element);
             }
             for (var i = 0; i < mentions.length; i++) {
-                var element = parseMentionNotification(mentions[i].tweet_id);
+                var element = parseMentionNotification(mentions[i].tweet_id, mentions[i].handle);
                 $(NOTIFICATIONS_MODAL_PARENT).append(element);
             }
             for (var i = 0; i < retweets.length; i++) {
                 var element = parseRetweetsNotification(retweets[i].user_id, retweets[i].tweet_id, retweets[i].handle);
                 $(NOTIFICATIONS_MODAL_PARENT).append(element);
             }
+        }, 
+        error: function(e) {
+        	redirectToLoginIfError(e);
         }
     });
 }

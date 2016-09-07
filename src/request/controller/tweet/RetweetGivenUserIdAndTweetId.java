@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -41,7 +42,7 @@ public class RetweetGivenUserIdAndTweetId extends HttpServlet {
 		}
 		long authorId = 0;
 		if(request.getParameterMap().containsKey("tweetId")) {
-		 tweetId = Long.parseLong(request.getParameter("tweetId"));
+			tweetId = Long.parseLong(request.getParameter("tweetId"));
 		}
 		else {
 			logger.error("tweet Id empty");
@@ -55,15 +56,23 @@ public class RetweetGivenUserIdAndTweetId extends HttpServlet {
 			logger.error("loggedInUserHandle empty");
 			return;
 		}
-		if(request.getParameterMap().containsKey("authorId")) {
+		if (request.getParameterMap().containsKey("authorId")) {
 			 authorId = Long.parseLong(request.getParameter("authorId"));
-			}
+		}
 		else {
 				logger.error("authorId empty");
 				return;
 			}
 		
 		Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
+		HttpSession httpSession = request.getSession(false);
+		System.out.println((Long)httpSession.getAttribute("userId") + "  " + loggedInUser);			
+		if (!httpSession.getAttribute("userId").equals(loggedInUser)) {
+			System.out.println("In here to redirect");
+			response.setStatus(401);
+			return;
+		}
+
 		if (loggedInUser != null) {
 			response.setStatus(404);
 		}

@@ -44,7 +44,7 @@ ADD PADDING TO THE NAVIGATION BAR
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#" class="navbar-brand">MiniTwitter</a>
+                <span  class="navbar-brand">MiniTwitter</span>
             </div>
             <!-- Collection of nav links, forms, and other content for toggling -->
 
@@ -83,7 +83,7 @@ ADD PADDING TO THE NAVIGATION BAR
             
         </div>
         <div class="row" name="panels">
-            <div class="col-sm-3 hidden-xs" name="left-panels">
+            <div class="col-sm-3 " name="left-panels" id="allTheLeftPanels">
                 <div class="left-panel" id="left-panel-profile">
                     <div class="row">
                         <img src="images/user.png" type="button" data-toggle="modal" data-target="#imageModal" class="photo-profile" id="profilePhoto">
@@ -136,13 +136,12 @@ ADD PADDING TO THE NAVIGATION BAR
                             </div>
                             <div class="row" id="mediaUploadAndSubmit">
                                 <span class="col-xs-5 tweet-char-left" id="tweet-characters-left">Characters left</span>
-                                <span class="col-xs-2"></span>
+                                <span class="col-xs-2 tweet-char-left" style="color:red;font-size:10px" id="enterTextFirst"></span>
                                     <label for="x" class="col-xs-2 photo-upload-image">
                                     <img src="images/camera.png" id="new-tweet-image" class="photo-upload-image"></label>
                                 <form id="imageInputForTweet">
                                     <input type="file" name="file" id="x" style="display:none">
                                 </form>
-                                <div id="imgContainer"></div>
                                 <span class="col-xs-1"></span>
                                 <button class="col-xs-2 btn-primary btn-md tweet-post-button" id="postTweet">Tweet</button>
                             </div>
@@ -160,6 +159,16 @@ ADD PADDING TO THE NAVIGATION BAR
             </div>
             <div class="col-md-3 hidden-sm hidden-xs" id="right-panels">
                 <div class="right-panel">
+	                <div class="row" style="heigh:auto;">
+	                	<span class="col-xs-2"></span>
+	                 	<img style="width:100px;" class="col-xs-9" src="images/Advertise.png">
+	                 	<span class="col-xs-1"></span>
+                 	</div>
+                 	<div class="row" style="margin-top:20px;height:40px;">
+	                	<span class="col-xs-1"></span>
+	                	<span class="col-xs-10">This space is reserved for advertising.</span>
+                 		<span class="col-xs-1"></span>
+                 	</div>
                 </div>
             </div>
         </div>
@@ -174,7 +183,7 @@ ADD PADDING TO THE NAVIGATION BAR
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="notificationModal" onclick="document.getElementById('notificationModal').style.display='none'">&times;</button>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Notifications</h4>
                 </div>
                 <div class="modal-body" id="notificationBody">
@@ -191,7 +200,7 @@ ADD PADDING TO THE NAVIGATION BAR
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="searchModal" onclick="document.getElementById('searchModal').style.display='none'">&times;</button>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Search For Handle</h4>
                 </div>
                 <div class="modal-body" id="searchBody">
@@ -219,7 +228,7 @@ ADD PADDING TO THE NAVIGATION BAR
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="myModal" onclick="document.getElementById('myModal').style.display='none'">&times;</button>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Update Information</h4>
                 </div>
                 <div class="modal-body" background="background-login-page.jpg">

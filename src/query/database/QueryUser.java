@@ -264,7 +264,7 @@ public class QueryUser {
 		StringBuilder query = new StringBuilder("select a.user_id, a.handle, r.tweet_id from authentication as a ");
 		query.append("inner join retweets r on a.user_id = r.user_id and r.author_id = ");
 		query.append(userId);
-		query.append(" and created_at > ");
+		query.append(" and r.created_at > ");
 		query.append(logoutTime);
 		
 		logger.info("executing sql query: " + query.toString());

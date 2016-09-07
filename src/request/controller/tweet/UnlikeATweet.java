@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -56,6 +57,14 @@ public class UnlikeATweet extends HttpServlet {
 	
 		long tweetId =  Long.parseLong(tweetLiked); 
 		long unlikeByUserId =  Long.parseLong(unLikedBy); 
+		HttpSession httpSession = request.getSession(false);
+		System.out.println((Long)httpSession.getAttribute("userId") + "  " + unlikeByUserId);			
+		if (!httpSession.getAttribute("userId").equals(unlikeByUserId)) {
+			System.out.println("In here to redirect");
+			response.setStatus(401);
+			return;
+		}
+
 		boolean status = false;
 		try {
 			status = UnlikeTweetService.unlikeTweet(unlikeByUserId, tweetId );

@@ -1,6 +1,6 @@
 function convertTextToURL(text) {
     console.log("converting " + text);
-    return aTag = "<a href=\"" + text + "\">" 
+    return aTag = "<a href=\"" + text + "\" target=\"blank\">" 
         + text + "</a>";
 }
 
@@ -41,7 +41,7 @@ function designTweet(jsonObject, tweetText) {
         if (jsonObject.mediaId != 0) {
             tweet += "<img class=\"col-xs-7 tweet-image\" id=\"tweetImage-" + jsonObject.mediaId +
              "\" onerror=\"brokenTweetImage(this)\" src=\"" + IMAGE_RETRIEVE_URL + "?mediaId=" + jsonObject.mediaId +
-        "\">"; 
+        "\" data-toggle=\"modal\" data-target=\"#imageModal\">"; 
         }
         tweet += "</div>" +
         "<div class=\"row tweet-footer\" name=\"tweetFooter\">" +
@@ -49,7 +49,7 @@ function designTweet(jsonObject, tweetText) {
                 "<div class=\"row\">" + 
                     "<input type=\"button\" class=\"col-sm-4 btn-primary btn-md tweet-footer-button\" id=\"like-" + jsonObject.tweetId +"-" + "\" value=\"Like\">";
                     if(jsonObject.authorId != getLoggedInUser()) { 
-                    	tweet += "<input type=\"button\" style=\"width:100px;\" class=\"col-sm-4 btn-primary btn-md tweet-footer-button\" id=\"Retweet-" + jsonObject.tweetId + "-" + getLoggedInUser() 
+                    	tweet += "<input type=\"button\" style=\"width:100px;\" class=\"col-sm-4 btn-primary btn-md tweet-footer-button\" id=\"Retweet-" + jsonObject.tweetId + "-" + jsonObject.authorId 
                     	+ "\" value=\"Retweet\">";
                     }
                     
@@ -123,10 +123,12 @@ function changeButtonStatesForTweet(jsonObject, loggedInUser) {
     }
 }
 
-function parseJSONOfAllTweets(jsonObject) {
+function parseJSONOfAllTweets(jsonObject, isNew) {
     var tweetsArray = [];
     for (var i = 0; i < jsonObject.length; i++) {
         var singleTweet = jsonObject[i];
+        if (checkIfTweetNeeded(isNew, singleTweet) == false)
+        	continue;
         var tweetText = parseTweetText(singleTweet);
         var tweetHTML = designTweet(singleTweet, tweetText);
         tweetsArray.push(tweetHTML);
@@ -134,32 +136,66 @@ function parseJSONOfAllTweets(jsonObject) {
     return tweetsArray;
 }
 
+function checkIfTweetNeeded(isNew, singleTweet) {
+    if (localStorage.getItem("pageFunction") == null) {
+    	clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
+	}
+    var pageFunction = localStorage.getItem("pageFunction"); 
+    if (isNew == true && getLoggedInUser() == getCurrentUser()) {
+    	if ( (pageFunction == "home" || pageFunction == "profile")
+    		&& singleTweet.authorId == getCurrentUser() && singleTweet.isARetweet == "false") {
+    		return false;
+    	} else if (pageFunction == "tweets") 
+    		return false;
+    }
+    return true;
+} 
+
 function getTimeDifference(timestamp) {
     var diff = Date.now() - timestamp;
-    if (Math.round(diff/1000) < 60) {
-    	if (Math.round(diff/1000) < 0)
+    var seconds = Math.floor(diff/1000);
+    var minutes = Math.floor(diff/1000/60);
+    var hours = Math.floor(diff/1000/60/60);
+    var days = Math.floor(diff/1000/60/60 / 24);
+    var months = Math.floor(diff/1000/60/60 / 24/ 30);
+    var years = Math.floor(diff/1000/60/60 / 24/ 30/ 12);
+
+    if (seconds < 60) {
+    	if (seconds < 0)
     		return "0 seconds ago";
-        return Math.round(diff/1000) + " seconds ago";
-    } else if (Math.round(diff/1000/60) < 60) {
-        return Math.round(diff/1000/60) + " minutes ago";
-    } else if (Math.round(diff/1000/60/60) < 24) {
-        return Math.round(diff/1000/60/60) + " hours ago";
-    } else if (Math.round(diff/1000/60/60) < 366){
-        return Math.round(diff/1000/60/60/24) + " days ago";
+        return seconds + trimTime(seconds, " seconds") +  " ago";
+    } else if (minutes < 60) {
+        return minutes + trimTime(minutes, " minutes") + " ago";
+    } else if (hours < 24) {
+        return hours + trimTime(hours, " hours") + " ago";
+    } else if (days < 30){
+        return days + trimTime(days, " days") + " ago";
+    } else if (months < 12) {
+    	return months + trimTime(months, " months") + " ago";
     } else {
-        return Math.round(diff/1000/60/60/24/365) + " years ago"
+        return years + trimTime(years, " years") + " ago";
     }
+}
+
+function trimTime(time, stringTime) {
+	if (time == 1)
+		return stringTime.substr(0, stringTime.length-1);
+	return stringTime;
 }
 
 function increaseTweetCount() {
     if (getCurrentUser() == getLoggedInUser()) {
         var count = $(LEFT_PANEL_TWEET_COUNT).html();
         count++;
-        $(LEFT_PANEL_TWEET_COUNT).html(count);                
+        $(LEFT_PANEL_TWEET_COUNT).html(count);
+        var x = getCurrentUserTweetCount();
+        x++;
+        localStorage.setItem("currentUserTweetCount", x);
     }
-    var x = getLoggedInUserTweetCount();
-    x++;
-    localStorage.setItem("loggedInUserTweetCount", x);
+    var y = getLoggedInUserTweetCount();
+    y++;
+    localStorage.setItem("loggedInUserTweetCount", y);
 }
 
 function decreaseTweetCount() {
@@ -167,6 +203,9 @@ function decreaseTweetCount() {
         var count = $(LEFT_PANEL_TWEET_COUNT).html();
         count--;
         $(LEFT_PANEL_TWEET_COUNT).html(count);                
+        var y = getCurrentUserTweetCount();
+        y--;
+        localStorage.setItem("currentUserTweetCount", y);
     }
     var x = getLoggedInUserTweetCount();
     x--;

@@ -1,4 +1,5 @@
 package response.util;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.json.simple.*;
@@ -6,6 +7,7 @@ import org.json.simple.*;
 import models.RetweetModel;
 import models.Tweet;
 import models.User;
+import query.database.QueryTweet;
 
 /**
  * @author mayank.ra
@@ -16,11 +18,13 @@ public class CreateJSONResponseNotifications {
 		jsonObject = new JSONObject();
 	}
 	
-	public void addMentionsAfterLogout(List<Tweet> tweets) {
+	public void addMentionsAfterLogout(List<Tweet> tweets) 
+			throws ClassNotFoundException, SQLException {
 		JSONArray jsonArray = new JSONArray();
 		for (Tweet tweet: tweets) {
 			JSONObject mention = new JSONObject();
 			mention.put("tweet_id", tweet.getTweetId());
+			mention.put("handle", QueryTweet.getAuthorOfTweet(tweet.getTweetId()));
 			jsonArray.add(mention);
 		}
 		jsonObject.put("mentions", jsonArray);

@@ -18,15 +18,10 @@ public class UpdateUser {
 	static Logger logger = Logger.getLogger(UpdateUser.class);
 	
 	public static boolean registerUser(User user) throws ClassNotFoundException, SQLException {
-		
 		int rowsInserted = insertIntoAuthentication(user);
-		
-		
 		int rowsInserted1 = insertIntoUserDetails(user);
 		
 		return rowsInserted > 0  && rowsInserted1 > 0 ;
-		
-		
 	}
 	
 	private static int insertIntoAuthentication(User user) throws ClassNotFoundException, SQLException {
@@ -66,11 +61,10 @@ public class UpdateUser {
 	public static boolean followUser(long userId, long userToFollow) 
 			throws SQLException, ClassNotFoundException {
 		
-		int rowsInserted = addConnections2(userId, userToFollow);
+		int status = addConnections2(userId, userToFollow);
 		int	rowsUpdated = incrementFollowingCount(userId);
 		int	rowsUpdated1 = incrementFollowerCount(userToFollow);
-		return rowsInserted > 0;
-		
+		return true;
 	}
 	
 	private static int incrementFollowerCount(long userToFollow) throws ClassNotFoundException, SQLException {
@@ -108,7 +102,8 @@ public class UpdateUser {
 		
 		logger.info("executing sql query in UpdateUser addConnections : " + sql.toString());
 	
-		return SQLConnection.executeUpdate(sql.toString());
+		SQLConnection.executeUpdate(sql.toString());
+		return 2;
 		
 	}
 	

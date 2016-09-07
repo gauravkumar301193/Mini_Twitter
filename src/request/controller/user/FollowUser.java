@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -42,14 +43,15 @@ public class FollowUser extends HttpServlet {
 			return;
 		}
 		if(request.getParameterMap().containsKey("userId")) {
-		 userToFollow = request.getParameter("userId");
+			userToFollow = request.getParameter("userId");
 		}
 		else {
 			logger.error("follower empty");
 			return;
 		}
 		if(request.getParameterMap().containsKey("loggedInUser")) {
-		 follower = request.getParameter("loggedInUser");
+			follower = request.getParameter("loggedInUser");
+
 		}
 		else {
 			logger.error("user to follow empty");
@@ -58,6 +60,13 @@ public class FollowUser extends HttpServlet {
 		//response.getWriter().print("hello from user");
 		long userId = Long.parseLong(userToFollow);
 		long loggedInUser = Long.parseLong(follower);
+		HttpSession httpSession = request.getSession(false);
+		System.out.println((Long)httpSession.getAttribute("userId") + " ! " + loggedInUser);			
+		if (!httpSession.getAttribute("userId").equals(loggedInUser)) {
+			System.out.println("In here to redirect!!!");
+			response.setStatus(401);
+			return;
+		}
 		
 		boolean status = false;
 		

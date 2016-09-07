@@ -42,8 +42,8 @@ public class AuthenticateUser extends HttpServlet {
 			logger.error("password empty");
 			return;
 		}
+
 		try {
-			
 			Long userId = CheckUserCredentials.checkIfUserExists(emailId, password);
 			if (userId != null) {
 				logger.info("Authentication success");

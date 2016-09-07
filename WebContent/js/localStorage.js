@@ -84,106 +84,138 @@ function destroyTimeStamps() {
 }
 
 function getLoggedInUser() {
-//	if (localStorage.getItem("loggedInUser") == null) {
-//		clearLocalStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
-//	}
+	if (localStorage.getItem("loggedInUser") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
+	}
 	return localStorage.getItem("loggedInUser");
 }
 
 function getLoggedInUserHandle() {
-//	if (localStorage.getItem("loggedInUserHandle") == nul) {
-//		clearLocalStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("loggedInUserHandle") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("loggedInUserHandle");
 }
 
 function getLoggedInMediaId() {
-//	if (localStorage.getItem("loggedInMediaId") == null) {
-//		clearLocalStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("loggedInMediaId") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("loggedInMediaId");
 }
 
 function getLoggedInUserFollowingCount() {
-//	if (localStorage.getItem("loggedInUserFollowingCount") == null) {
-//		clearLocalStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("loggedInUserFollowingCount") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("loggedInUserFollowingCount");
 }
 
 function getLoggedInUserFollowerCount() {
-//	if (localStorage.getItem("loggedInUserFollowerCount") == null) {
-//		clearLocalStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("loggedInUserFollowerCount") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("loggedInUserFollowerCount");
 }
 
 function getLoggedInUserTweetCount() {
-//	if (localStorage.getItem("loggedInUserTweetCount") == null) {
-//		clearLocalStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("loggedInUserTweetCount") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("loggedInUserTweetCount");
 }
 
 
 function getCurrentUser() {
-//	if (localStorage.getItem("currentUser") == null) {
-//		clearLocasStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("currentUser") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("currentUser");
 }
 
 function getCurrentUserHandle() {
-//	if (localStorage.getItem("currentUserHandle") == null) {
-//		clearLocasStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("currentUserHandle") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("currentUserHandle");
 }
 
 function getCurrentUserMediaId() {
-//	if (localStorage.getItem("currentUserMediaId") == null) {
-//		clearLocasStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("currentUserMediaId") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("currentUserMediaId");
 }
 
 function getCurrentUserFollowingCount() {
-//	if (localStorage.getItem("currentUserFollowingCount") == null) {
-//		clearLocasStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("currentUserFollowingCount") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("currentUserFollowingCount");
 }
 
 function getCurrentUserFollowerCount() {
-//	if (localStorage.getItem("currentUserFollowerCount") == null) {
-//		clearLocasStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("currentUserFollowerCount") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("currentUserFollowerCount");
 }
 
 function getCurrentUserTweetCount() {
-//	if (localStorage.getItem("currentUserTweetCount") == null) {
-//		clearLocasStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("currentUserTweetCount") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("currentUserTweetCount");
 }
 
 function checkIfCurrentUserIsFollowed() {
-//	if (localStorage.getItem("isFollowed") == null) {
-//		clearLocasStorage();
-//		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
-//	}
+	if (localStorage.getItem("isFollowed") == null) {
+		invalidateServerSession();
+		clearLocalStorage();
+		window.location.replace(LOGIN_AND_REGISTRATION_PAGE);		
+	}
 	return localStorage.getItem("isFollowed");
+}
+
+function redirectToLoginIfError(e){
+	if (e.hasOwnProperty('status')) {
+		if (e.status == 401) {
+			invalidateServerSession();
+			clearLocalStorage();
+			window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
+		}
+	}
+}
+
+function invalidateServerSession() {
+	$.ajax({
+		url: LOGOUT_URL,
+		error: function(e) {
+			console.log("Couldn't invalidate the user session on server");
+		}
+	})
 }

@@ -23,6 +23,7 @@ function fetchAndShowProfileOfCurrentUser(handle, userId, loggedInUser) {
             window.location.replace(PROFILE_CUM_HOME_PAGE);
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("user details could not be fetched: " + e);
         }
     });
@@ -47,6 +48,7 @@ function fetchAndUpdateInfoOfLoggedInUser(userId, loggedInUser) {
             window.location.replace(PROFILE_CUM_HOME_PAGE);
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("user details could not be fetched: " + e);
         }        
     });
@@ -74,6 +76,7 @@ function fetchAllUsers(url, userId, loggedInUser) {
             }
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("could not fetch all users: " + e);
         }
     });
@@ -82,7 +85,7 @@ function fetchAllUsers(url, userId, loggedInUser) {
 function fetchUserHTML(jsonObject) {
     var tweet = "<div class=\"col-md-6 col-sm-6\" style=\"margin-top:30px\">" +
                     "<div class=\"row\">" +
-                        "<img class=\"col-xs-5\" id=\"user-" + jsonObject.userId + "\"style=\"max-width:70px\" onerror=\"brokenProfileImage(this)\"" + "src=\"" + FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + jsonObject.userId + "\"" +
+                        "<img class=\"col-xs-5\" id=\"user-" + jsonObject.userId + "\"style=\"width:70px;height:45px;\" onerror=\"brokenProfileImage(this)\"" + "src=\"" + FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + jsonObject.userId + "\"" +
                             ">" + 
                         "<div class=\"col-xs-7\" align=\"center\">" +
                             "<a id=\"profile-" + jsonObject.userId + "\" style=\"font-size:15px;word-break:break-word\">@" + jsonObject.handle + "</a>" + 
@@ -134,6 +137,7 @@ function followAUser(userId, loggedInUser) {
             $("#follow-" + userId).val("Unfollow");
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("could not follow user: " + e);
         }
     });
@@ -156,6 +160,7 @@ function unfollowAUser(userId, loggedInUser) {
             $("#follow-" + userId).val("Follow");
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("could not unfollow user: " + e);
         }        
     })

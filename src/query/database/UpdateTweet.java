@@ -44,7 +44,7 @@ public class UpdateTweet {
 		
 		int hashtagsInserted = addHashtagsToDb(tweet_id, hashtags, listOfWords);
 		
-		int mentionsInserted = addMentionsToDb(tweet_id, mentions, listOfWords);
+		int mentionsInserted = addMentionsToDb(tweet_id, mentions, listOfWords, tweetToAdd.getTimestamp());
 		
 		return (tweetInserted > 0 || hashtagsInserted > 0 || mentionsInserted > 0);
 	}
@@ -99,7 +99,7 @@ public class UpdateTweet {
  
 	}
 	
-	public static int addMentionsToDb(long tweet_id, List<Integer> mentions , String[] allWordsInTweet) throws ClassNotFoundException, SQLException {
+	public static int addMentionsToDb(long tweet_id, List<Integer> mentions , String[] allWordsInTweet, long timestamp) throws ClassNotFoundException, SQLException {
 		int mentionsInserted = 0;
 		
 		Iterator<Integer> mentionIterator = mentions.iterator();
@@ -113,7 +113,7 @@ public class UpdateTweet {
 			StringBuilder sql = new StringBuilder("insert into tweet_mentions values(")
 						.append(tweet_id).append(",") 
 						.append(userId).append(",") 
-						.append(System.currentTimeMillis()).append(")");
+						.append(timestamp).append(")");
 			
 			logger.info("executing sql query in UpdateTweet addMentionsToDb: " + sql.toString());
 			mentionsInserted += SQLConnection.executeUpdate(sql.toString());

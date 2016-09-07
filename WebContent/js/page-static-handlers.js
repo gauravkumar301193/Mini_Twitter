@@ -1,6 +1,6 @@
 $(document).ready(function() {
     if (localStorage.getItem("pageFunction") == null) {
-    	localStorage.setItem("pageFunctions", "home");
+    	localStorage.setItem("pageFunction", "home");
     }
     var pageRole = localStorage.getItem("pageFunction");
     var url = "";
@@ -11,7 +11,9 @@ $(document).ready(function() {
             clearLocalStorage();
             window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
         }
+        $(LEFT_PANELS_CONTAINER).addClass("hidden-xs");
         setCurrentEqualLoggedIn();
+        $(NEW_TWEET_TEXT).val("");
         url = TWEETS_FOR_USER_HOME_URL;
         homePage();
         addInfoToLeftPanelProfile();
@@ -26,6 +28,11 @@ $(document).ready(function() {
         profilePage();
         addInfoToLeftPanelProfile();
         userId = getCurrentUser();
+        if (getLoggedInUser() == getCurrentUser()) {
+        	$(NEW_TWEET_TEXT).val("");
+        } else {
+        	$(NEW_TWEET_TEXT).val("@" + getCurrentUserHandle() + " ");
+        }
         if (localStorage.getItem("isFollowed") == true) {
             $(LEFT_PANEL_FOLLOW_BUTTON).val("Unfollow");
         } else if (localStorage.getItem("isFollowed") == false) {
@@ -49,6 +56,11 @@ $(document).ready(function() {
             window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
         }
         userId = getCurrentUser();
+        if (getLoggedInUser() == getCurrentUser()) {
+        	$(NEW_TWEET_TEXT).val("");
+        } else {
+        	$(NEW_TWEET_TEXT).val("@" + getCurrentUserHandle() + " ");
+        }
         url = TWEETS_BY_A_SPECIFIC_USER;
         profilePage();
         addInfoToLeftPanelProfile();
@@ -67,7 +79,15 @@ $(document).ready(function() {
     localStorage.setItem("sent", true);
     fetchOlderTweetsFromServer(url, userId, getLoggedInUser());
     
-    setTimeout(function() {setInterval(fetchNewTweetsFromServer(url, userId, getLoggedInUser()), 30000)}, 50000);
+    var fetchNewTweetsInterval = null;
+    setTimeout(function() {
+    	fetchNewTweetsInterval = setInterval(function() {
+    		if (REQUEST_FOR_TWEETS_SENT == false) {
+    			REQUEST_FOR_TWEETS_SENT = true;
+    			fetchNewTweetsFromServer(url, userId, getLoggedInUser());
+    		}
+    	}, 30000);
+    }, 30000);
     
     $(LEFT_PANEL_PROFILE_DETAILS).click(function(e) {
         var id = e.target.id;
@@ -83,16 +103,16 @@ $(document).ready(function() {
             window.location.replace(PROFILE_CUM_HOME_PAGE);
         } else if (id == followers.substr(1, followers.length)) {
             followersPage();
+            clearInterval(fetchNewTweetsInterval);
             fetchAllFollowers(getCurrentUser(), getLoggedInUser());
         } else if (id == following.substr(1, following.length)) {
             followersPage();
+            clearInterval(fetchNewTweetsInterval);
             fetchAllFollowing(getCurrentUser(), getLoggedInUser());
         } else if (id == photo.substr(1, photo.length)) {
-//            $(IMAGE_MODAL).show();
             $(IMAGE_IN_MODAL).attr("src", FETCH_IMAGE_GIVEN_USER_ID + "?userId=" + getCurrentUser());
         } else if (id == handle.substr(1, handle.length)) {
             localStorage.setItem("pageFunction", "profile");
-            setCurrentEqualLoggedIn();
             destroyTimeStamps();
             window.location.replace(PROFILE_CUM_HOME_PAGE);
         }
@@ -138,6 +158,7 @@ $(document).ready(function() {
                 window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
             },
             error : function(e) {
+            	redirectToLoginIfError(e);
                 console.log("error while logging out: " + e);
             }
         });
@@ -147,10 +168,9 @@ $(document).ready(function() {
         var doc = $(document).height() - $(window).height();
         var current = $(document).scrollTop();
         console.log("height " + doc + "  " + current + "  " + Math.round(doc * 0.7));
-        if (Math.abs(Math.round(doc * 0.7) - current) <= 5 && localStorage.getItem("sent") == null) {
-            console.log("herer 1 ");
-            localStorage.setItem("sent", true);
-//            console.log("here " + flag);
+        if (catchUser(doc, current) == true) {
+            console.log("Requesting For more tweets");
+            REQUEST_FOR_TWEETS_SENT = true;
             fetchOlderTweetsFromServer(url, userId, getLoggedInUser());
         }
     });
@@ -170,7 +190,7 @@ $(document).ready(function() {
         if ($(IMAGE_ELEMENT_MODAL).val()) {
             var file = $(IMAGE_ELEMENT_MODAL);
             var filename = $.trim(file.val());
-        	if (!(isJpg(filename) || (isPng(filename) || (isJpeg(filename))))) {
+        	if (!(isJpg(filename) || !(isPng(filename) || !(isJpeg(filename))))) {
         		alert("only Jpg, Jpeg and Png formats");
         		return;
         	}
@@ -261,7 +281,8 @@ $(document).ready(function() {
                         console.log("false");
                     }
                 },
-                error : function(jqXHR, textStatus, errorThrown) {
+                error : function(e) {
+                	redirectToLoginIfError(e);
                     $(EMAIL_EXISTS_ERROR).show();
                 }
             });

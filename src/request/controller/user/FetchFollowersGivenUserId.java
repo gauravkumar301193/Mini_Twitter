@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 
@@ -39,6 +40,14 @@ public class FetchFollowersGivenUserId extends HttpServlet {
 			List<User> followersList = GetAllFollowers.getAllFollowers(userId);
 			System.out.println(followersList.size());
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
+			HttpSession httpSession = request.getSession(false);
+			System.out.println((Long)httpSession.getAttribute("userId") + "  " + loggedInUser);			
+			if (!httpSession.getAttribute("userId").equals(loggedInUser)) {
+				System.out.println("In here to redirect");
+				response.setStatus(401);
+				return;
+			}
+
 			if (loggedInUser != null) {
 				response.setStatus(404);
 			}

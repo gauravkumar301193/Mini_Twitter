@@ -1,4 +1,12 @@
 $(document).ready(function(){
+	
+//	if (checkIfLoggedInUserSet() == true) {
+//		console.log("here sending to homepage");
+//		localStorage.setItem("pageFunction", "home");
+//		window.location.replace(PROFILE_CUM_HOME_PAGE);
+//	}
+//	
+	
     var previousEmailValue = "";
     var invalidHandle = false;
     var invalidEmail = false;
@@ -95,10 +103,19 @@ $(document).ready(function(){
         }
     });
     
+//    $(SIGN_IN_BUTTON).click(function(){
+//    	$(SIGN_IN_FORM_LOGIN).submit();
+//    });
+//    
     $(SIGN_IN_BUTTON).click(function(){
         $(INVALID_CREDENTIALS_ENTERED).hide();
+    	$(INCOMPLETE_DETAILS_ERROR_SIGN_IN).hide();
         var email = $(SIGN_IN_EMAIL).val();
         var password = MD5($(SIGN_IN_PASSWORD).val());
+        if (password == ""|| email == "") {
+        	$(INCOMPLETE_DETAILS_ERROR_SIGN_IN).show();
+        	return;
+        }
         var tryResult;
         $.ajax({
             url : AUTHENTICATION_URL,
@@ -118,21 +135,24 @@ $(document).ready(function(){
                 $(INVALID_CREDENTIALS_ENTERED).hide();
                 localStorage.setItem("pageFunction", "home");
                 window.location = PROFILE_CUM_HOME_PAGE;
+                return;
             },
             error : function(e) {
                 console.log("authentication failed");
                 $(INVALID_CREDENTIALS_ENTERED).show();
+                return;
             }
         });
     });
     
     $(SIGN_UP_BUTTON).click(function(){
+    	$(INCOMPLETE_DETAILS_ERROR).hide();
         var email = $(SIGN_UP_EMAIL).val();
         var handle = $(SIGN_UP_HANDLE).val();
         var password = MD5($(SIGN_UP_PASSWORD).val());
         var name = $(SIGN_UP_NAME).val();
         if (name == "" || password == "" || handle == "" || email == "") {
-        	alert("Please fill out all the fields");
+        	$(INCOMPLETE_DETAILS_ERROR).show();
         	return;
         }
         $(SIGN_UP_EMAIL).focusout();
@@ -158,15 +178,17 @@ $(document).ready(function(){
                 if ($(IMAGE_ELEMENT_MODAL).val()) {
                     var file = $(IMAGE_ELEMENT_MODAL);
                     var filename = $.trim(file.val());
-                	if (!(isJpg(filename) || (isPng(filename) || (isJpeg(filename))))) {
+                	if (!(isJpg(filename) || !(isPng(filename) || !(isJpeg(filename))))) {
                 		alert("only Jpg, Jpeg and Png formats");
                 		return;
                 	}                	
                     uploadImageForUser(IMAGE_INFORMATION_URL_USER, IMAGE_FORM_MODAL, result.userId, LOGIN_AND_REGISTRATION_PAGE);
-                    alert("successful registration");
+                    return;
                 } else {
                     window.location.replace(LOGIN_AND_REGISTRATION_PAGE);
+                    return;
                 }
+                alert("successful registration");
             },
             error : function(e) {
                 console.log("error occured: ");

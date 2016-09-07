@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import models.Tweet;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import services.tweet.*;
 
 import org.apache.log4j.Logger;
@@ -40,6 +42,9 @@ public class FetchTweetsForUserHomeGivenId extends HttpServlet {
 			response.setStatus(504);
 			return;
 		}
+		
+//		System.out.println(httpSession.getAttribute("userId"));
+		
 		try {
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = Long.parseLong(request.getParameter("userId"));
@@ -58,7 +63,14 @@ public class FetchTweetsForUserHomeGivenId extends HttpServlet {
 				startTime = 0;
 			}
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
-		
+			HttpSession httpSession = request.getSession(false);
+			System.out.println((Long)httpSession.getAttribute("userId") + "  " + loggedInUser);			
+			if (!httpSession.getAttribute("userId").equals(loggedInUser)) {
+				System.out.println("In here to redirect");
+				response.setStatus(401);
+				return;
+			}
+			
 			if (CheckValidity.isValidUser(userId)) {
 				List<Tweet> listOfTweets = new ArrayList<>();
 				listOfTweets = services.tweet.TweetsForUserHome.getTweetsForUserHome(userId, startTime, latestTime);

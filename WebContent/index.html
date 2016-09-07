@@ -42,10 +42,10 @@
     </header>
 
     <div class="container">
-        
-      <form class="form-signin">
+       <form class="form-signin"> 
         <h2 class="form-signin-heading">Please sign in</h2>
         <h5 class="error-message" id="invalidCredentials">Invalid user credentials.</h5>
+        <h5 class="error-message" id="incompleteDetailsLogIn">Please Fill out all Fields</h5>
         <label for="signInEmail" class="sr-only">Email address</label>
         <input type="email" id="signInEmail" class="form-control login-input" placeholder="Email address" required autofocus>
           
@@ -54,10 +54,9 @@
       <div style="width:100%">
         <button class="btn btn-lg btn-primary signin-buttons" type="button" data-toggle="modal" data-target="#myModal">Register</button>
 
-        <button class="btn btn-lg btn-primary signin-buttons" id="signIn" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary signin-buttons" id="signIn" type="button">Sign in</button>
       </div>
-      </form>
-        
+    </form>    
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
@@ -73,6 +72,7 @@
             <h5 id="invalidEmailError" class="error-message">Invalid Email entered</h5>
             <h5 id="handleTakenError" class="error-message">This handle already taken</h5>
             <h5 id="usernameInvalidError" class="error-message">Invalid handle entered</h5>
+            <h5 id="incompleteDetails" class="error-message">Please Enter All the details</h5>
             <h2 class="form-signin-heading"></h2>
             <label for="signUpEmail" class="sr-only">Email address</label>
             <input type="email" id="signUpEmail" class="form-control" style="margin:2% 0;" placeholder="Email address" required autofocus>

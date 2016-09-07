@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -43,7 +44,15 @@ public class DeleteAUserGivenId extends HttpServlet {
 			return;
 		}
 		if(request.getParameterMap().containsKey("userId")) {
-		user = request.getParameter("userId");
+			user = request.getParameter("userId");
+			HttpSession httpSession = request.getSession(false);
+			System.out.println((Long)httpSession.getAttribute("userId") + "  " + user);			
+			if (!httpSession.getAttribute("userId").equals(user)) {
+				System.out.println("In here to redirect");
+				response.setStatus(401);
+				return;
+			}
+
 		}
 		else {
 			logger.error("user id empty");
@@ -55,7 +64,7 @@ public class DeleteAUserGivenId extends HttpServlet {
 		boolean status = false;
 		
 		try {
-			if(userId > 0 && CheckValidity.isValidUser(userId)) {
+			if (userId > 0 && CheckValidity.isValidUser(userId)) {
 			
 				status = RemoveUser.deleteUser(userId);
 				

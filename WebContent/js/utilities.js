@@ -35,6 +35,7 @@ function addInfoToLeftPanelHashtag() {
             }
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("error loading hashtags on left panel: " + e);
         }
     });
@@ -51,6 +52,8 @@ function showHashtagPage(hashtag) {
 }
 
 function fetchAndUpdateMatchingResults(text, loggedInUser) {
+	if (text[0] == "@")
+		text = text.substr(1, text.length);
     $.ajax({
         url : IPAddress + "GetBestMatchingUserGivenPattern",
         type : "GET",
@@ -69,6 +72,9 @@ function fetchAndUpdateMatchingResults(text, loggedInUser) {
                 $("#searchResult-" + i).html("@" + x[i - 1].handle);
                 $("#searchResult-" + i).show();
             }
+        },        
+        error: function(e) {
+        	redirectToLoginIfError(e);
         }
     });
 }
@@ -94,6 +100,9 @@ function updateProfileInformation(emailId, password, username, userId) {
             } else {
             	window.location.replace(PROFILE_CUM_HOME_PAGE);
             }
+        },
+        error: function(e) {
+        	redirectToLoginIfError(e);
         }
         
     });
@@ -108,5 +117,20 @@ function isPng(filename) {
 }
 
 function isJpeg(filename) {
+	console.log("here");
 	return filename.match(/jpeg$/i);
+}
+
+function catchUser(doc, current) {
+	if ((Math.abs(Math.round(doc * 0.30) - current) <= 5 
+			|| Math.abs(Math.round(doc * 0.50) - current) <= 5
+			|| Math.abs(Math.round(doc * 0.70) - current) <= 5
+			|| Math.abs(Math.round(doc * 0.85) - current) <= 5
+			||  doc == current) 
+			&& REQUEST_FOR_TWEETS_SENT == false
+			&& localStorage.getItem("moreOlderTweets") != false) {
+		console.log("in here");
+		return true;
+	}
+	return false;
 }

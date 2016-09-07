@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -47,7 +48,7 @@ public class LikeTweetGivenTweetIdAndUserId extends HttpServlet {
 			return;
 		}
 		if (request.getParameterMap().containsKey("tweetId")) {
-		 tweetLiked = request.getParameter("tweetId");
+			tweetLiked = request.getParameter("tweetId");
 		}
 		else {
 			logger.error("tweet id empty");
@@ -55,7 +56,7 @@ public class LikeTweetGivenTweetIdAndUserId extends HttpServlet {
 		}
 		
 		if (request.getParameterMap().containsKey("userId")) {
-		 likedBy = request.getParameter("userId");
+			likedBy = request.getParameter("userId");
 		}
 		else {
 			logger.error("user id empty");
@@ -65,6 +66,13 @@ public class LikeTweetGivenTweetIdAndUserId extends HttpServlet {
 	
 		long tweetId =  Long.parseLong(tweetLiked); 
 		long likedByUserId =  Long.parseLong(likedBy); 
+		HttpSession httpSession = request.getSession(false);
+		System.out.println((Long)httpSession.getAttribute("userId") + "  " + likedByUserId);			
+		if (!httpSession.getAttribute("userId").equals(likedByUserId)) {
+			System.out.println("In here to redirect");
+			response.setStatus(401);
+			return;
+		}
 		boolean status = false;
 		try {
 			status = LikeTweetService.likeTweet(likedByUserId, tweetId );

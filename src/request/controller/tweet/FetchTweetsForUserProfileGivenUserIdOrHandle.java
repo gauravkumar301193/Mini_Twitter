@@ -13,6 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -32,15 +34,22 @@ public class FetchTweetsForUserProfileGivenUserIdOrHandle extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		if(request.getSession(false) == null) {
-			response.setStatus(504);
-			return;
-		}
+//		if(request.getSession(false) == null) {
+//			response.setStatus(504);
+//			return;
+//		}
 		try {
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = 0;
 			Long loggedInUser = Long.parseLong(request.getParameter("loggedInUser"));
-		
+			HttpSession httpSession = request.getSession(false);
+			System.out.println((Long)httpSession.getAttribute("userId") + "  " + loggedInUser);			
+			if (!httpSession.getAttribute("userId").equals(loggedInUser)) {
+				System.out.println("In here to redirect");
+				response.setStatus(401);
+				return;
+			}
+
 			logger.info("logged in user set "+ loggedInUser);
 			if (!request.getParameterMap().containsKey("userId")) {
 				if(request.getParameterMap().containsKey("handle")) {

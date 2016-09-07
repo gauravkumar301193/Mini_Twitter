@@ -20,24 +20,36 @@ public class EndUserSession extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//doGet(request, response);
+
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		Long userId = Long.parseLong(request.getParameter("userId"));
 		HttpSession session = request.getSession(false);
+		if (request.getParameter("userId") == null) {
+			request.getSession().invalidate();
+			response.setStatus(200);
+			return;
+		}
+				
 		try {
+			Long userId = Long.parseLong(request.getParameter("userId"));
+			HttpSession httpSession = request.getSession(false);
+			System.out.println((Long)httpSession.getAttribute("userId") + "  " + userId);			
+			if (!httpSession.getAttribute("userId").equals(userId)) {
+				System.out.println("In here to redirect");
+				response.setStatus(401);
+				return;
+			}
 			QueryUser.setLogoutAfterSignout(userId);
-			System.out.println("set time");
+
+			if (session != null) {
+				response.setStatus(200);
+			    session.invalidate();			    
+			}
 		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
+			response.setStatus(503);
 			e.printStackTrace();
+			return;
 		}
 		
-		if (session != null) {
-			response.setStatus(200);
-		    session.invalidate();
-		    
-		}
 	}
 
 }

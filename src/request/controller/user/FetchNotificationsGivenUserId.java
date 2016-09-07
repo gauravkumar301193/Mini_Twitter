@@ -9,12 +9,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import models.RetweetModel;
 import models.Tweet;
 import models.User;
+import query.database.QueryUser;
 import response.util.CreateJSONResponseNotifications;
 //import response.util.CreateJSONResponseNotifiactions;
 import services.tweet.GetMentionsAfterLogout;
@@ -46,6 +48,14 @@ public class FetchNotificationsGivenUserId extends HttpServlet {
 			response.setContentType("application/json");
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			long userId = Long.parseLong(request.getParameter("userId"));
+			HttpSession httpSession = request.getSession(false);
+			System.out.println((Long)httpSession.getAttribute("userId") + "  " + userId);			
+			if (!httpSession.getAttribute("userId").equals(userId)) {
+				System.out.println("In here to redirect");
+				response.setStatus(401);
+				return;
+			}
+
 			List<RetweetModel> retweetsAfterLogout = RetweetUsersAfterLogout.getRetweetUsersAfterLogout(userId);
 			List<Tweet> mentionsAfterLogout = GetMentionsAfterLogout.getMentionsAfterLogout(userId);
 			List<User> followersAfterLogout = GetFollowersAfterLogout.getFollowersAfterLogout(userId);
@@ -63,6 +73,7 @@ public class FetchNotificationsGivenUserId extends HttpServlet {
 			
 			response.setStatus(200);
 			response.getWriter().write(jsonResponse.getJsonObject().toString());
+//			QueryUser.setLogoutAfterSignout(userId);
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			response.setStatus(503);

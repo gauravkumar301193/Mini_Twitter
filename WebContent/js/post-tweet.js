@@ -23,6 +23,7 @@ function postANewTweet(tweetText, userId, isMedia) {
             }
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("Couldn't post your tweet: " + e);
         }
     });
@@ -47,6 +48,7 @@ function postRetweet(tweetId, userId, authorId, handle) {
             $("#retweet-" + tweetId + "-" + userId).prop("disabled", true);
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("error occurred while posting tweet: " + e);
         }
     });
@@ -69,6 +71,7 @@ function likeTweet(tweetId, userId) {
             $("#like-" + tweetId + "-").val("Unlike");
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("couldn't like tweet");
         }
     });
@@ -91,6 +94,7 @@ function unlikeTweet(tweetId, userId) {
             $("#like-" + tweetId + "-").val("Like");
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("couldn't unlike tweet");
         }
     });
@@ -111,6 +115,7 @@ function deleteTweet(tweetId) {
             console.log("tweet deleted successfully");
         },
         error : function(e) {
+        	redirectToLoginIfError(e);
             console.log("tweet delete unsuccessful: " + e);
         }
     });
@@ -145,7 +150,7 @@ $(document).ready(function() {
                 unlikeTweet(elementId[1], getLoggedInUser());
             }
         } else if (elementId[0] == "Retweet" && $("#" + e.target.id).val() == "Retweet") {
-            postRetweet(elementId[1], elementId[2], getLoggedInUser(), getLoggedInUserHandle());
+            postRetweet(elementId[1], getLoggedInUser(), elementId[2], getLoggedInUserHandle());
             increaseTweetCount();
             $("#" + e.target.id).val("Retweeted");
         } else if (elementId[0] == "hashtag") {
@@ -158,15 +163,16 @@ $(document).ready(function() {
     $(MIDDLE_PANEL_NEW_TWEET).click(function(e){
         if (("#" + e.target.id) == POST_A_NEW_TWEET_BUTTON) {
         	if ($(NEW_TWEET_TEXT).val().trim() == "") {
-        		alert("Please enter some text first");
+        		$("#enterTextFirst").text("Please enter some text first");
         		return;
         	}
+    		$("#enterTextFirst").text("");
             if (getLoggedInUser() != null && $(NEW_TWEET_TEXT).val().trim() != "") {
                 if ($(IMAGE_ELEMENT_TWEET).val()) {
                     var file = $(IMAGE_ELEMENT_TWEET);
                     var filename = $.trim(file.val());
-                	if (!(isJpg(filename) || (isPng(filename)))) {
-                		alert("only Jpg and Png formats");
+                	if (!(isJpg(filename) || !(isPng(filename)) || !(isJpeg(filename)))) {
+                		alert("only Jpg, Jpeg and Png formats");
                 		return;
                 	}
                 }

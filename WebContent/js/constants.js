@@ -10,7 +10,6 @@ var FIVE_MOST_USED_HASHTAGS_URl = IPAddress + "FetchFiveMostUsedHashtags";
 var TWEETS_FOR_USER_HOME_URL = IPAddress + "FetchTweetsForUserHomeGivenId";
 var TWEETS_FOR_USER_PROFILE = IPAddress + "FetchTweetsForUserProfileGivenUserIdOrHandle";
 var FETCH_NOTIFICATIONS_URL = IPAddress + "FetchNotificationsGivenUserId";
-var UNLIKE_TWEET_URL = "";
 var FETCH_SINGLE_TWEET_URL = IPAddress + "GetTweetGivenId";
 var USER_DETAILS_GIVEN_ID = IPAddress + "FetchUserDetailsGivenUserId";
 var FETCH_ALL_FOLLOWERS_GIVEN_USERID = IPAddress + "FetchFollowersGivenUserId";
@@ -68,6 +67,8 @@ var HANDLE_TAKEN_ERROR = "#handleTakenError";
 var INVALID_CREDENTIALS_ENTERED = "#invalidCredentials";
 var INVALID_USERNAME_ENTERED = "#usernameInvalidError";
 var INVALID_EMAIL_ENTERED ="#invalidEmailError";
+var INCOMPLETE_DETAILS_ERROR = "#incompleteDetails";
+var INCOMPLETE_DETAILS_ERROR_SIGN_IN = "#incompleteDetailsLogIn";
 
 
 var LEFT_PANEL_FOLLOW_BUTTON = "#follow-button-left-panel";
@@ -77,6 +78,8 @@ var MODAL_SEARCHES = "#searchBody";
 // Buttons
 var SIGN_UP_BUTTON = "#signUpButton";
 var SIGN_IN_BUTTON = "#signIn";
+var SIGN_IN_FORM_LOGIN = "#signInFormLogin";
+
 
 var LOADER = "#loader";
 // Notification Bar
@@ -96,6 +99,7 @@ var HASHTAG_HEADING_PANEL_TEXT = "#hashtag";
 var LEFT_PANEL_PROFILE_DETAILS = "#left-panel-profile";
 var LEFT_PANEL_HASHTAGS = "#left-panel-hashtags";
 var HASHTAG_TITLE = "#hashtag";
+var LEFT_PANELS_CONTAINER = "#allTheLeftPanels";
 var LEFT_PANEL_HASHTAG_PREFIX = "#left-panel-hashtag-";
 var MIDDLE_PANEL_NEW_TWEET = "#middle-panel-new-tweet";
 var INPUT_TEXT_FOR_NEW_TWEET = "#newTweetText";
@@ -125,3 +129,7 @@ var UPDATE_PROFILE_USERNAME = "#userName";
 var UPDATE_PROFILE_HANDLE = "#signUpHandle";
 var UPDATE_PROFILE_SUBMIT = "#signUpButton";
 var UPDATE_PROFILE_INFORMATION = IPAddress + "UpdateUserDetails";
+
+
+// GLOBAL Variables
+var REQUEST_FOR_TWEETS_SENT = false;

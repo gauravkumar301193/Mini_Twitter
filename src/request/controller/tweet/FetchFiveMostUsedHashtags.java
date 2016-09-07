@@ -9,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import models.User;
@@ -34,12 +36,21 @@ public class FetchFiveMostUsedHashtags extends HttpServlet {
 			response.setStatus(504);
 			return;
 		}
+
 		try {
 			response.setContentType("application/json");
 			response.addHeader("Access-Control-Allow-Origin", "*");
 			List<String> trendingHashtags = GetHashtags.getTrendingHashtags();
 			
 			Long loggedInUserId = (Long) request.getSession().getAttribute("userId");
+			HttpSession httpSession = request.getSession(false);
+			System.out.println((Long)httpSession.getAttribute("userId") + "  " + loggedInUserId);			
+			if (!httpSession.getAttribute("userId").equals(loggedInUserId)) {
+				System.out.println("In here to redirect");
+				response.setStatus(401);
+				return;
+			}
+
 			if (loggedInUserId != null) {
 				response.setStatus(404);
 			}
